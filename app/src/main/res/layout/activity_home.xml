@@ -1,9 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.lplus.activities.HomeActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <fragment
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/BLACK"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        android:layout_margin="15dp"
+        app:navigationIcon="@drawable/ic_menu_white_24dp"
+        app:title="Locate Plus"
+        app:titleTextColor="@color/WHITE"/>
+
+    <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/current_location"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/ic_my_location_white_24dp"
+            android:onClick="currentLocationClick"/>
+
+        <ImageButton
+            android:id="@+id/category_filter"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/ic_filter_list_white_24dp"
+            android:onClick="onFilterClick"/>
+
+        <ImageButton
+            android:id="@+id/add_place"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/ic_add_location_white_24dp"
+            android:onClick="onAddPlaceClick"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
