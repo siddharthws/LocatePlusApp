@@ -306,8 +306,9 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 loadingDialog.HideDialog();
             }
         }, 2000);
-
-        Toast.makeText(this, "Clicked on Add place",Toast.LENGTH_SHORT).show();
+        LatLng center = mMap.getCameraPosition().target;
+        Toast.makeText(this, "Clicked Latitude: "+center.latitude+" Longitude: "+center.longitude,Toast.LENGTH_SHORT).show();
+        center = null;
     }
 
 }
