@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.lplus.R;
+import com.lplus.activities.Dialogs.LoadingDialog;
 
 public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback,
                                                                GoogleMap.OnMapClickListener,
@@ -294,6 +296,17 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void onAddPlaceClick(View view)
     {
+        final LoadingDialog loadingDialog = new LoadingDialog(this, "Fetching Coordinates..");
+        loadingDialog.ShowDialog();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingDialog.HideDialog();
+            }
+        }, 2000);
+
         Toast.makeText(this, "Clicked on Add place",Toast.LENGTH_SHORT).show();
     }
 
