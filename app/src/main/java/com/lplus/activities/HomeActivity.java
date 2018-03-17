@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -20,10 +21,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -49,13 +53,20 @@ import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveCanceledListener;
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 import com.lplus.R;
 import com.lplus.activities.Dialogs.LoadingDialog;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallback,
                                                                 OnMapClickListener,
@@ -76,6 +87,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private NavigationView navigationView;
     private Toolbar toolbar;
     private LinearLayout ll_map;
+    private ImageButton zoomlevel;
     private LocationManager locationManager;
     private LoadingDialog loadingDialog;
 
@@ -113,6 +125,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
         //get Linear Layout
         ll_map = findViewById(R.id.ll_map);
+        zoomlevel = findViewById(R.id.zoomlevel);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -191,6 +204,15 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public void onCameraIdle() {
         getSupportActionBar().show();
         ll_map.setVisibility(View.VISIBLE);
+        float zoomLevel = mMap.getCameraPosition().zoom;
+        if(zoomLevel > 7.2)
+        {
+            zoomlevel.setVisibility(View.VISIBLE);
+        }
+        if(zoomLevel <= 7.2)
+        {
+            zoomlevel.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -249,6 +271,23 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         mMap.setOnCameraIdleListener(this);
         mMap.setOnCameraMoveCanceledListener(this);
         mMap.setOnCameraMoveListener(this);
+
+        recenterMap();
+        try {
+            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.maharashtra_districts, getApplicationContext());
+
+            GeoJsonPolygonStyle style = layer.getDefaultPolygonStyle();
+            style.setFillColor(Color.TRANSPARENT);
+            style.setStrokeColor(Color.RED);
+            style.setStrokeWidth(1F);
+
+            layer.addLayerToMap();
+
+        } catch (IOException ex) {
+            Log.e("IOException", ex.getLocalizedMessage());
+        } catch (JSONException ex) {
+            Log.e("JSONException", ex.getLocalizedMessage());
+        }
     }
 
     private void setUISettings() {
@@ -351,12 +390,24 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     {
         if(currentLocation !=null) {
             loadingDialog.HideDialog();
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));//Moves the camera to users current longitude and latitude
+           // mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));//Moves the camera to users current longitude and latitude
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
         }
     }
 
+    private void recenterMap()
+    {
+        //move camera to Maharastra state
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 6.0f));
+    }
+
     //=======================PUBLIC API'S=====================//
+    public void zoomOutClick(View view)
+    {
+        zoomlevel.setVisibility(View.GONE);
+        recenterMap();
+    }
+
     public void currentLocationClick(View view)
     {
         //show dialog
