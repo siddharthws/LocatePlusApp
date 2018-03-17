@@ -1,27 +1,33 @@
 package com.lplus.activities;
 
 import android.Manifest;
-import android.content.Intent;
+import android.app.Dialog;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -67,6 +73,9 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ScrollView parentScroll=findViewById(R.id.parent_scroll_desc);
+        ScrollView childScroll=findViewById(R.id.child_scroll_facility);
+
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +96,25 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapView = mapFragment.getView();
         mapFragment.getMapAsync(this);
+
+        //touch listeners for scroll
+
+       /* parentScroll.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                findViewById(R.id.child_scroll_facility).getParent().requestDisallowInterceptTouchEvent(false);
+                return false;
+            }
+        });
+        childScroll.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });*/
 
         //check for permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -310,6 +338,40 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng center = mMap.getCameraPosition().target;
         Toast.makeText(this, "Clicked Latitude: "+center.latitude+" Longitude: "+center.longitude,Toast.LENGTH_SHORT).show();
         center = null;
+
+        CardView save = null,cancel = null;
+
+        final Dialog dialog = new Dialog(HomeActivity.this,R.style.CustomDialogTheme);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_place_add);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        EditText place_name = dialog.findViewById(R.id.add_place_name);
+        place_name.setText("Rest Rooms");
+
+        TextView address = dialog.findViewById(R.id.address_add);
+        address.setText("is the an appropriate facility ?");
+
+        save = dialog.findViewById(R.id.save_add);
+
+        //TextView yes = dialog.findViewById(R.id.ok_text);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        cancel = dialog.findViewById(R.id.cancel_add);
+        //TextView yes = dialog.findViewById(R.id.ok_text);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(true);
     }
 
 }
