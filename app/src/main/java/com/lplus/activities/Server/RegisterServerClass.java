@@ -3,6 +3,9 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.lplus.activities.Dialogs.LoadingDialog;
+import com.lplus.activities.Interfaces.RegisterClassInterface;
+import com.lplus.activities.Macros.UrlMappings;
 import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONException;
@@ -17,15 +20,28 @@ import static android.content.Context.MODE_PRIVATE;
 public class RegisterServerClass extends BaseServerClass {
 
     private final String APP_ID = "app_id";
-    private final String APP_UNAME = "userName";
+    private final String APP_UNAME = "name";
+    private Context context;
+    private String loading_msg = "Registering App";
+    private  LoadingDialog loadingDialog;
 
-    public RegisterServerClass(Context context, String URL) {
-        super(context, URL);
+    private RegisterClassInterface listener = null;
+    public void SetListener(RegisterClassInterface listener)
+    {
+        this.listener = listener;
+    }
+
+    public RegisterServerClass(Context context)
+    {
+        super(context, UrlMappings.REGISTER_APP);
+        this.context = context;
     }
 
     @Override
-    public void onPreExecute() {
-
+    public void onPreExecute()
+    {
+        loadingDialog = new LoadingDialog(context, loading_msg);
+        loadingDialog.ShowDialog();
     }
 
     @Override
@@ -48,7 +64,13 @@ public class RegisterServerClass extends BaseServerClass {
 
         // Call Super
         super.doInBackground(params);
+        return null;
+    }
 
+    @Override
+    public void onPostExecute (Void result)
+    {
+        loadingDialog.HideDialog();
         // Register user in preferences if server returned OK
         if (IsResponseValid()) {
             try {
@@ -61,23 +83,13 @@ public class RegisterServerClass extends BaseServerClass {
                 edit.putString(APP_UNAME, userName);
                 edit.commit();
 
+                listener.onRegisterSuccess();
             } catch (JSONException e) {
-               e.printStackTrace();
+                e.printStackTrace();
             }
         }
-        return null;
-    }
-
-    @Override
-    public void onPostExecute (Void result)
-    {
-        if (IsResponseValid())
-        {
-
-        }
-        else
-        {
-
+        else {
+           listener.onRegisterFailure();
         }
     }
 }
