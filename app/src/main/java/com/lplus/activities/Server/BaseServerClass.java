@@ -34,13 +34,16 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
     protected Request.Builder requestBuilder = null;
     protected JSONObject responseJson = null;
     private final String APP_ID = "app_id";
-    SharedPreferences app_sharePref = context.getSharedPreferences("app_details", MODE_PRIVATE);
+    private final String IMEI = "imei";
+    private SharedPreferences app_sharePref;
+    private int app_id;
 
     public BaseServerClass(Context context, String URL)
     {
         this.context = context;
         this.URL = URL;
-        okHttpClient = new OkHttpClient();
+        this.requestBuilder = new Request.Builder();
+        app_sharePref = context.getSharedPreferences("app_details", MODE_PRIVATE);
     }
 
     @Override
@@ -59,13 +62,25 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
         return null;
     }
 
-    private boolean connectToServer()
+    private void connectToServer()
     {
-        boolean connectionResult = false;
         CacheControl cc = new CacheControl.Builder().noCache().build();
-        requestBuilder.url(URL)
-                .cacheControl(cc)
-                .header(APP_ID, String.valueOf(app_sharePref.getInt(APP_ID, -1)));
+        okHttpClient = new OkHttpClient();
+        app_id = app_sharePref.getInt(APP_ID, -1);
+
+        if(app_id == -1)
+        {
+            System.out.println("IMEI to be sent: "+app_sharePref.getString(IMEI, ""));
+            requestBuilder.url(URL)
+                    .cacheControl(cc)
+                    .header(IMEI, app_sharePref.getString(IMEI, ""));
+        }
+        else
+        {
+            requestBuilder.url(URL)
+                    .cacheControl(cc)
+                    .header(APP_ID, String.valueOf(app_id));
+        }
 
         try {
             Request request = requestBuilder.build();
@@ -74,7 +89,6 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
             // Validate and parse reponse
             if (response.code() == HttpURLConnection.HTTP_OK) {
                 responseJson = new JSONObject(response.body().string());
-                connectionResult = true;
             } else {
                 System.out.println("Response Code = " + response.code());
             }
@@ -85,7 +99,6 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
             System.out.println("JSON exception while making server request");
             e.printStackTrace();
         }
-        return connectionResult;
     }
 
     protected boolean IsResponseValid()

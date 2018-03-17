@@ -1,0 +1,11 @@
+package com.lplus.activities.Macros;
+
+/**
+ * Created by Sai_Kameswari on 17-03-2018.
+ */
+
+public class UrlMappings {
+
+    //functionalities
+    public static final String REGISTER_APP = "http://172.16.39.50:8080/api/auth/register";
+}
