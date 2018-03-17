@@ -6,12 +6,14 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.ActivityCompat;
-
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,30 +21,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
+import com.google.android.gms.maps.GoogleMap.OnCameraMoveCanceledListener;
+import com.google.android.gms.maps.GoogleMap.OnCameraMoveListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -51,18 +57,27 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.lplus.R;
 import com.lplus.activities.Dialogs.LoadingDialog;
 
-public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback,
-                                                               GoogleMap.OnMapClickListener,
-                                                                NavigationView.OnNavigationItemSelectedListener{
+public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallback,
+                                                                OnMapClickListener,
+                                                                OnNavigationItemSelectedListener,
+                                                                OnCameraMoveListener,
+                                                                OnCameraIdleListener,
+                                                                OnCameraMoveCanceledListener,
+                                                                ConnectionCallbacks,
+                                                                OnConnectionFailedListener{
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1;
     private static LatLng currentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
     private GoogleApiClient googleApiClient;
-    private static boolean isGPSOn;
+    private static boolean isGPSOn, isNetworkOn;
     private View mapView;
     private NavigationView navigationView;
+    private Toolbar toolbar;
+    private LinearLayout ll_map;
+    private LocationManager locationManager;
+    private LoadingDialog loadingDialog;
 
     //-----------------------OVERRIDES------------------------//
     @Override
@@ -70,9 +85,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_drawer);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         ScrollView parentScroll=findViewById(R.id.parent_scroll_desc);
         ScrollView childScroll=findViewById(R.id.child_scroll_facility);
 
@@ -84,12 +98,21 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         navigationView = findViewById(R.id.nav_view);
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_white_24dp));
         navigationView.setNavigationItemSelectedListener(this);
+
+        //get Linear Layout
+        ll_map = findViewById(R.id.ll_map);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -155,14 +178,32 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onMapClick(LatLng latLng) {}
+    public void onMapClick(LatLng latLng) {
+    }
+
+    @Override
+    public void onCameraMove() {
+        getSupportActionBar().hide();
+        ll_map.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onCameraIdle() {
+        getSupportActionBar().show();
+        ll_map.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onCameraMoveCanceled() {
+        getSupportActionBar().show();
+        ll_map.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        switch (id)
-        {
+        switch (id) {
             case R.id.favorites: {
 
                 break;
@@ -175,26 +216,24 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 break;
             }
-            case R.id.exit:
-            {
+            case R.id.exit: {
                 System.exit(1);
             }
         }
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
-
 
     //-----------------------PRIVATE API'S-------------------------//
     private void displayMap() {
@@ -206,8 +245,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         setUISettings();
 
         //set my location enabled
-        mMap.setMyLocationEnabled(true);
         mMap.setOnMapClickListener(this);
+        mMap.setOnCameraIdleListener(this);
+        mMap.setOnCameraMoveCanceledListener(this);
+        mMap.setOnCameraMoveListener(this);
     }
 
     private void setUISettings() {
@@ -225,96 +266,103 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                     locationCompass.getLayoutParams();
             // position on right bottom
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
-            layoutParams.setMargins(0, 220,30, 0);
+            layoutParams.setMargins(0, 220, 30, 0);
         }
     }
 
+    private void checkForGpsOn() {
+        LocationRequest mLocationRequest;
+        GoogleApiClient mGoogleApiClient;
+        PendingResult<LocationSettingsResult> result;
+        final int REQUEST_LOCATION = 199;
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).build();
+        mGoogleApiClient.connect();
+
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(30 * 1000);
+        mLocationRequest.setFastestInterval(5 * 1000);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        builder.setAlwaysShow(true);
+
+        result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                //final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        {
+                            getCurrentLocation();
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                        break;
+                    }
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(
+                                    HomeActivity.this,
+                                    REQUEST_LOCATION);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+    }
+
     private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        if(mFusedLocationClient !=null) {
+        System.out.println("mfuesdClient: "+mFusedLocationClient.toString());
+        if (mFusedLocationClient != null) {
             mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null) {
+                        System.out.println("location: "+location.getLatitude());
                         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        animateCamera();
                     }
                 }
             });
         }
     }
 
-    private boolean checkForGpsOn()
+    private void animateCamera()
     {
-        isGPSOn = false;
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(getApplicationContext()).addApi(LocationServices.API).build();
-            googleApiClient.connect();
-
-            LocationRequest locationRequest = LocationRequest.create();
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            locationRequest.setInterval(30 * 1000);
-            locationRequest.setFastestInterval(5 * 1000);
-            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-
-            // **************************
-            builder.setAlwaysShow(true); // this is the key statement
-            // **************************
-
-            PendingResult result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-            result.setResultCallback(new ResultCallback()
-             {
-                 @Override
-                 public void onResult(@NonNull Result result)
-                 {
-                     final Status status = result.getStatus();
-                     switch (status.getStatusCode())
-                     {
-
-                         case LocationSettingsStatusCodes.SUCCESS:
-                             {
-                                isGPSOn = true;
-                                break;
-                             }
-
-                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                             try {
-                                 status.startResolutionForResult(HomeActivity.this, 1000);
-                             } catch (IntentSender.SendIntentException e){}
-                             break;
-
-                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                             {
-                                 isGPSOn = false;
-                                 break;
-                             }
-                         case LocationSettingsStatusCodes.CANCELED:
-                         {
-                             isGPSOn = false;
-                             break;
-                         }
-
-                     }
-                 }
-             });
+        if(currentLocation !=null) {
+            loadingDialog.HideDialog();
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));//Moves the camera to users current longitude and latitude
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
         }
-        return isGPSOn;
     }
 
     //=======================PUBLIC API'S=====================//
     public void currentLocationClick(View view)
     {
-        if(!checkForGpsOn())
-        {
-            return;
-        }
-        getCurrentLocation();
-        if(currentLocation !=null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));//Moves the camera to users current longitude and latitude
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 16));
-        }
+        //show dialog
+        loadingDialog = new LoadingDialog(this, "Fetching Current Location..");
+        loadingDialog.ShowDialog();
+        checkForGpsOn();
     }
 
     public void onFilterClick(View view)
@@ -374,4 +422,12 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         dialog.setCanceledOnTouchOutside(true);
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {}
+
+    @Override
+    public void onConnectionSuspended(int i) {}
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 }
