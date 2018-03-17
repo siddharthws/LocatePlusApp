@@ -40,6 +40,16 @@
     android:orientation="vertical">
 
         <ImageButton
+        android:id="@+id/zoomlevel"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/rounded_button"
+        android:src="@drawable/ic_zoom_out_map_white_24dp"
+        android:onClick="zoomOutClick"
+        android:visibility="gone"/>
+
+        <ImageButton
             android:id="@+id/current_location"
             android:layout_width="50dp"
             android:layout_height="50dp"
