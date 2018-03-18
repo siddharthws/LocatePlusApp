@@ -13,7 +13,6 @@ import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import com.lplus.R;
-import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Interfaces.RegisterClassInterface;
 import com.lplus.activities.Server.RegisterServerClass;
 
@@ -24,7 +23,8 @@ public class SplashActivity extends AppCompatActivity implements RegisterClassIn
     private final String IMEI = "imei";
     private final String APP_UNAME = "name";
     private final int INVALID = -1;
-    private final int REQUEST_PERMISSION = 2;
+    private static final int REQUEST_PERMISSION = 5;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,38 +32,10 @@ public class SplashActivity extends AppCompatActivity implements RegisterClassIn
         setContentView(R.layout.activity_splash);
 
         app_sharePref = getSharedPreferences("app_details", MODE_PRIVATE);
-
-
-        //check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // request the permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_PERMISSION);
-            return;
-        }
-        RegisterUser();
+        checkForPermissions();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_PERMISSION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    RegisterUser();
-                } else {
-                    System.exit(1);
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-        }
-    }
+
 
     @Override
     public void onRegisterSuccess() {
@@ -127,5 +99,58 @@ public class SplashActivity extends AppCompatActivity implements RegisterClassIn
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
         }
+    }
+
+    public void checkForPermissions()
+    {
+        System.out.println("Checking for permissions.......");
+        //check for permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+        {
+            // request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{   Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_PERMISSION);
+            return;
+        }
+        onPermissionSuccess();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    System.out.println("permissions granted.......");
+                    onPermissionSuccess();
+
+                } else {
+                    onPermissionFailure();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
+    }
+
+    public void onPermissionSuccess() {
+        RegisterUser();
+        finish();
+    }
+
+    public void onPermissionFailure() {
+        System.exit(1);
     }
 }

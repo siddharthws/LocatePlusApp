@@ -5,20 +5,23 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.lplus.R;
-import com.lplus.activities.HomeActivity;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
-import com.lplus.activities.Interfaces.RegisterClassInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sai_Kameswari on 18-03-2018.
  */
 
-public class AddPlaceDialog {
+public class AddPlaceDialog implements AdapterView.OnItemSelectedListener {
 
     private Context context;
     private Dialog addplacedialog;
@@ -56,6 +59,20 @@ public class AddPlaceDialog {
         cancel = addplacedialog.findViewById(R.id.cancel_add);
         //TextView yes = dialog.findViewById(R.id.ok_text);
 
+        //select category
+        Spinner spinner = addplacedialog.findViewById(R.id.category_spinner);
+        List<String> list = new ArrayList<>();
+        list.add("category one");              //delete these
+        list.add("category two");
+        list.add("category three");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,list);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+
+        spinner.setOnItemSelectedListener(this);
+
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +95,17 @@ public class AddPlaceDialog {
 
     public void HideDialog()
     {
-        addplacedialog.dismiss();
+        addplacedialog.cancel();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+       addPlacelistener.onItemSelected(parent, view, position, id);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        addPlacelistener.onNothingSelected();
     }
 }
+
