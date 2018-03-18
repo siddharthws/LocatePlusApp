@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
+import com.lplus.activities.InternetConnectivityCheck;
 import com.squareup.okhttp.CacheControl;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -47,16 +48,11 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-
-
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
-        // Validate network info and connection status and return result
-        if ((networkInfo == null)  && !networkInfo.isConnected())
+    protected Void doInBackground(Void... voids)
+    {
+        if(!InternetConnectivityCheck.isConnectedToNetwork(context))
         {
-            return null;
+          return null;
         }
         connectToServer();
         return null;

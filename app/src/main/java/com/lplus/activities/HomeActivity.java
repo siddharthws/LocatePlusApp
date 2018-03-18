@@ -62,7 +62,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 import com.lplus.R;
+import com.lplus.activities.Dialogs.AddPlaceDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
+import com.lplus.activities.Interfaces.AddPlaceInterface;
 
 import org.json.JSONException;
 
@@ -75,21 +77,23 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                                                                 OnCameraIdleListener,
                                                                 OnCameraMoveCanceledListener,
                                                                 ConnectionCallbacks,
-                                                                OnConnectionFailedListener{
+                                                                OnConnectionFailedListener,
+                                                                 AddPlaceInterface{
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1;
     private static LatLng currentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
-    private GoogleApiClient googleApiClient;
-    private static boolean isGPSOn, isNetworkOn;
     private View mapView;
     private NavigationView navigationView;
     private Toolbar toolbar;
     private LinearLayout ll_map;
     private ImageButton zoomlevel;
-    private LocationManager locationManager;
     private LoadingDialog loadingDialog;
+    private static AddPlaceDialog addPlaceDialog;
+
+    public HomeActivity() {
+    }
 
     //-----------------------OVERRIDES------------------------//
     @Override
@@ -423,9 +427,16 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void onAddPlaceClick(View view)
     {
+        //check for internet connection
+        if(!InternetConnectivityCheck.isConnectedToNetwork(HomeActivity.this))
+        {
+            Toast.makeText(this, "Please connect to internet and try again...", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final LoadingDialog loadingDialog = new LoadingDialog(this, "Fetching Coordinates..");
         loadingDialog.ShowDialog();
 
+        LatLng center = mMap.getCameraPosition().target;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -434,43 +445,12 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             }
         }, 2000);
 
-        LatLng center = mMap.getCameraPosition().target;
         Toast.makeText(this, "Clicked Latitude: "+center.latitude+" Longitude: "+center.longitude,Toast.LENGTH_SHORT).show();
         center = null;
 
-        CardView save = null,cancel = null;
-
-        final Dialog dialog = new Dialog(HomeActivity.this,R.style.CustomDialogTheme);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_place_add);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        EditText place_name = dialog.findViewById(R.id.add_place_name);
-        place_name.setText("Rest Rooms");
-
-        TextView address = dialog.findViewById(R.id.address_add);
-        address.setText("is the an appropriate facility ?");
-
-        save = dialog.findViewById(R.id.save_add);
-
-        //TextView yes = dialog.findViewById(R.id.ok_text);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        cancel = dialog.findViewById(R.id.cancel_add);
-        //TextView yes = dialog.findViewById(R.id.ok_text);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-        dialog.setCanceledOnTouchOutside(true);
+        addPlaceDialog = new AddPlaceDialog(HomeActivity.this);
+        addPlaceDialog.SetListener(this);
+        addPlaceDialog.ShowDialog();
     }
 
     @Override
@@ -481,4 +461,16 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+
+    @Override
+    public void onSaveClick() {
+        Toast.makeText(this, "Save Clicked", Toast.LENGTH_SHORT).show();
+        addPlaceDialog.HideDialog();
+    }
+
+    @Override
+    public void onCancelClick() {
+        Toast.makeText(this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
+        addPlaceDialog.HideDialog();
+    }
 }
