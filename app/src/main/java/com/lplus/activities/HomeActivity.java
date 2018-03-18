@@ -1,15 +1,10 @@
 package com.lplus.activities;
 
 import android.Manifest;
-import android.app.Dialog;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,21 +16,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -64,20 +53,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
-import com.kosalgeek.android.photoutil.CameraPhoto;
-import com.kosalgeek.android.photoutil.GalleryPhoto;
-import com.kosalgeek.android.photoutil.ImageLoader;
 import com.lplus.R;
 import com.lplus.activities.Dialogs.AddPlaceDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
-import com.lplus.activities.Listeners.CustomOnItemSelectedListener;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallback,
                                                                 OnMapClickListener,
@@ -99,6 +82,8 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private LinearLayout ll_map;
     private ImageButton zoomlevel;
     private LoadingDialog loadingDialog;
+    private static AddPlaceDialog addPlaceDialog;
+
 
     /*CameraPhoto cameraPhoto;
 
@@ -106,8 +91,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     ImageView showPhoto = null,addphoto = null;
     Dialog dialog = null;*/
-
-    private static AddPlaceDialog addPlaceDialog;
 
     public HomeActivity() {
     }
@@ -465,54 +448,11 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         Toast.makeText(this, "Clicked Latitude: "+center.latitude+" Longitude: "+center.longitude,Toast.LENGTH_SHORT).show();
         center = null;
 
+        addPlaceDialog = new AddPlaceDialog(HomeActivity.this);
+        addPlaceDialog.SetListener(this);
+        addPlaceDialog.ShowDialog();
 
-       /* CardView save = null,cancel = null;
-
-        final Dialog dialog = new Dialog(HomeActivity.this,R.style.CustomDialogTheme);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_place_add);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        EditText place_name = dialog.findViewById(R.id.add_place_name);
-        place_name.setText("Rest Rooms");
-
-        TextView address = dialog.findViewById(R.id.address_add);
-        address.setText("is the an appropriate facility ?");
-
-        save = dialog.findViewById(R.id.save_add);
-
-        //TextView yes = dialog.findViewById(R.id.ok_text);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        cancel = dialog.findViewById(R.id.cancel_add);
-        //TextView yes = dialog.findViewById(R.id.ok_text);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-        dialog.setCanceledOnTouchOutside(true);
-
-        //select category
-        Spinner spinner = dialog.findViewById(R.id.category_spinner);
-        List<String> list = new ArrayList<>();
-        list.add("category one");              //delete these
-        list.add("category two");
-        list.add("category three");
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(HomeActivity.this,android.R.layout.simple_list_item_1,list);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
-
-        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener()); //either use OnItemSelectedListener directly
-
+       /*
         //Add photo
         cameraPhoto = new CameraPhoto(getApplicationContext());
         addphoto = dialog.findViewById(R.id.addImage);
@@ -552,10 +492,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                 }
             }
         }*/
-
-        addPlaceDialog = new AddPlaceDialog(HomeActivity.this);
-        addPlaceDialog.SetListener(this);
-        addPlaceDialog.ShowDialog();
     }
 
     @Override
@@ -577,5 +513,18 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public void onCancelClick() {
         Toast.makeText(this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
         addPlaceDialog.HideDialog();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
+    {
+        Toast.makeText(this,
+                "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNothingSelected() {
+
     }
 }

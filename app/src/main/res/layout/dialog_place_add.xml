@@ -44,7 +44,7 @@
                     android:layout_gravity="bottom"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/add_photo_white"
+                    android:src="@drawable/not_sure_white"
                     />
             </LinearLayout>
 
