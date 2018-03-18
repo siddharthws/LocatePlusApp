@@ -2,8 +2,10 @@ package com.lplus.activities;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -25,12 +27,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +57,6 @@ import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveCanceledListener;
 import com.google.android.gms.maps.GoogleMap.OnCameraMoveListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
@@ -61,12 +64,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
+import com.kosalgeek.android.photoutil.CameraPhoto;
+import com.kosalgeek.android.photoutil.GalleryPhoto;
+import com.kosalgeek.android.photoutil.ImageLoader;
 import com.lplus.R;
 import com.lplus.activities.Dialogs.LoadingDialog;
+import com.lplus.activities.Listeners.CustomOnItemSelectedListener;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallback,
                                                                 OnMapClickListener,
@@ -90,6 +99,13 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private ImageButton zoomlevel;
     private LocationManager locationManager;
     private LoadingDialog loadingDialog;
+    CameraPhoto cameraPhoto;
+    GalleryPhoto galleryPhoto;
+
+    final int CAMERA_REQUEST = 13323;
+
+    ImageView showPhoto = null,addphoto = null;
+    Dialog dialog = null;
 
     //-----------------------OVERRIDES------------------------//
     @Override
@@ -471,6 +487,60 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         });
         dialog.show();
         dialog.setCanceledOnTouchOutside(true);
+
+        //select category
+        Spinner spinner = dialog.findViewById(R.id.category_spinner);
+        List<String> list = new ArrayList<>();
+        list.add("category one");              //delete these
+        list.add("category two");
+        list.add("category three");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(HomeActivity.this,android.R.layout.simple_list_item_1,list);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+
+        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener()); //either use OnItemSelectedListener directly
+
+        //Add photo
+        cameraPhoto = new CameraPhoto(getApplicationContext());
+        addphoto = dialog.findViewById(R.id.addImage);
+        addphoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    PackageManager pm = getPackageManager();
+
+                    if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                        startActivityForResult(cameraPhoto.takePhotoIntent(),CAMERA_REQUEST);
+                        cameraPhoto.addToGallery();
+                    }
+                }catch(Exception e) {
+                    Log.v("Camera",e.getMessage());
+                    Toast.makeText(getApplicationContext(),"Something Wrong while taking photos", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK) {
+            if(requestCode == CAMERA_REQUEST) {
+                String PhotoPath = cameraPhoto.getPhotoPath();
+                try {
+                    showPhoto = dialog.findViewById(R.id.ivImage);
+                    Bitmap bitmap = ImageLoader.init().from(PhotoPath).requestSize(512,512).getBitmap();
+                    showPhoto.setImageBitmap(bitmap);
+
+                    /*String encoded = ImageBase64.encode(bitmap);
+                      Bitmap bitmap = ImageBase64.decode(encodedString);*/
+                }catch(Exception e) {
+
+                    Toast.makeText(getApplicationContext(),"Something Wrong while loading photos"+ e, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
     }
 
     @Override
