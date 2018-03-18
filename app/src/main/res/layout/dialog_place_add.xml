@@ -25,23 +25,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="60"
-                android:orientation="vertical"
-                android:weightSum="100">
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:id="@+id/rr"
-                    android:layout_height="170dp">
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/pager"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_alignParentTop="true" />
-                    <me.relex.circleindicator.CircleIndicator
-                        android:id="@+id/indicator"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_alignParentBottom="true"/>
-                </RelativeLayout>
+                android:orientation="horizontal"
+                android:weightSum="4">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:id="@+id/ivImage"
+                    android:layout_weight="3"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@android:drawable/star_big_on"
+                    />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addImage"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/add_photo_white"
+                    />
             </LinearLayout>
 
 
@@ -94,14 +98,12 @@
                         android:gravity="right"
                         android:orientation="horizontal">
 
-                       <ExpandableListView
-                            android:id="@+id/expandableListView"
-                            android:layout_height="match_parent"
-                           android:layout_width="120dp"
-                            android:background="@color/navy_blue"
-                            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-                            android:divider="@color/white"
-                            android:dividerHeight="0.5dp" />
+                        <Spinner
+                            android:id="@+id/category_spinner"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:gravity="right"/>
 
                     </LinearLayout>
                 </LinearLayout>
@@ -199,7 +201,7 @@
                                         android:padding="5dp"
                                         android:layout_weight="3"
                                         android:text="Facility_one"
-                                        android:textAppearance="?android:attr/textAppearanceSmall"></TextView>
+                                        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
                                     <ImageView
                                         android:layout_width="30dp"
@@ -222,7 +224,7 @@
                                         android:padding="5dp"
                                         android:layout_weight="3"
                                         android:text="Facility_one"
-                                        android:textAppearance="?android:attr/textAppearanceSmall"></TextView>
+                                        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
                                     <ImageView
                                         android:layout_width="30dp"
@@ -236,7 +238,7 @@
 
                         </LinearLayout>
 
-                       </ScrollView>
+                    </ScrollView>
                     <View
                         android:layout_width="match_parent"
                         android:layout_marginRight="5dp"
@@ -257,34 +259,34 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/save_add"
-                            android:layout_width="100dp"
-                            android:layout_marginLeft="40dp"
-                            android:layout_marginRight="20dp"
-                            android:layout_height="45dp"
-                            android:gravity="center_vertical"
-                            app:cardBackgroundColor="@color/navy_blue"
-                            app:cardCornerRadius="25dp">
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/save_add"
+                        android:layout_width="100dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_height="45dp"
+                        android:gravity="center_vertical"
+                        app:cardBackgroundColor="@color/navy_blue"
+                        app:cardCornerRadius="25dp">
 
-                            <LinearLayout
-                                android:layout_width="100dp"
+                        <LinearLayout
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                app:srcCompat="@drawable/icons8_save_96"/>
+                            <TextView
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:layout_gravity="center_vertical"
-                                android:orientation="horizontal">
-                                <ImageView
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    app:srcCompat="@drawable/icons8_save_96"/>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="SAVE"
-                                    android:textColor="@color/white"
-                                    android:textStyle="bold"/>
-                            </LinearLayout>
-                        </android.support.v7.widget.CardView>
+                                android:text="SAVE"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
 
 
                     <android.support.v7.widget.CardView
