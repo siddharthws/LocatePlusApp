@@ -68,8 +68,10 @@ import com.kosalgeek.android.photoutil.CameraPhoto;
 import com.kosalgeek.android.photoutil.GalleryPhoto;
 import com.kosalgeek.android.photoutil.ImageLoader;
 import com.lplus.R;
+import com.lplus.activities.Dialogs.AddPlaceDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Listeners.CustomOnItemSelectedListener;
+import com.lplus.activities.Interfaces.AddPlaceInterface;
 
 import org.json.JSONException;
 
@@ -84,28 +86,31 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                                                                 OnCameraIdleListener,
                                                                 OnCameraMoveCanceledListener,
                                                                 ConnectionCallbacks,
-                                                                OnConnectionFailedListener{
+                                                                OnConnectionFailedListener,
+                                                                 AddPlaceInterface{
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1;
     private static LatLng currentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
-    private GoogleApiClient googleApiClient;
-    private static boolean isGPSOn, isNetworkOn;
     private View mapView;
     private NavigationView navigationView;
     private Toolbar toolbar;
     private LinearLayout ll_map;
     private ImageButton zoomlevel;
-    private LocationManager locationManager;
     private LoadingDialog loadingDialog;
-    CameraPhoto cameraPhoto;
-    GalleryPhoto galleryPhoto;
+
+    /*CameraPhoto cameraPhoto;
 
     final int CAMERA_REQUEST = 13323;
 
     ImageView showPhoto = null,addphoto = null;
-    Dialog dialog = null;
+    Dialog dialog = null;*/
+
+    private static AddPlaceDialog addPlaceDialog;
+
+    public HomeActivity() {
+    }
 
     //-----------------------OVERRIDES------------------------//
     @Override
@@ -439,9 +444,16 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void onAddPlaceClick(View view)
     {
+        //check for internet connection
+        if(!InternetConnectivityCheck.isConnectedToNetwork(HomeActivity.this))
+        {
+            Toast.makeText(this, "Please connect to internet and try again...", Toast.LENGTH_SHORT).show();
+            return;
+        }
         final LoadingDialog loadingDialog = new LoadingDialog(this, "Fetching Coordinates..");
         loadingDialog.ShowDialog();
 
+        LatLng center = mMap.getCameraPosition().target;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -450,11 +462,11 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             }
         }, 2000);
 
-        LatLng center = mMap.getCameraPosition().target;
         Toast.makeText(this, "Clicked Latitude: "+center.latitude+" Longitude: "+center.longitude,Toast.LENGTH_SHORT).show();
         center = null;
 
-        CardView save = null,cancel = null;
+
+       /* CardView save = null,cancel = null;
 
         final Dialog dialog = new Dialog(HomeActivity.this,R.style.CustomDialogTheme);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -520,9 +532,9 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                 }
             }
         });
-    }
+    }*/
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK) {
             if(requestCode == CAMERA_REQUEST) {
@@ -532,15 +544,18 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                     Bitmap bitmap = ImageLoader.init().from(PhotoPath).requestSize(512,512).getBitmap();
                     showPhoto.setImageBitmap(bitmap);
 
-                    /*String encoded = ImageBase64.encode(bitmap);
-                      Bitmap bitmap = ImageBase64.decode(encodedString);*/
+                    //  String encoded = ImageBase64.encode(bitmap);
+                    //  Bitmap bitmap = ImageBase64.decode(encodedString);
                 }catch(Exception e) {
 
                     Toast.makeText(getApplicationContext(),"Something Wrong while loading photos"+ e, Toast.LENGTH_SHORT).show();
                 }
             }
-        }
+        }*/
 
+        addPlaceDialog = new AddPlaceDialog(HomeActivity.this);
+        addPlaceDialog.SetListener(this);
+        addPlaceDialog.ShowDialog();
     }
 
     @Override
@@ -551,4 +566,16 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+
+    @Override
+    public void onSaveClick() {
+        Toast.makeText(this, "Save Clicked", Toast.LENGTH_SHORT).show();
+        addPlaceDialog.HideDialog();
+    }
+
+    @Override
+    public void onCancelClick() {
+        Toast.makeText(this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
+        addPlaceDialog.HideDialog();
+    }
 }
