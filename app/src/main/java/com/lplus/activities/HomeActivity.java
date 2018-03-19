@@ -1,6 +1,7 @@
 package com.lplus.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -448,9 +449,12 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         Toast.makeText(this, "Clicked Latitude: "+center.latitude+" Longitude: "+center.longitude,Toast.LENGTH_SHORT).show();
         center = null;
 
-        addPlaceDialog = new AddPlaceDialog(HomeActivity.this);
+        Intent intent = new Intent(this, AddPlaceActivity.class);
+        startActivity(intent);
+
+        /*addPlaceDialog = new AddPlaceDialog(HomeActivity.this);
         addPlaceDialog.SetListener(this);
-        addPlaceDialog.ShowDialog();
+        addPlaceDialog.ShowDialog();*/
 
        /*
         //Add photo
