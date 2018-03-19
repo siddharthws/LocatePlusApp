@@ -34,10 +34,8 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
     private static OkHttpClient okHttpClient = null;
     protected Request.Builder requestBuilder = null;
     protected JSONObject responseJson = null;
-    private final String APP_ID = "app_id";
     private final String IMEI = "imei";
     private SharedPreferences app_sharePref;
-    private int app_id;
 
     public BaseServerClass(Context context, String URL)
     {
@@ -62,21 +60,11 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
     {
         CacheControl cc = new CacheControl.Builder().noCache().build();
         okHttpClient = new OkHttpClient();
-        app_id = app_sharePref.getInt(APP_ID, -1);
 
-        if(app_id == -1)
-        {
-            System.out.println("IMEI to be sent: "+app_sharePref.getString(IMEI, ""));
-            requestBuilder.url(URL)
-                    .cacheControl(cc)
-                    .header(IMEI, app_sharePref.getString(IMEI, ""));
-        }
-        else
-        {
-            requestBuilder.url(URL)
-                    .cacheControl(cc)
-                    .header(APP_ID, String.valueOf(app_id));
-        }
+        System.out.println("IMEI to be sent: "+app_sharePref.getString(IMEI, ""));
+        requestBuilder.url(URL)
+                .cacheControl(cc)
+                .header(IMEI, app_sharePref.getString(IMEI, ""));
 
         try {
             Request request = requestBuilder.build();

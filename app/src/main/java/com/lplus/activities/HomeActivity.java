@@ -56,12 +56,18 @@ import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 import com.lplus.R;
 import com.lplus.activities.Dialogs.AddPlaceDialog;
+import com.lplus.activities.Dialogs.FilterDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
+import com.lplus.activities.Interfaces.CategorySelectedInterface;
+import com.lplus.activities.Macros.Keys;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallback,
                                                                 OnMapClickListener,
@@ -71,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                                                                 OnCameraMoveCanceledListener,
                                                                 ConnectionCallbacks,
                                                                 OnConnectionFailedListener,
-                                                                 AddPlaceInterface{
+                                                                 AddPlaceInterface,CategorySelectedInterface{
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1;
@@ -83,6 +89,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private LinearLayout ll_map;
     private ImageButton zoomlevel;
     private LoadingDialog loadingDialog;
+    private FilterDialog filterDialog;
     private static AddPlaceDialog addPlaceDialog;
 
 
@@ -423,7 +430,15 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void onFilterClick(View view)
     {
-        Toast.makeText(this, "Clicked on filter",Toast.LENGTH_SHORT).show();
+        ArrayList<String> categoriesList = new ArrayList<>();
+        for(Map.Entry m:Statics.getCategories().entrySet())
+        {
+            System.out.println("Cat at map: "+m.getValue().toString());
+            categoriesList.add(m.getValue().toString());
+        }
+        filterDialog = new FilterDialog(this, categoriesList);
+        filterDialog.setListener(this);
+        filterDialog.ShowDialog();
     }
 
     public void onAddPlaceClick(View view)
@@ -530,5 +545,25 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     @Override
     public void onNothingSelected() {
 
+    }
+
+    @Override
+    public void onApplyClick(List<String> selectedcategories)
+    {
+        Toast.makeText(this, "selected: "+selectedcategories.toString(), Toast.LENGTH_SHORT).show();
+        filterDialog.HideDialog();
+
+        //LoadingDialog loadingDialog = new LoadingDialog(this, "Applying Filters......");
+        //loadingDialog.ShowDialog();
+    }
+
+    @Override
+    public void onCancelClick(List<String> selectedcategories)
+    {
+        if(selectedcategories!=null)
+        {
+            filterDialog.HideDialog();
+            Toast.makeText(this, "selected: "+selectedcategories.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
