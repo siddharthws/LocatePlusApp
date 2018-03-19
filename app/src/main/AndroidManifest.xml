@@ -42,7 +42,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AddPlaceActivity"></activity>
+        <activity android:name=".activities.AddPlaceActivity" />
+        <activity android:name=".activities.FavouriteActivity"></activity>
     </application>
 
 </manifest>

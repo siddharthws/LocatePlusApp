@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="330dp"
-    android:layout_height="550dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     android:padding="5dp"
@@ -27,15 +27,22 @@
                 android:layout_weight="60"
                 android:orientation="horizontal"
                 android:weightSum="4">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:id="@+id/ivImage"
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:id="@+id/rr"
                     android:layout_weight="3"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:src="@android:drawable/star_big_on"
-                    />
+                    android:layout_height="170dp">
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/pager"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_alignParentTop="true" />
+                    <me.relex.circleindicator.CircleIndicator
+                        android:id="@+id/indicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_alignParentBottom="true"/>
+                </RelativeLayout>
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -44,7 +51,7 @@
                     android:layout_gravity="bottom"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/not_sure_white"
+                    android:src="@drawable/add_photo_white"
                     />
             </LinearLayout>
 
@@ -275,10 +282,6 @@
                             android:gravity="center"
                             android:layout_gravity="center_vertical"
                             android:orientation="horizontal">
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                app:srcCompat="@drawable/icons8_save_96"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -293,7 +296,7 @@
                         android:id="@+id/cancel_add"
                         android:layout_width="100dp"
                         android:layout_height="45dp"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginLeft="60dp"
                         android:layout_marginRight="40dp"
                         android:gravity="center_vertical"
                         app:cardBackgroundColor="@color/navy_blue"
@@ -305,10 +308,6 @@
                             android:gravity="center"
                             android:layout_gravity="center_vertical"
                             android:orientation="horizontal">
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                app:srcCompat="@drawable/icons8_close_96"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

@@ -239,7 +239,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         int id = item.getItemId();
         switch (id) {
             case R.id.favorites: {
-
+                startActivity(new Intent(HomeActivity.this,FavouriteActivity.class));
                 break;
             }
             case R.id.help: {
