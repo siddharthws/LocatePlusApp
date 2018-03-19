@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="300dp"
+    android:orientation="vertical">
 
     <ListView
+        android:layout_weight="9"
         android:id="@+id/filter_list"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:divider="#f00"
+        android:dividerHeight="1dp">
     </ListView>
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_below="@id/filter_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_alignBottom="@id/filter_list">
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/bt_apply"
+            android:background="@color/navy_blue"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:minWidth="190dp"
             android:text="Apply"/>
+
         <Button
             android:id="@+id/bt_cancel"
-            android:layout_toRightOf="@id/bt_apply"
-            android:layout_width="wrap_content"
-            android:minWidth="190dp"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Cancel"/>
+            android:background="@color/navy_blue"
+            android:text="Cancel" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
