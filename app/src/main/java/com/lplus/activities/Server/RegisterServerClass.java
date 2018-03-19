@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.lplus.activities.Dialogs.LoadingDialog;
-import com.lplus.activities.Interfaces.RegisterClassInterface;
+import com.lplus.activities.Interfaces.ServerStatusInterface;
 import com.lplus.activities.Macros.UrlMappings;
 import com.squareup.okhttp.RequestBody;
 
@@ -23,10 +23,9 @@ public class RegisterServerClass extends BaseServerClass {
     private final String APP_UNAME = "name";
     private Context context;
     private String loading_msg = "Registering App";
-    private  LoadingDialog loadingDialog;
 
-    private RegisterClassInterface listener = null;
-    public void SetListener(RegisterClassInterface listener)
+    private ServerStatusInterface listener = null;
+    public void SetListener(ServerStatusInterface listener)
     {
         this.listener = listener;
     }
@@ -35,13 +34,6 @@ public class RegisterServerClass extends BaseServerClass {
     {
         super(context, UrlMappings.REGISTER_APP);
         this.context = context;
-    }
-
-    @Override
-    public void onPreExecute()
-    {
-        loadingDialog = new LoadingDialog(context, loading_msg);
-        loadingDialog.ShowDialog();
     }
 
     @Override
@@ -70,7 +62,7 @@ public class RegisterServerClass extends BaseServerClass {
     @Override
     public void onPostExecute (Void result)
     {
-        loadingDialog.HideDialog();
+
         // Register user in preferences if server returned OK
         if (IsResponseValid()) {
             try {
@@ -83,13 +75,13 @@ public class RegisterServerClass extends BaseServerClass {
                 edit.putString(APP_UNAME, userName);
                 edit.commit();
 
-                listener.onRegisterSuccess();
+                listener.onStatusSuccess();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         else {
-           listener.onRegisterFailure();
+           listener.onStatusFailure();
         }
     }
 }

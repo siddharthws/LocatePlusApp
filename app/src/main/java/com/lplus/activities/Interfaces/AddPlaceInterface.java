@@ -12,5 +12,4 @@ public interface AddPlaceInterface {
     void onCancelClick();
     void onItemSelected(AdapterView<?> parent, View view, int pos, long id);
     void onNothingSelected();
-
 }
