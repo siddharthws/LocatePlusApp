@@ -3,11 +3,10 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.lplus.activities.Dialogs.LoadingDialog;
+import com.lplus.activities.Extras.Statics;
 import com.lplus.activities.Interfaces.CategoryFetchInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
-import com.lplus.activities.Statics;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +35,7 @@ public class FilterServerClass extends BaseServerClass {
     public FilterServerClass(Context context) {
         super(context, UrlMappings.FILTER_FETCH);
         this.context = context;
-        app_sharePref = context.getSharedPreferences("app_details", MODE_PRIVATE);
+        app_sharePref = context.getSharedPreferences(Keys.SHARED_PREF_NAME, MODE_PRIVATE);
 
     }
 
@@ -67,10 +66,8 @@ public class FilterServerClass extends BaseServerClass {
             {
                 System.out.println("Response JSON fetched");
                 JSONArray categories = responseJson.getJSONArray(Keys.CATEGORIES);
-                Statics.setCategories(categories);
-
                 JSONArray facilities = responseJson.getJSONArray(Keys.FACILITIES);
-                Statics.setFacilities(facilities);
+                Statics.Init(context, categories, facilities);
                 listener.onCatFetched();
 
             } catch (Exception e) {

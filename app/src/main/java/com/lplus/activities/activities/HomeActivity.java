@@ -1,15 +1,14 @@
-package com.lplus.activities;
+package com.lplus.activities.activities;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.ActivityCompat;
@@ -18,29 +17,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraIdleListener;
@@ -52,22 +39,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.maps.android.data.geojson.GeoJsonLayer;
-import com.google.maps.android.data.geojson.GeoJsonPolygonStyle;
 import com.lplus.R;
-import com.lplus.activities.Dialogs.AddPlaceDialog;
 import com.lplus.activities.Dialogs.FilterDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
-import com.lplus.activities.Interfaces.AddPlaceInterface;
+import com.lplus.activities.Extras.CheckGPSOn;
+import com.lplus.activities.Extras.InternetConnectivityCheck;
 import com.lplus.activities.Interfaces.CategorySelectedInterface;
 import com.lplus.activities.Macros.Keys;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallback,
                                                                 OnMapClickListener,
@@ -75,9 +58,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                                                                 OnCameraMoveListener,
                                                                 OnCameraIdleListener,
                                                                 OnCameraMoveCanceledListener,
-                                                                ConnectionCallbacks,
-                                                                OnConnectionFailedListener,
-                                                                 AddPlaceInterface,CategorySelectedInterface{
+                                                                CategorySelectedInterface, CheckGPSOn.CheckGPSInterface {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1;
@@ -90,37 +71,28 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private ImageButton zoomlevel;
     private LoadingDialog loadingDialog;
     private FilterDialog filterDialog;
-    private static AddPlaceDialog addPlaceDialog;
+    private SupportMapFragment mapFragment;
+    private SharedPreferences app_sharePref;
 
-
+    final int REQUEST_LOCATION = 199;
     /*CameraPhoto cameraPhoto;
 
     final int CAMERA_REQUEST = 13323;
 
     ImageView showPhoto = null,addphoto = null;
     Dialog dialog = null;*/
-
-    public HomeActivity() {
-    }
-
-    //-----------------------OVERRIDES------------------------//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_drawer);
+
+        app_sharePref = getSharedPreferences(Keys.SHARED_PREF_NAME, MODE_PRIVATE);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ScrollView parentScroll=findViewById(R.id.parent_scroll_desc);
         ScrollView childScroll=findViewById(R.id.child_scroll_facility);
 
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.exit(1);
-            }
-        });
         navigationView = findViewById(R.id.nav_view);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -140,12 +112,9 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         zoomlevel = findViewById(R.id.zoomlevel);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapView = mapFragment.getView();
         mapFragment.getMapAsync(this);
-
-        //touch listeners for scroll
 
        /* parentScroll.setOnTouchListener(new View.OnTouchListener() {
 
@@ -194,8 +163,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                     displayMap();
                 } else {
                     System.exit(1);
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return;
             }
@@ -203,8 +170,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     }
 
     @Override
-    public void onMapClick(LatLng latLng) {
-    }
+    public void onMapClick(LatLng latLng) {}
 
     @Override
     public void onCameraMove() {
@@ -269,12 +235,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         }
     }
 
-    //-----------------------PRIVATE API'S-------------------------//
     private void displayMap() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
         //set UI Settings
         setUISettings();
 
@@ -285,21 +246,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         mMap.setOnCameraMoveListener(this);
 
         recenterMap();
-        try {
-            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.maharashtra_districts, getApplicationContext());
-
-            GeoJsonPolygonStyle style = layer.getDefaultPolygonStyle();
-            style.setFillColor(Color.TRANSPARENT);
-            style.setStrokeColor(Color.RED);
-            style.setStrokeWidth(1F);
-
-            layer.addLayerToMap();
-
-        } catch (IOException ex) {
-            Log.e("IOException", ex.getLocalizedMessage());
-        } catch (JSONException ex) {
-            Log.e("JSONException", ex.getLocalizedMessage());
-        }
     }
 
     private void setUISettings() {
@@ -321,62 +267,33 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         }
     }
 
-    private void checkForGpsOn() {
-        LocationRequest mLocationRequest;
-        GoogleApiClient mGoogleApiClient;
-        PendingResult<LocationSettingsResult> result;
-        final int REQUEST_LOCATION = 199;
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this).build();
-        mGoogleApiClient.connect();
-
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(30 * 1000);
-        mLocationRequest.setFastestInterval(5 * 1000);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                .addLocationRequest(mLocationRequest);
-        builder.setAlwaysShow(true);
-
-        result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
-
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                //final LocationSettingsStates state = result.getLocationSettingsStates();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        {
-                            getCurrentLocation();
-                        // All location settings are satisfied. The client can initialize location
-                        // requests here.
-                        break;
-                    }
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        // Location settings are not satisfied. But could be fixed by showing the user
-                        // a dialog.
-                        try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            status.startResolutionForResult(
-                                    HomeActivity.this,
-                                    REQUEST_LOCATION);
-                        } catch (IntentSender.SendIntentException e) {
-                            // Ignore the error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way to fix the
-                        // settings so we won't show the dialog.
-                        break;
+    private void checkForGpsOn()
+    {
+        CheckGPSOn checkGPSOn = new CheckGPSOn(this);
+        checkGPSOn.setListener(this);
+        checkGPSOn.Init();
+    }
+    @Override
+    public void GPSResult(int statusCode, Status resultStatus)
+    {
+        switch (statusCode)
+        {
+            case 1: {getCurrentLocation(); break;}
+            case 2:
+            {
+                try {
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    resultStatus.startResolutionForResult(
+                            HomeActivity.this,
+                            REQUEST_LOCATION);
+                } catch (IntentSender.SendIntentException e) {
+                    // Ignore the error.
                 }
+                break;
             }
-        });
+            case 3: break;
+        }
     }
 
     private void getCurrentLocation() {
@@ -397,6 +314,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             });
         }
     }
+
 
     private void animateCamera()
     {
@@ -431,11 +349,15 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public void onFilterClick(View view)
     {
         ArrayList<String> categoriesList = new ArrayList<>();
-        for(Map.Entry m:Statics.getCategories().entrySet())
-        {
-            System.out.println("Cat at map: "+m.getValue().toString());
-            categoriesList.add(m.getValue().toString());
-        }
+
+        Set<String> categoriesSet = new HashSet<>();
+        categoriesSet = app_sharePref.getStringSet(Keys.CATEGORY_VALUE, categoriesSet);
+        System.out.println("Set at home: "+categoriesSet.toString());
+        //put in arraylist
+        categoriesList.addAll(categoriesSet);
+
+        System.out.println("list at home: "+categoriesList.toString());
+
         filterDialog = new FilterDialog(this, categoriesList);
         filterDialog.setListener(this);
         filterDialog.ShowDialog();
@@ -466,85 +388,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
         Intent intent = new Intent(this, AddPlaceActivity.class);
         startActivity(intent);
-
-        /*addPlaceDialog = new AddPlaceDialog(HomeActivity.this);
-        addPlaceDialog.SetListener(this);
-        addPlaceDialog.ShowDialog();*/
-
-       /*
-        //Add photo
-        cameraPhoto = new CameraPhoto(getApplicationContext());
-        addphoto = dialog.findViewById(R.id.addImage);
-        addphoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    PackageManager pm = getPackageManager();
-
-                    if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        startActivityForResult(cameraPhoto.takePhotoIntent(),CAMERA_REQUEST);
-                        cameraPhoto.addToGallery();
-                    }
-                }catch(Exception e) {
-                    Log.v("Camera",e.getMessage());
-                    Toast.makeText(getApplicationContext(),"Something Wrong while taking photos", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }*/
-
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK) {
-            if(requestCode == CAMERA_REQUEST) {
-                String PhotoPath = cameraPhoto.getPhotoPath();
-                try {
-                    showPhoto = dialog.findViewById(R.id.ivImage);
-                    Bitmap bitmap = ImageLoader.init().from(PhotoPath).requestSize(512,512).getBitmap();
-                    showPhoto.setImageBitmap(bitmap);
-
-                    //  String encoded = ImageBase64.encode(bitmap);
-                    //  Bitmap bitmap = ImageBase64.decode(encodedString);
-                }catch(Exception e) {
-
-                    Toast.makeText(getApplicationContext(),"Something Wrong while loading photos"+ e, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }*/
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {}
-
-    @Override
-    public void onConnectionSuspended(int i) {}
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
-
-    @Override
-    public void onSaveClick() {
-        Toast.makeText(this, "Save Clicked", Toast.LENGTH_SHORT).show();
-        addPlaceDialog.HideDialog();
-    }
-
-    @Override
-    public void onCancelClick() {
-        Toast.makeText(this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
-        addPlaceDialog.HideDialog();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
-    {
-        Toast.makeText(this,
-                "OnItemSelectedListener : " + parent.getItemAtPosition(pos).toString(),
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNothingSelected() {
-
     }
 
     @Override
@@ -565,5 +408,29 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             filterDialog.HideDialog();
             Toast.makeText(this, "selected: "+selectedcategories.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        mapFragment.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mapFragment.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mapFragment.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        System.gc();
+        super.onLowMemory();
     }
 }
