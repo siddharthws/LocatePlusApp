@@ -28,6 +28,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     private CustomExpandableListAdapter listAdapter;
     private ExpandableListView simpleExpandableListView;
 
+
     private EditText place_name;
     private TextView address;
     private CardView save,cancel;
