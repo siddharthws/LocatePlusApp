@@ -4,13 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.lplus.R;
-import com.lplus.activities.FacilityChildInfo;
-import com.lplus.activities.FacilityGroupInfo;
+import com.lplus.activities.JavaFiles.FacilityChildInfo;
+import com.lplus.activities.JavaFiles.FacilityGroupInfo;
 
 import java.util.ArrayList;
 

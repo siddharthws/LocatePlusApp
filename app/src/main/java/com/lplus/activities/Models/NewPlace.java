@@ -48,7 +48,6 @@ public class NewPlace {
                     + COLUMN_TIMESTAMP      + " INTEGER,"
                     + COLUMN_NAME           + " TEXT,"
                     + COLUMN_ADDRESS        + " TEXT,"
-
                     + COLUMN_CATEGORY       + " TEXT,"
                     + COLUMN_FACILITIES     + " TEXT,"
                     + COLUMN_PHOTOS         + " TEXT,"

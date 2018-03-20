@@ -1,4 +1,4 @@
-package com.lplus.activities;
+package com.lplus.activities.JavaFiles;
 
 /**
  * Created by CHANDEL on 3/20/2018.

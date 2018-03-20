@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -45,6 +44,7 @@ import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Extras.CheckGPSOn;
 import com.lplus.activities.Extras.InternetConnectivityCheck;
 import com.lplus.activities.Interfaces.CategorySelectedInterface;
+import com.lplus.activities.JavaFiles.Geocoding;
 import com.lplus.activities.Macros.Keys;
 
 import java.util.ArrayList;
@@ -58,7 +58,8 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                                                                 OnCameraMoveListener,
                                                                 OnCameraIdleListener,
                                                                 OnCameraMoveCanceledListener,
-                                                                CategorySelectedInterface, CheckGPSOn.CheckGPSInterface {
+                                                                CategorySelectedInterface,
+                                                                CheckGPSOn.CheckGPSInterface, Geocoding.geocodingInterface {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1;
@@ -73,6 +74,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private FilterDialog filterDialog;
     private SupportMapFragment mapFragment;
     private SharedPreferences app_sharePref;
+    private static LatLng center;
 
     final int REQUEST_LOCATION = 199;
     /*CameraPhoto cameraPhoto;
@@ -371,23 +373,41 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             Toast.makeText(this, "Please connect to internet and try again...", Toast.LENGTH_SHORT).show();
             return;
         }
-        final LoadingDialog loadingDialog = new LoadingDialog(this, "Fetching Coordinates..");
+        loadingDialog = new LoadingDialog(this, "Fetching Coordinates..");
         loadingDialog.ShowDialog();
 
-        LatLng center = mMap.getCameraPosition().target;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadingDialog.HideDialog();
-            }
-        }, 2000);
+        center = mMap.getCameraPosition().target;
 
-        Toast.makeText(this, "Clicked Latitude: "+center.latitude+" Longitude: "+center.longitude,Toast.LENGTH_SHORT).show();
+        //get address using geocoding
+        Geocoding geocoding = new Geocoding(HomeActivity.this, center.latitude, center.longitude);
+        geocoding.setListener(this);
+        geocoding.execute();
         center = null;
+    }
+    @Override
+    public void onAddressFetched(String result, double latit, double longi) {
 
-        Intent intent = new Intent(this, AddPlaceActivity.class);
-        startActivity(intent);
+        loadingDialog.HideDialog();
+        Toast.makeText(this, "Clicked Latitude: "+latit+" Longitude: "+longi,Toast.LENGTH_SHORT).show();
+
+        System.out.println("Addrs fetched: "+result);
+        System.out.println("Latit fetched: "+latit);
+        System.out.println("Longi fetched: "+longi);
+
+        Intent addPlaceIntent = new Intent(HomeActivity.this, AddPlaceActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putDouble(Keys.CENTER_LATITUDE, latit);
+        mBundle.putDouble(Keys.CENTER_LONGITUDE, longi);
+        mBundle.putString(Keys.CENTER_ADDRESS, result);
+        addPlaceIntent.putExtras(mBundle);
+        startActivity(addPlaceIntent);
+    }
+
+    @Override
+    public void onAddressFetchFailed()
+    {
+        loadingDialog.HideDialog();
+        Toast.makeText(this, "Sorry...Cannot Fetch the address...Try again",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -433,4 +453,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         System.gc();
         super.onLowMemory();
     }
+
+
 }

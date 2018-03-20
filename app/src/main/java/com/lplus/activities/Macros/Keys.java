@@ -26,4 +26,22 @@ public class Keys {
     public static final String CATEGORY_VALUE            = "category_value";
     public static final String FACILITIES_KEY            = "facilities_key";
     public static final String FACILITIES_VALUE          = "facilities_value";
+
+    //Add Place Bundle
+    public static final String CENTER_ADDRESS           =   "center_address";
+    public static final String CENTER_LATITUDE          =   "center_latitude";
+    public static final String CENTER_LONGITUDE         =   "center_longitude";
+
+    //Expandable List
+    public static final String DEPARTMENT   = "Facilities";
+
+    //Add Place
+    public static final String AP_NAME          = "name";
+    public static final String AP_ADDRESS       = "address";
+    public static final String AP_LATITUDE      = "latitude";
+    public static final String AP_LONGITUDE     = "longitude";
+    public static final String AP_CATEGORY      = "category";
+    public static final String AP_FACILITIES    = "facilities";
+    public static final String AP_RESPONSE      = "sucess";
+
 }

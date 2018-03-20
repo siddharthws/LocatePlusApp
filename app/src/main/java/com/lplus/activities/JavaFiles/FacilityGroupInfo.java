@@ -1,4 +1,4 @@
-package com.lplus.activities;
+package com.lplus.activities.JavaFiles;
 
 import java.util.ArrayList;
 
