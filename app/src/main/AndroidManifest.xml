@@ -29,6 +29,10 @@
         <activity
             android:name=".activities.activities.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
            <!-- <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,10 +43,7 @@
         <activity android:name=".activities.activities.AddPlaceActivity" />
         <activity android:name=".activities.activities.FavouriteActivity" />
         <activity android:name=".activities.activities.PreSplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
     </application>
 
