@@ -2,6 +2,9 @@
     <string name="app_name">Locate Plus</string>
     <string name="title_activity_maps">Map</string>
 
+    //Splash Strings
+    <string name="splash_title">Locate Plus</string>
+
     //navigation drawer
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
