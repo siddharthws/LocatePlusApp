@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.lplus.activities.HomeActivity">
+    tools:context="com.lplus.activities.activities.HomeActivity">
 
     <fragment
     android:id="@+id/map"

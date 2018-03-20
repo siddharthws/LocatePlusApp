@@ -1,4 +1,4 @@
-package com.lplus.activities;
+package com.lplus.activities.Extras;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
