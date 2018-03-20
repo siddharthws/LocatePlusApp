@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent_scroll_desc"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     android:padding="5dp"
     android:weightSum="100">
-    <ScrollView
-        android:id="@+id/parent_scroll_desc"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,6 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/addImage"
+                    android:padding="10dp"
                     android:layout_weight="1"
                     android:layout_gravity="bottom"
                     android:layout_centerVertical="true"
@@ -158,7 +160,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="20"
                     android:gravity="center"
                     android:orientation="vertical">
                     <View
@@ -166,14 +167,13 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginLeft="5dp"
                         android:layout_height="1dp"
-                        android:layout_above="@+id/textView14"
                         android:background="@color/colorPrimary" />
                     <ExpandableListView
                         android:id="@+id/simpleExpandableListView"
                         android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
+                        android:layout_height="wrap_content"
                         android:divider="@color/colorPrimary"
-                        android:dividerHeight="2dp"
+                        android:dividerHeight="1dp"
                         android:childDivider="#0f0"
                         android:padding="10dp"/>
                     <View
@@ -181,19 +181,58 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginLeft="5dp"
                         android:layout_height="1dp"
-                        android:layout_above="@+id/textView14"
                         android:background="@color/colorPrimary" />
 
                 </LinearLayout>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimary" />
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="20"
                     android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="bottom"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icons8_pen_96"
+                        />
+                    <EditText
+                        android:id="@+id/addplace_review"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Write a Review (Optional)"
+                        android:textColorHint="@color/GREY_7"
+                        android:layout_weight="5"
+                        android:textColor="@color/white"/>
+
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimary" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:gravity="bottom|center_horizontal"
                     android:orientation="horizontal">
 
                     <android.support.v7.widget.CardView
@@ -249,5 +288,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+
 </LinearLayout>
+</ScrollView>

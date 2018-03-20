@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.lplus.R;
 import com.lplus.activities.JavaFiles.FacilityChildInfo;
-import com.lplus.activities.JavaFiles.FacilityGroupInfo;
 
 import java.util.ArrayList;
 
@@ -19,44 +19,45 @@ import java.util.ArrayList;
 
 public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private ArrayList<FacilityGroupInfo> deptList;
+    private ArrayList<String> facility_group;
+    private ArrayList<ArrayList<FacilityChildInfo>> facility_group_items;
+    private LayoutInflater inflater;
 
-    public CustomExpandableListAdapter(Context context, ArrayList<FacilityGroupInfo> deptList) {
+    public CustomExpandableListAdapter(Context context, ArrayList<String> facility_group, ArrayList<ArrayList<FacilityChildInfo>> facility_group_items) {
         this.context = context;
-        this.deptList = deptList;
+        this.facility_group = facility_group;
+        this.facility_group_items = facility_group_items;
+        inflater = LayoutInflater.from( context );
     }
-
 
     @Override
     public int getGroupCount() {
-        return deptList.size();
+        return facility_group.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        ArrayList<FacilityChildInfo> productList = deptList.get(groupPosition).getList();
-        return productList.size();
+        return facility_group_items.get( groupPosition ).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return deptList.get(groupPosition);
+        return facility_group.get( groupPosition );
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        ArrayList<FacilityChildInfo> productList = deptList.get(groupPosition).getList();
-        return productList.get(childPosition);
+        return facility_group_items.get( groupPosition ).get( childPosition );
     }
 
     @Override
     public long getGroupId(int groupPosition) {
-        return groupPosition;
+        return (long)( groupPosition*1024 );  // To be consistent with getChildId
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
+        return (long)( groupPosition*1024+childPosition );  // Max 1024 children per group
     }
 
     @Override
@@ -65,37 +66,43 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View view, ViewGroup parent) {
-        FacilityGroupInfo headerInfo = (FacilityGroupInfo) getGroup(groupPosition);
-        if (view == null) {
-            LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inf.inflate(R.layout.facility_group, null);
-        }
-
-        TextView heading = (TextView) view.findViewById(R.id.facility_header);
-        heading.setText(headerInfo.getName().trim());
-
-        return view;
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        View v = null;
+        if( convertView != null )
+            v = convertView;
+        else
+            v = inflater.inflate(R.layout.facility_group, parent, false);
+        String gt = (String)getGroup( groupPosition );
+        TextView facility_header = (TextView)v.findViewById( R.id.facility_header );
+        if( gt != null )
+            facility_header.setText( gt );
+        return v;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup parent) {
-        FacilityChildInfo detailInfo = (FacilityChildInfo) getChild(groupPosition, childPosition);
-        if (view == null) {
-            LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = infalInflater.inflate(R.layout.facility_group_items, null);
-        }
-
-        TextView sequence = (TextView) view.findViewById(R.id.facility_sequence);
-        sequence.setText(detailInfo.getFacility_sequence().trim() + ". ");
-        TextView childItem = (TextView) view.findViewById(R.id.facility_childItem);
-        childItem.setText(detailInfo.getFacility_name().trim());
-
-        return view;
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        View v = null;
+        if( convertView != null )
+            v = convertView;
+        else
+            v = inflater.inflate(R.layout.facility_group_items, parent, false);
+        FacilityChildInfo c = (FacilityChildInfo)getChild( groupPosition, childPosition );
+        TextView sequence = v.findViewById( R.id.facility_child_sequence );
+        if( sequence != null )
+            sequence.setText( c.getFacility_sequence() );
+        TextView facility_name = v.findViewById( R.id.facility_child_name );
+        if( facility_name != null )
+            facility_name.setText( c.getFacility_name() );
+        CheckBox cb = v.findViewById( R.id.facility_child_check );
+        cb.setChecked( c.getState() );
+        return v;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    public void onGroupCollapsed (int groupPosition) {}
+    public void onGroupExpanded(int groupPosition) {}
 }

@@ -5,8 +5,14 @@ package com.lplus.activities.JavaFiles;
  */
 
 public class FacilityChildInfo {
-    private String facility_sequence = "";
-    private String facility_name = "";
+    private String facility_sequence = null;
+    private String facility_name = null;
+    private boolean state = false;
+
+    public FacilityChildInfo(String facility_sequence, String facility_name) {
+        this.facility_sequence = facility_sequence;
+        this.facility_name = facility_name;
+    }
 
     public String getFacility_sequence() {
         return facility_sequence;
@@ -22,5 +28,13 @@ public class FacilityChildInfo {
 
     public void setFacility_name(String facility_name) {
         this.facility_name = facility_name;
+    }
+
+    public boolean getState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 }
