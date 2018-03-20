@@ -3,8 +3,8 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Interfaces.ServerStatusInterface;
+import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 import com.squareup.okhttp.RequestBody;
 
@@ -23,6 +23,7 @@ public class RegisterServerClass extends BaseServerClass {
     private final String APP_UNAME = "name";
     private Context context;
     private String loading_msg = "Registering App";
+    private  SharedPreferences app_sharePref;
 
     private ServerStatusInterface listener = null;
     public void SetListener(ServerStatusInterface listener)
@@ -66,15 +67,15 @@ public class RegisterServerClass extends BaseServerClass {
         // Register user in preferences if server returned OK
         if (IsResponseValid()) {
             try {
-                int appId = responseJson.getInt(APP_ID);
-                String userName = responseJson.getString(APP_UNAME);
+                boolean splashResponse = responseJson.getBoolean(Keys.SERVER_RESPONSE);
 
-                SharedPreferences app_sharePref = context.getSharedPreferences("app_details", MODE_PRIVATE);
-                SharedPreferences.Editor edit = app_sharePref.edit();
-                edit.putInt(APP_ID, appId);
-                edit.putString(APP_UNAME, userName);
-                edit.commit();
-
+                if(splashResponse)
+                {
+                    app_sharePref = context.getSharedPreferences(Keys.SHARED_PREF_NAME, MODE_PRIVATE);
+                    SharedPreferences.Editor edit = app_sharePref.edit();
+                    edit.putBoolean(Keys.UPDATE_REQURED, splashResponse);
+                    edit.commit();
+                }
                 listener.onStatusSuccess();
             } catch (JSONException e) {
                 e.printStackTrace();

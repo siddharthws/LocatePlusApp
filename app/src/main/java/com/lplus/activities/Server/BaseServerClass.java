@@ -2,11 +2,9 @@ package com.lplus.activities.Server;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
-import com.lplus.activities.InternetConnectivityCheck;
+import com.lplus.activities.Extras.InternetConnectivityCheck;
 import com.squareup.okhttp.CacheControl;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -66,6 +64,7 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
                 .cacheControl(cc)
                 .header(IMEI, app_sharePref.getString(IMEI, ""));
 
+
         try {
             Request request = requestBuilder.build();
             Response response = okHttpClient.newCall(request).execute();
@@ -75,6 +74,13 @@ public class BaseServerClass extends AsyncTask<Void, Integer, Void>
                 responseJson = new JSONObject(response.body().string());
             } else {
                 System.out.println("Response Code = " + response.code());
+            }
+
+            //close Connection
+            if(response != null)
+            {
+                response.body().close();
+                okHttpClient = null;
             }
         } catch (IOException e) {
             System.out.println("IO exception while making server request");
