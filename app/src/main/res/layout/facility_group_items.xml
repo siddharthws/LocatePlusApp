@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/facility_sequence"
+        android:layout_width="wrap_content"
+        android:layout_weight="2"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="35sp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/facility_childItem"
+        android:layout_width="wrap_content"
+        android:layout_weight="2"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/facility_sequence"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <!--<ImageView
+        android:id="@+id/facility_childImage"
+        android:layout_width="10dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/facility_childItem"
+        android:src="@drawable/checked_white" />
+        -->
+</LinearLayout>
