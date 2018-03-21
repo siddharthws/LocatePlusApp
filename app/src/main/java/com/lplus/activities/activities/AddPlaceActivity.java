@@ -3,7 +3,6 @@ package com.lplus.activities.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -22,24 +21,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kosalgeek.android.photoutil.CameraPhoto;
-import com.kosalgeek.android.photoutil.ImageLoader;
 import com.lplus.R;
 import com.lplus.activities.Adapters.CustomExpandableListAdapter;
 import com.lplus.activities.Adapters.ImageSliderAdapter;
 import com.lplus.activities.Dialogs.LoadingDialog;
+import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
 import com.lplus.activities.JavaFiles.FacilityChildInfo;
 import com.lplus.activities.JavaFiles.PhotoStoreInfo;
 import com.lplus.activities.Macros.Keys;
-import com.lplus.activities.Models.TempNewPlaceObject;
+import com.lplus.activities.Objects.TempNewPlaceObject;
 import com.lplus.activities.Server.AddPlaceServerClass;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,9 +60,10 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     private String address_result, place_name_string;
     private double latitude, longitude;
     private static String category, facilities;
-    private List<String> list, fac_list, selected_fac, cat_key, fac_key;
+    private ArrayList<String> list, fac_list, selected_fac, cat_key, fac_key;
     private SharedPreferences app_sharePref;
     private LoadingDialog loadingDialog =null;
+    private TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +79,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             latitude = addPlaceIntent.getDoubleExtra(Keys.CENTER_LATITUDE, 0.0);
             longitude = addPlaceIntent.getDoubleExtra(Keys.CENTER_LONGITUDE, 0.0);
         }
-
+       tinyDB = new TinyDB(AddPlaceActivity.this);
         list = new ArrayList<>();
         fac_list = new ArrayList<>();
         selected_fac = new ArrayList<>();
@@ -106,20 +102,10 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         //select category
         Spinner spinner = findViewById(R.id.category_spinner);
 
-        Set<String> categoriesSet = new HashSet<>();
-        Set<String> facilitiesSet = new HashSet<>();
-        Set<String> faciltiesKeys = new HashSet<>();
-        Set<String> categoryKeys = new HashSet<>();
-
-        categoriesSet = app_sharePref.getStringSet(Keys.CATEGORY_VALUE, categoriesSet);
-        facilitiesSet = app_sharePref.getStringSet(Keys.FACILITIES_VALUE, facilitiesSet);
-        faciltiesKeys = app_sharePref.getStringSet(Keys.FACILITIES_KEY, faciltiesKeys);
-        categoryKeys = app_sharePref.getStringSet(Keys.CATEGORY_KEY, categoryKeys);
-
-        list.addAll(categoriesSet);
-        fac_list.addAll(facilitiesSet);
-        cat_key.addAll(categoryKeys);
-        fac_key.addAll(faciltiesKeys);
+        list = tinyDB.getListString(Keys.CATEGORY_VALUE);
+        fac_list = tinyDB.getListString(Keys.FACILITIES_VALUE);
+        cat_key = tinyDB.getListString(Keys.CATEGORY_KEY);
+        fac_key = tinyDB.getListString(Keys.FACILITIES_KEY);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -132,18 +118,12 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         groupNames.add( "Select Facility" );
         ArrayList<ArrayList<FacilityChildInfo>> facility_arr = new ArrayList<>();
         final ArrayList<FacilityChildInfo> facility = new ArrayList<>();
-        facility.add( new FacilityChildInfo( "1","Hawa") );
-        facility.add( new FacilityChildInfo( "2","Pani" ) );
-        facility.add( new FacilityChildInfo( "3","Roti") );
-        facility.add( new FacilityChildInfo( "1","Sabzi") );
-        facility.add( new FacilityChildInfo( "2","daal") );
-        facility.add( new FacilityChildInfo( "3","chawal") );
-        facility.add( new FacilityChildInfo( "1","wada paw") );
-        facility.add( new FacilityChildInfo(  "2","maggi") );
-        facility.add( new FacilityChildInfo( "3","tamator") );
-        facility.add( new FacilityChildInfo( "1","gobi ki sabzi" ) );
-        facility.add( new FacilityChildInfo( "2","aur bhi bhohoy kuch" ) );
-        facility.add( new FacilityChildInfo( "3","samosa") );
+
+        for(int i=0; i<fac_list.size();i++)
+        {
+            System.out.println("Fac key i list: "+fac_key.get(i)+"having: "+fac_list.get(i));
+            facility.add( new FacilityChildInfo(fac_key.get(i), i+1, fac_list.get(i)));
+        }
         facility_arr.add( facility );
         simpleExpandableListView = findViewById(R.id.simpleExpandableListView);
 
@@ -154,14 +134,13 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Log.d( LOG_TAG, "onChildClick: "+childPosition );
                 CheckBox cb = v.findViewById( R.id.facility_child_check );
-                if(selected_fac.contains(facility.get(childPosition).getFacility_name()))
+                if(selected_fac.contains(facility.get(childPosition).getFac_id()))
                 {
-                    selected_fac.remove(childPosition);
+                    selected_fac.remove(facility.get(childPosition).getFac_id());
                 }
                 else{
-                    selected_fac.add(childPosition,facility.get(childPosition).getFacility_name());
+                    selected_fac.add(facility.get(childPosition).getFac_id());
                 }
-                Toast.makeText(AddPlaceActivity.this,"Selected "+ Arrays.toString(selected_fac.toArray()), Toast.LENGTH_SHORT).show();
                 if( cb != null )
                     if (cb.isChecked())
                     {
@@ -181,23 +160,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         cancel.setOnClickListener(this);
         //Add photo
         cameraPhoto = new CameraPhoto(getApplicationContext());
-        addphoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    PackageManager pm = getPackageManager();
-
-                    if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                        startActivityForResult(cameraPhoto.takePhotoIntent(),CAMERA_REQUEST);
-                        cameraPhoto.addToGallery();
-                    }
-                }catch(Exception e) {
-                    Log.v("Camera",e.getMessage());
-                    Toast.makeText(getApplicationContext(),"Something Wrong while taking photos", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
+        addphoto.setOnClickListener(this);
     }
 
     public void onContentChanged  () {
@@ -215,7 +178,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
                 loadingDialog.ShowDialog();
                 //apply constraint checks everywhere and as necessary
                 place_name_string = place_name.getText().toString();
-                TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, facilities, latitude, longitude);
+                TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac, latitude, longitude);
                 AddPlaceServerClass addPlaceServerClass = new AddPlaceServerClass(AddPlaceActivity.this, tempNewPlaceObject);
                 addPlaceServerClass.SetListener(this);
                 addPlaceServerClass.execute();
@@ -225,6 +188,21 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             {
                 Toast.makeText(AddPlaceActivity.this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
                 finish();
+                break;
+            }
+            case R.id.addImage:
+            {
+                try {
+                    PackageManager pm = getPackageManager();
+
+                    if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                        startActivityForResult(cameraPhoto.takePhotoIntent(),CAMERA_REQUEST);
+                        cameraPhoto.addToGallery();
+                    }
+                }catch(Exception e) {
+                    Log.v("Camera",e.getMessage());
+                    Toast.makeText(getApplicationContext(),"Something Wrong while taking photos", Toast.LENGTH_SHORT).show();
+                }
                 break;
             }
         }

@@ -1,4 +1,6 @@
-package com.lplus.activities.Models;
+package com.lplus.activities.Objects;
+
+import java.util.ArrayList;
 
 /**
  * Created by Sai_Kameswari on 20-03-2018.
@@ -9,13 +11,13 @@ public class TempNewPlaceObject {
     private String name;
     private String address;
     private String category;
-    private String facilities;
+    private ArrayList<String> facilities;
     private String photos;
     private double latitude;
     private double longitude;
     private long timestamp;
 
-    public TempNewPlaceObject(String name, String address, String category, String facilities, double latitude, double longitude)
+    public TempNewPlaceObject(String name, String address, String category, ArrayList<String> facilities, double latitude, double longitude)
     {
         this.name = name;
         this.address = address;
@@ -50,11 +52,11 @@ public class TempNewPlaceObject {
         this.category = category;
     }
 
-    public String getFacilities() {
+    public ArrayList<String> getFacilities() {
         return facilities;
     }
 
-    public void setFacilities(String facilities) {
+    public void setFacilities(ArrayList<String> facilities) {
         this.facilities = facilities;
     }
 

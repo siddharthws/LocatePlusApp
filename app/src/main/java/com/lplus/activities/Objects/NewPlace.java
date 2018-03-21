@@ -1,4 +1,4 @@
-package com.lplus.activities.Models;
+package com.lplus.activities.Objects;
 
 /**
  * Created by Sai_Kameswari on 17-03-2018.

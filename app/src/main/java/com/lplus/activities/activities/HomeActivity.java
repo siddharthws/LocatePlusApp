@@ -43,14 +43,13 @@ import com.lplus.activities.Dialogs.FilterDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Extras.CheckGPSOn;
 import com.lplus.activities.Extras.InternetConnectivityCheck;
+import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.CategorySelectedInterface;
 import com.lplus.activities.JavaFiles.Geocoding;
 import com.lplus.activities.Macros.Keys;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallback,
                                                                 OnMapClickListener,
@@ -75,6 +74,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private SupportMapFragment mapFragment;
     private SharedPreferences app_sharePref;
     private static LatLng center;
+    private TinyDB tinyDB;
 
     final int REQUEST_LOCATION = 199;
     /*CameraPhoto cameraPhoto;
@@ -89,6 +89,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         setContentView(R.layout.menu_drawer);
 
         app_sharePref = getSharedPreferences(Keys.SHARED_PREF_NAME, MODE_PRIVATE);
+        tinyDB = new TinyDB(HomeActivity.this);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -350,13 +351,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void onFilterClick(View view)
     {
-        ArrayList<String> categoriesList = new ArrayList<>();
-
-        Set<String> categoriesSet = new HashSet<>();
-        categoriesSet = app_sharePref.getStringSet(Keys.CATEGORY_VALUE, categoriesSet);
-        System.out.println("Set at home: "+categoriesSet.toString());
-        //put in arraylist
-        categoriesList.addAll(categoriesSet);
+        ArrayList<String> categoriesList = tinyDB.getListString(Keys.CATEGORY_VALUE);
 
         System.out.println("list at home: "+categoriesList.toString());
 
@@ -444,7 +439,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     @Override
     public void onDestroy() {
-        mapFragment.onDestroy();
         super.onDestroy();
     }
 

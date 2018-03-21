@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.lplus.activities.Models.NewPlace;
+import com.lplus.activities.Objects.NewPlace;
 
 /**
  * Created by Sai_Kameswari on 17-03-2018.
