@@ -46,17 +46,33 @@
                         android:layout_height="48dp"
                         android:layout_alignParentBottom="true"/>
                 </RelativeLayout>
-                <ImageView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/addImage"
-                    android:padding="10dp"
                     android:layout_weight="1"
-                    android:layout_gravity="bottom"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/add_photo_white"
-                    />
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/edit_photo"
+                        android:layout_gravity="bottom"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/icons8_pen_96"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addImage"
+                        android:padding="10dp"
+                        android:layout_gravity="bottom"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/add_photo_white"
+                        />
+                </LinearLayout>
+
+
             </LinearLayout>
 
 

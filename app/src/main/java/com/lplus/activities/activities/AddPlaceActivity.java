@@ -92,6 +92,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
 
         cameraPhoto = new CameraPhoto(getApplicationContext());
         ImageView addphoto = findViewById(R.id.addImage);
+        ImageView edit_phot = findViewById(R.id.edit_photo);
 
         address = findViewById(R.id.address_add);
         address.setText(address_result);
@@ -161,6 +162,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         //Add photo
         cameraPhoto = new CameraPhoto(getApplicationContext());
         addphoto.setOnClickListener(this);
+        edit_phot.setOnClickListener(this);
     }
 
     public void onContentChanged  () {
@@ -203,6 +205,12 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
                     Log.v("Camera",e.getMessage());
                     Toast.makeText(getApplicationContext(),"Something Wrong while taking photos", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            }
+            case R.id.edit_photo:
+            {
+                Intent intent = new Intent(AddPlaceActivity.this,EditPhotosActivity.class);
+                startActivity(intent);
                 break;
             }
         }
