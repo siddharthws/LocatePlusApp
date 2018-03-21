@@ -5,7 +5,7 @@ import android.content.Context;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
-import com.lplus.activities.Models.TempNewPlaceObject;
+import com.lplus.activities.Objects.TempNewPlaceObject;
 import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONArray;
@@ -20,7 +20,6 @@ public class AddPlaceServerClass extends BaseServerClass {
 
     private Context context;
     private TempNewPlaceObject tempNewPlaceObject;
-    private JSONArray facilitiesJSON;
 
     private AddPlaceInterface listener = null;
     public void SetListener(AddPlaceInterface listener)
@@ -40,10 +39,11 @@ public class AddPlaceServerClass extends BaseServerClass {
     {
         // Init Request JSON
         JSONObject requestJson = new JSONObject();
-        toJSONArray();
+        JSONArray facilitiesJSON = toJSONArray();
         try
         {
 
+            System.out.println("Facilities: "+facilitiesJSON.toString());
             //put in jsonObject
             requestJson.put(Keys.AP_NAME,       tempNewPlaceObject.getName());
             requestJson.put(Keys.AP_ADDRESS,    tempNewPlaceObject.getAddress());
@@ -92,16 +92,20 @@ public class AddPlaceServerClass extends BaseServerClass {
         }
     }
 
-    private void toJSONArray()
+    private JSONArray toJSONArray()
     {
-        JSONObject fac = new JSONObject();
+        JSONObject fac = null;
+        JSONArray facilitiesJSON = new JSONArray();
         try {
-            fac.put(Keys.FAC_ID, tempNewPlaceObject.getFacilities());
+            for(String id : tempNewPlaceObject.getFacilities())
+            {
+                fac = new JSONObject();
+                fac.put(Keys.FAC_ID, id);
+                facilitiesJSON.put(fac);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        facilitiesJSON = new JSONArray();
-        facilitiesJSON.put(fac);
+        return facilitiesJSON;
     }
 }

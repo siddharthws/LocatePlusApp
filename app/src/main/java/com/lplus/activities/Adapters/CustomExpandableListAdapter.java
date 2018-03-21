@@ -89,7 +89,7 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         FacilityChildInfo c = (FacilityChildInfo)getChild( groupPosition, childPosition );
         TextView sequence = v.findViewById( R.id.facility_child_sequence );
         if( sequence != null )
-            sequence.setText( c.getFacility_sequence() );
+            sequence.setText( String.valueOf(c.getFacility_sequence()));
         TextView facility_name = v.findViewById( R.id.facility_child_name );
         if( facility_name != null )
             facility_name.setText( c.getFacility_name() );

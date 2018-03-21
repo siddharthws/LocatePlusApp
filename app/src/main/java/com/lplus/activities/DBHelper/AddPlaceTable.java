@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.lplus.activities.Models.NewPlace;
+import com.lplus.activities.Objects.NewPlace;
 
 import java.util.ArrayList;
 import java.util.List;
