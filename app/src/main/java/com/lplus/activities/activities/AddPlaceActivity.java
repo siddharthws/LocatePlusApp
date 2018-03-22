@@ -34,6 +34,7 @@ import com.lplus.activities.Objects.TempNewPlaceObject;
 import com.lplus.activities.Server.AddPlaceServerClass;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -51,8 +52,8 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     final int GALLERY_REQUEST = 22131;
     private static ViewPager mPager;
     private static int currentPage = 0;
-    private List<String> XMEN = new ArrayList<>();
-    private List<String> XMENArray = new ArrayList<>();
+    private ArrayList<String> XMEN = new ArrayList<>();
+    private ArrayList<String> XMENArray = new ArrayList<>();
 
     private EditText place_name,place_review;
     private TextView address;
@@ -64,6 +65,9 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     private SharedPreferences app_sharePref;
     private LoadingDialog loadingDialog =null;
     private TinyDB tinyDB;
+
+    ImageView edit_photo;
+    ImageView addphoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +95,8 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         place_review = findViewById(R.id.addplace_review);
 
         cameraPhoto = new CameraPhoto(getApplicationContext());
-        ImageView addphoto = findViewById(R.id.addImage);
-        ImageView edit_phot = findViewById(R.id.edit_photo);
+        addphoto = findViewById(R.id.addImage);
+        edit_photo = findViewById(R.id.edit_photo);
 
         address = findViewById(R.id.address_add);
         address.setText(address_result);
@@ -162,7 +166,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         //Add photo
         cameraPhoto = new CameraPhoto(getApplicationContext());
         addphoto.setOnClickListener(this);
-        edit_phot.setOnClickListener(this);
+        edit_photo.setOnClickListener(this);
     }
 
     public void onContentChanged  () {
@@ -189,6 +193,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             case R.id.cancel_add:
             {
                 Toast.makeText(AddPlaceActivity.this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
+                tinyDB.putListString("photoList",new ArrayList<String>());
                 finish();
                 break;
             }
@@ -199,7 +204,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
 
                     if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                         startActivityForResult(cameraPhoto.takePhotoIntent(),CAMERA_REQUEST);
-                        cameraPhoto.addToGallery();
+                        //cameraPhoto.addToGallery();
                     }
                 }catch(Exception e) {
                     Log.v("Camera",e.getMessage());
@@ -246,31 +251,32 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQUEST) {
                 String PhotoPath = cameraPhoto.getPhotoPath();
-                try {
-                    /*showPhoto = findViewById(R.id.ivImage);
-                    Bitmap bitmap = ImageLoader.init().from(PhotoPath).requestSize(512, 512).getBitmap();
-                    showPhoto.setImageBitmap(bitmap);*/
-
-                    //  String encoded = ImageBase64.encode(bitmap);
-                    //  Bitmap bitmap = ImageBase64.decode(encodedString);
-                } catch (Exception e) {
-
-                    Toast.makeText(getApplicationContext(), "Something Wrong while loading photos" + e, Toast.LENGTH_SHORT).show();
-                }
+                XMEN.add(PhotoPath);
+                tinyDB.putListString("photoList",XMEN);
+                Toast.makeText(getApplicationContext(), "Path = " +PhotoPath, Toast.LENGTH_SHORT).show();
+                beginSlide();
             }
         }
     }
 
-    private void beginSlide() {
-        for(int i=0;i<XMEN.size();i++)
-            XMENArray.add(XMEN.get(i));
+    public void beginSlide() {
 
         mPager =  findViewById(R.id.pager);
-        mPager.setAdapter(new ImageSliderAdapter(AddPlaceActivity.this,XMENArray));
+        XMEN = tinyDB.getListString("photoList");
+        /*if(XMEN == null || XMEN.size() == 0)
+            return;*/
+        mPager.setAdapter(new ImageSliderAdapter(AddPlaceActivity.this,XMEN));
 
         CircleIndicator indicator =  findViewById(R.id.indicator);
         indicator.setViewPager(mPager);
-
+        if(XMEN.size() == 5)
+        {
+            addphoto.setEnabled(false);
+            Toast.makeText(getApplicationContext(), "Max Photo limit reached", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            addphoto.setEnabled(true);
+        }
         // Auto start of viewpager
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
@@ -287,8 +293,15 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             public void run() {
                 handler.post(Update);
             }
-        }, 1500, 1500);
+        }, 5000, 5000);
     }
+
+    @Override
+    protected void onPostResume() {
+        beginSlide();
+        super.onPostResume();
+    }
+
 }
 
 

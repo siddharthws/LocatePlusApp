@@ -1,309 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/parent_scroll_desc"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
-    android:padding="5dp"
-    android:weightSum="100">
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/navy_blue"
+        android:weightSum="4">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:id="@+id/rr"
+            android:layout_weight="3"
+            android:layout_height="170dp">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" />
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/indicator"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_photo"
+                android:layout_gravity="bottom"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/icons8_pen_96"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addImage"
+                android:padding="10dp"
+                android:layout_gravity="bottom"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/add_photo_white"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/navy_blue"
-            android:orientation="vertical"
-            android:padding="0dp"
-            android:weightSum="100">
-
+            android:background="@color/white"
+            android:orientation="vertical">
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="60"
-                android:orientation="horizontal"
-                android:weightSum="4">
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:id="@+id/rr"
-                    android:layout_weight="3"
-                    android:layout_height="170dp">
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/pager"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true" />
-                    <me.relex.circleindicator.CircleIndicator
-                        android:id="@+id/indicator"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_alignParentBottom="true"/>
-                </RelativeLayout>
-                <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/edit_photo"
-                        android:layout_gravity="bottom"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/icons8_pen_96"
-                        />
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/addImage"
-                        android:padding="10dp"
-                        android:layout_gravity="bottom"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/add_photo_white"
-                        />
-                </LinearLayout>
-
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="Name :"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/add_place_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:singleLine="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:hint="Place Name"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold"/>
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="Address :"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/address_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="left"
+                    android:textSize="13sp"
+                    android:singleLine="false"
+                    android:text="AddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddress"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_weight="40"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:weightSum="5000">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_gravity="center_vertical"
-                            android:singleLine="true"
-                            android:text="Name :"
-                            android:textColor="@color/BLACK"
-                            android:textStyle="bold"/>
-                        <EditText
-                            android:id="@+id/add_place_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="13sp"
-                            android:singleLine="true"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginLeft="20dp"
-                            android:hint="Place Name"
-                            android:textColor="@color/BLACK"
-                            android:textStyle="bold"/>
-
-                    </LinearLayout>
-                <LinearLayout
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="20"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="20"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_gravity="center_vertical"
-                            android:singleLine="true"
-                            android:text="Address :"
-                            android:gravity="center_vertical"
-                            android:textColor="@color/BLACK"
-                            android:textStyle="bold"/>
-                        <TextView
-                            android:id="@+id/address_add"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_gravity="left"
-                            android:textSize="13sp"
-                            android:singleLine="false"
-                            android:text="AddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddress"
-                            android:textColor="@color/BLACK"
-                            android:textStyle="bold"/>
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true"
+                    android:text="Category :"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold"/>
 
-                    </LinearLayout>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/category_spinner"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="20"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+            <ExpandableListView
+                android:id="@+id/simpleExpandableListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/colorPrimary"
+                android:dividerHeight="1dp"
+                android:childDivider="@color/Purple"
+                android:padding="10dp"
+                android:background="@color/navy_blue"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/icons8_pen_96"
+                    />
+                <EditText
+                    android:id="@+id/addplace_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Write a Review (Optional)"
+                    android:textColorHint="@color/GREY_7"
+                    android:layout_weight="5"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:gravity="bottom|center_horizontal"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/save_add"
+                    android:layout_width="100dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="45dp"
+                    android:gravity="center_vertical"
+                    app:cardBackgroundColor="@color/navy_blue"
+                    app:cardCornerRadius="25dp">
+
+                    <LinearLayout
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:singleLine="true"
-                        android:text="Category :"
-                        android:textColor="@color/BLACK"
-                        android:textStyle="bold"/>
-
-                    <Spinner
-                        android:id="@+id/category_spinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_height="1dp"
-                        android:background="@color/colorPrimary" />
-                    <ExpandableListView
-                        android:id="@+id/simpleExpandableListView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@color/colorPrimary"
-                        android:dividerHeight="1dp"
-                        android:childDivider="#0f0"
-                        android:padding="10dp"/>
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_height="1dp"
-                        android:background="@color/colorPrimary" />
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimary" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="20"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="bottom"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/icons8_pen_96"
-                        />
-                    <EditText
-                        android:id="@+id/addplace_review"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Write a Review (Optional)"
-                        android:textColorHint="@color/GREY_7"
-                        android:layout_weight="5"
-                        android:textColor="@color/white"/>
-
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimary" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:gravity="bottom|center_horizontal"
-                    android:orientation="horizontal">
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/save_add"
-                        android:layout_width="100dp"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_height="45dp"
-                        android:gravity="center_vertical"
-                        app:cardBackgroundColor="@color/navy_blue"
-                        app:cardCornerRadius="25dp">
-
-                        <LinearLayout
-                            android:layout_width="100dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_gravity="center_vertical"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="SAVE"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"/>
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                            android:text="SAVE"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cancel_add"
+                    android:layout_width="100dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="40dp"
+                    android:gravity="center_vertical"
+                    app:cardBackgroundColor="@color/navy_blue"
+                    app:cardCornerRadius="25dp">
 
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/cancel_add"
+                    <LinearLayout
                         android:layout_width="100dp"
-                        android:layout_height="45dp"
-                        android:layout_marginLeft="60dp"
-                        android:layout_marginRight="40dp"
-                        android:gravity="center_vertical"
-                        app:cardBackgroundColor="@color/navy_blue"
-                        app:cardCornerRadius="25dp">
-
-                        <LinearLayout
-                            android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_gravity="center_vertical"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="CANCEL"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"/>
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
-                </LinearLayout>
+                            android:text="CANCEL"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
             </LinearLayout>
         </LinearLayout>
 
 </LinearLayout>
-</ScrollView>

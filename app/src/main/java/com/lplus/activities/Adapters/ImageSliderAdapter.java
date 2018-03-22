@@ -5,15 +5,19 @@ package com.lplus.activities.Adapters;
  */
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.lplus.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 public class ImageSliderAdapter extends PagerAdapter {
@@ -42,7 +46,7 @@ public class ImageSliderAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup view, int position) {
         View myImageLayout = inflater.inflate(R.layout.slide, view, false);
         ImageView myImage =  myImageLayout.findViewById(R.id.slider_image);
-        Picasso.with(context).load(images.get(position)).into(myImage);
+        Picasso.with(context).load(Uri.fromFile(new File(images.get(position)))).into(myImage);
         view.addView(myImageLayout, 0);
         return myImageLayout;
     }

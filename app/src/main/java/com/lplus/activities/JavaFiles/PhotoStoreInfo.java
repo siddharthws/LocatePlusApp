@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class PhotoStoreInfo {
     private int maxImageCount = 5;
-    private ArrayList<String> photo_array = null;
+    private ArrayList<String> photo_array;
 
-    public PhotoStoreInfo( ArrayList<String> photo_array) {
+    public PhotoStoreInfo() {
         this.maxImageCount = maxImageCount;
     }
 
