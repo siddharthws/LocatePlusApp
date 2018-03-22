@@ -110,11 +110,12 @@ public class CustomDeletePhotosAdapter extends RecyclerView.Adapter<CustomDelete
                     dialog.setCanceledOnTouchOutside(true);
                     LinearLayout delete_photo_selection = dialog.findViewById(R.id.photo_yes);
                     LinearLayout cancel_photo_selection = dialog.findViewById(R.id.photo_no);
+                    position=getAdapterPosition();
 
                     delete_photo_selection.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            position=getAdapterPosition();
+
                             dialog.cancel();
                             final LoadingDialog loadingDialog = new LoadingDialog(context,"Updating Selection");
                             loadingDialog.ShowDialog();

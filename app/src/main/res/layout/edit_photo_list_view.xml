@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/photo_available"
         android:layout_width="match_parent"
-        android:layout_height="512px"
+        android:layout_height="wrap_content"
         app:srcCompat="@drawable/icons8_heart_red_96"/>
     <TextView
         android:layout_width="match_parent"
@@ -17,7 +17,15 @@
         android:singleLine="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:layout_gravity="center|center_horizontal"
         android:text="click and hold for options"
         android:textSize="10dp"
         android:textStyle="italic" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary" />
 </LinearLayout>
