@@ -42,9 +42,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.lplus.R;
 import com.lplus.activities.DBHelper.AddCategoryTable;
+import com.lplus.activities.DBHelper.MarkersTable;
 import com.lplus.activities.Dialogs.FilterDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Dialogs.MarkerSummaryDialog;
+import com.lplus.activities.Extras.CacheData;
 import com.lplus.activities.Extras.CheckGPSOn;
 import com.lplus.activities.Extras.InternetConnectivityCheck;
 import com.lplus.activities.Extras.TinyDB;
@@ -516,7 +518,15 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void setAllMarkers()
     {
-        ArrayList<MarkerObject> markersList = tinyDB.getListObject(Keys.TINYDB_MARKERS, MarkerObject.class);
+        if(CacheData.cacheMarkers == null)
+        {
+            CacheData.cacheMarkers = new ArrayList<>();
+            MarkersTable markersTable = new MarkersTable(this);
+            CacheData.cacheMarkers.addAll(markersTable.ReadRecords());
+            markersTable.CloseConnection();
+        }
+
+        ArrayList<MarkerObject> markersList = CacheData.cacheMarkers;
         LatLng position;
         for(MarkerObject markerObject : markersList)
         {

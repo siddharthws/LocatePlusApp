@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.lplus.activities.DBHelper.AddCategoryTable;
 import com.lplus.activities.DBHelper.AddFacilityTable;
+import com.lplus.activities.DBHelper.MarkersTable;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.CategoryObject;
 import com.lplus.activities.Objects.FacilityObject;
@@ -123,11 +124,17 @@ public class Statics {
 
     public static void parseMarkers(Context contexts, JSONArray markers)
     {
+
+        //Initialise the cache variable
+        if(CacheData.cacheMarkers == null)
+        {
+            CacheData.cacheMarkers = new ArrayList<>();
+        }
+        MarkersTable markersTable = new MarkersTable(context);
         context = contexts;
         tinydb = new TinyDB(context);
         System.out.println("Reaching the statics part");
         MarkerObject markerObject;
-        ArrayList<MarkerObject> markers_list = new ArrayList<>();
         for(int i=0; i<markers.length();i++)
         {
             try {
@@ -154,13 +161,13 @@ public class Statics {
 
                 //set marker facilities
                 markerObject.setMarkerFacilities(marker_facilities_list);
-                markers_list.add(markerObject);
+                markersTable.SaveRecord(markerObject);
+                CacheData.cacheMarkers.add(markerObject);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
-        //set it in TInyDB
-        tinydb.putListObject(Keys.TINYDB_MARKERS, markers_list);
+        markersTable.CloseConnection();
     }
 }
