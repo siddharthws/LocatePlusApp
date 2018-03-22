@@ -39,13 +39,14 @@ public class Keys {
     public static final String DEPARTMENT   = "Facilities";
 
     //Add Place
-    public static final String AP_NAME          = "name";
-    public static final String AP_ADDRESS       = "address";
-    public static final String AP_LATITUDE      = "latitude";
-    public static final String AP_LONGITUDE     = "longitude";
-    public static final String AP_CATEGORY      = "category";
-    public static final String AP_FACILITIES    = "facilities";
-    public static final String AP_RESPONSE      = "sucess";
+    public static final String AP_NAME                  = "name";
+    public static final String AP_ADDRESS               = "address";
+    public static final String AP_LATITUDE              = "latitude";
+    public static final String AP_LONGITUDE             = "longitude";
+    public static final String AP_CATEGORY              = "category";
+    public static final String AP_FACILITIES            = "facilities";
+    public static final String AP_DESCRIPTION           = "description";
+    public static final String AP_RESPONSE              = "sucess";
 
     //get markers
     public static final String KEY_MARKERS              = "markers";

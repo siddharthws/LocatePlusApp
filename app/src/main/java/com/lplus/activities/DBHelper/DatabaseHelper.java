@@ -28,14 +28,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         // create notes table
-       // db.execSQL(NewPlace.CREATE_TABLE);
+        db.execSQL(AddCategoryTable.CREATE_TABLE);
+        db.execSQL(AddFacilityTable.CREATE_TABLE);
     }
 
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
-       // db.execSQL("DROP TABLE IF EXISTS " + NewPlace.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AddCategoryTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AddFacilityTable.TABLE_NAME);
 
         // Create tables again
         onCreate(db);

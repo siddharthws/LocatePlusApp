@@ -121,8 +121,11 @@ public class Statics {
     }
 
 
-    public static void parseMarkers(JSONArray markers)
+    public static void parseMarkers(Context contexts, JSONArray markers)
     {
+        context = contexts;
+        tinydb = new TinyDB(context);
+        System.out.println("Reaching the statics part");
         MarkerObject markerObject;
         ArrayList<MarkerObject> markers_list = new ArrayList<>();
         for(int i=0; i<markers.length();i++)

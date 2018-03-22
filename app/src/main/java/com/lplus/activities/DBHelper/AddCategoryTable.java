@@ -30,7 +30,7 @@ public class AddCategoryTable extends DatabaseHelper {
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
                     + COLUMN_ID                + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_CATEGORY_ID       + " TEXT,"
-                    + COLUMN_CATEGORY_VALUE    + " TEXT,"
+                    + COLUMN_CATEGORY_VALUE    + " TEXT"
                     + ")";
 
     public AddCategoryTable(Context context) {

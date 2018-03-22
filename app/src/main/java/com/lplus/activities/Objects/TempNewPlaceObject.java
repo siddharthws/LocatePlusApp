@@ -15,18 +15,8 @@ public class TempNewPlaceObject {
     private String photos;
     private double latitude;
     private double longitude;
-    private long timestamp;
+    private String description;
 
-    public TempNewPlaceObject(String name, String address, String category, ArrayList<String> facilities, double latitude, double longitude)
-    {
-        this.name = name;
-        this.address = address;
-        this.category = category;
-        this.facilities = facilities;
-        this.latitude = latitude;
-        this.longitude = longitude;
-
-    }
 
     public String getName() {
         return name;
@@ -60,6 +50,14 @@ public class TempNewPlaceObject {
         this.facilities = facilities;
     }
 
+    public String getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(String photos) {
+        this.photos = photos;
+    }
+
     public double getLatitude() {
         return latitude;
     }
@@ -76,5 +74,21 @@ public class TempNewPlaceObject {
         this.longitude = longitude;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public TempNewPlaceObject(String name, String address, String category, ArrayList<String> facilities, double latitude, double longitude, String description) {
+        this.name = name;
+        this.address = address;
+        this.category = category;
+        this.facilities = facilities;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+    }
 }

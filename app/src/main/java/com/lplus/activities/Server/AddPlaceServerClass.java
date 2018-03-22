@@ -45,12 +45,13 @@ public class AddPlaceServerClass extends BaseServerClass {
 
             System.out.println("Facilities: "+facilitiesJSON.toString());
             //put in jsonObject
-            requestJson.put(Keys.AP_NAME,       tempNewPlaceObject.getName());
-            requestJson.put(Keys.AP_ADDRESS,    tempNewPlaceObject.getAddress());
-            requestJson.put(Keys.AP_CATEGORY,   tempNewPlaceObject.getCategory());
-            requestJson.put(Keys.AP_LATITUDE,   tempNewPlaceObject.getLatitude());
-            requestJson.put(Keys.AP_LONGITUDE,  tempNewPlaceObject.getLongitude());
-            requestJson.put(Keys.AP_FACILITIES, facilitiesJSON);
+            requestJson.put(Keys.AP_NAME,               tempNewPlaceObject.getName());
+            requestJson.put(Keys.AP_ADDRESS,            tempNewPlaceObject.getAddress());
+            requestJson.put(Keys.AP_CATEGORY,           tempNewPlaceObject.getCategory());
+            requestJson.put(Keys.AP_LATITUDE,           tempNewPlaceObject.getLatitude());
+            requestJson.put(Keys.AP_LONGITUDE,          tempNewPlaceObject.getLongitude());
+            requestJson.put(Keys.AP_DESCRIPTION,        tempNewPlaceObject.getDescription());
+            requestJson.put(Keys.AP_FACILITIES,         facilitiesJSON);
         }
         catch (JSONException e)
         {

@@ -6,6 +6,11 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/sync_places"
+            android:icon="@drawable/ic_filter_list_white_24dp"
+            android:title="Sync Places" />
+
+        <item
             android:id="@+id/favorites"
             android:icon="@drawable/ic_filter_list_white_24dp"
             android:title="Favorites" />
