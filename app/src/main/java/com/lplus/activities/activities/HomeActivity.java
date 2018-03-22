@@ -98,7 +98,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
         app_sharePref = getSharedPreferences(Keys.SHARED_PREF_NAME, MODE_PRIVATE);
         tinyDB = new TinyDB(HomeActivity.this);
-        tinyDB.putListString("photoList",new ArrayList<String>());
+        tinyDB.putListString(Keys.TINYDB_PHOTO_LIST,new ArrayList<String>());
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ScrollView parentScroll=findViewById(R.id.parent_scroll_desc);

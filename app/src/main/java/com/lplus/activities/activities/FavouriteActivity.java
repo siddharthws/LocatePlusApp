@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.lplus.R;
 import com.lplus.activities.Adapters.CustomFavouriteListAdapter;
+import com.lplus.activities.DBHelper.AddFavoutiteTable;
 import com.lplus.activities.Interfaces.ListDataChangedInterface;
+import com.lplus.activities.Objects.FavouriteObject;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,8 @@ public class FavouriteActivity extends AppCompatActivity implements ListDataChan
     TextView no_fav = null;
     CardView fav_show_all = null;
     CustomFavouriteListAdapter customFavouriteListAdapter = null;
+    AddFavoutiteTable addFavoutiteTable = null;
+    ArrayList<FavouriteObject> favouriteObjects = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +48,18 @@ public class FavouriteActivity extends AppCompatActivity implements ListDataChan
                 finish();
             }
         });
+        ArrayList<String> place_id = new ArrayList<>();
         ArrayList<String> names = new ArrayList<>();
-        names.add("a");
-        names.add("b");
-        names.add("c");
-        names.add("d");
-        names.add("e");
-        names.add("f");
-        names.add("g");
         ArrayList<String> address = new ArrayList<>();
-        address.add("fasdasdsadasdasdasdas");
-        address.add("fasdasdsadasdasdasdas");
-        address.add("fasdasdsadasdasdasdas");
-        address.add("fasdasdsadasdasdasdas");
-        address.add("fasdasdsadasdasdasdas");
-        address.add("fasdasdsadasdasdasdas");
-        address.add("fasdasdsadasdasdasdas");
-        customFavouriteListAdapter = new CustomFavouriteListAdapter(this,names,address);
+        addFavoutiteTable = new AddFavoutiteTable(this);
+        //extract data from database
+        favouriteObjects = addFavoutiteTable.ReadRecords();
+        for(FavouriteObject fav: favouriteObjects) {
+            place_id.add(fav.getFavourite_place_id());
+            names.add(fav.getFavourite_name());
+            address.add(fav.getFavourite_address());
+        }
+        customFavouriteListAdapter = new CustomFavouriteListAdapter(this,place_id,names,address);
         customFavouriteListAdapter.setListener(this);
         listView.setAdapter(customFavouriteListAdapter);
         if(customFavouriteListAdapter.getCount() != 0)

@@ -58,7 +58,9 @@ public class Keys {
     public static final String MARKER_FACILITIES        = "facilities";
     public static final String MARKER_LATITUDE          = "latitude";
     public static final String MARKER_LONGITUDE         = "longitude";
-    public static final String TINYDB_MARKERS           = "tinydb_markers";
 
+    //tinyDB variables
+    public static final String TINYDB_MARKERS           = "tinydb_markers";
+    public static final String TINYDB_PHOTO_LIST        = "photoList";
 
 }

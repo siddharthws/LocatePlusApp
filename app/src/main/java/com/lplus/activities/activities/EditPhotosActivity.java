@@ -18,6 +18,7 @@ import com.lplus.activities.Adapters.CustomDeletePhotosAdapter;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.ListDataChangedInterface;
 import com.lplus.activities.JavaFiles.PhotoStoreInfo;
+import com.lplus.activities.Macros.Keys;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class EditPhotosActivity extends AppCompatActivity implements ListDataCha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_photos);
         tinyDB = new TinyDB(EditPhotosActivity.this);
-        photos = tinyDB.getListString("photoList");
+        photos = tinyDB.getListString(Keys.TINYDB_PHOTO_LIST);
         delete_listView = findViewById(R.id.selected_photo_list);
         delete_photo_save = findViewById(R.id.delete_photo_save);
         no_photo_selected = findViewById(R.id.no_photo_selected);
@@ -97,7 +98,7 @@ public class EditPhotosActivity extends AppCompatActivity implements ListDataCha
     @Override
     public void onDataChanged() {
         customDeletePhotosAdapter.notifyDataSetChanged();
-        if(tinyDB.getListString("photoList").size() == 0)
+        if(tinyDB.getListString(Keys.TINYDB_PHOTO_LIST).size() == 0)
         {
             delete_listView.setVisibility(View.GONE);
             no_photo_selected.setVisibility(View.VISIBLE);
