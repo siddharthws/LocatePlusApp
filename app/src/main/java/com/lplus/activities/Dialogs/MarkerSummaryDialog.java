@@ -24,23 +24,29 @@ public class MarkerSummaryDialog implements View.OnClickListener {
     private Context context;
     private Dialog markerSummaryDialog;
     private MarkerObject markerObject;
-    private TextView place_name, place_category, place_facilities;
+    private TextView place_name, place_category, place_facilities, fav_tv;
     private LinearLayout direction_layout, desc_layout, fav_layout, rate_layout;
     private AddFavoutiteTable addFavoutiteTable;
+    private ImageView fav_iv;
 
     public MarkerSummaryDialog(Context context, MarkerObject markerObject)
     {
         this.context = context;
         this.markerObject = markerObject;
+        addFavoutiteTable = new AddFavoutiteTable(context);
         Init();
     }
 
     private void Init()
     {
+
         markerSummaryDialog = new Dialog(context, R.style.CustomDialogTheme);
         markerSummaryDialog.setContentView(R.layout.dialog_marker_summary);
         markerSummaryDialog.setCancelable(true);
         markerSummaryDialog.setCanceledOnTouchOutside(true);
+
+        fav_iv = markerSummaryDialog.findViewById(R.id.favourite_iv);
+        fav_tv = markerSummaryDialog.findViewById(R.id.favourite_tv);
 
         //fetch all ID's from View
         place_name = markerSummaryDialog.findViewById(R.id.place_name);
@@ -52,6 +58,7 @@ public class MarkerSummaryDialog implements View.OnClickListener {
         fav_layout = markerSummaryDialog.findViewById(R.id.fav_layout);
         rate_layout = markerSummaryDialog.findViewById(R.id.rate_layout);
 
+        checkforFavorites();
         setData();
         //set listeners for linear layouts
         direction_layout.setOnClickListener(this);
@@ -78,6 +85,20 @@ public class MarkerSummaryDialog implements View.OnClickListener {
         markerSummaryDialog.cancel();
     }
 
+    private void checkforFavorites()
+    {
+        if(addFavoutiteTable ==null)
+        {
+            addFavoutiteTable = new AddFavoutiteTable(context);
+        }
+        boolean isFavorite = addFavoutiteTable.isFavourite(markerObject.getMarkerID());
+        if(isFavorite)
+        {
+            fav_iv.setImageResource(R.drawable.icons8_heart_red_96);
+            fav_tv.setText("Added");
+        }
+    }
+
     @Override
     public void onClick(View view) {
 
@@ -102,9 +123,11 @@ public class MarkerSummaryDialog implements View.OnClickListener {
 
             case R.id.fav_layout:
             {
-                ImageView fav_iv = view.findViewById(R.id.favourite_iv);
-                TextView fav_tv = view.findViewById(R.id.favourite_tv);
-                addFavoutiteTable = new AddFavoutiteTable(context);
+
+                if(addFavoutiteTable ==null)
+                {
+                    addFavoutiteTable = new AddFavoutiteTable(context);
+                }
                 if(addFavoutiteTable.isFavourite(markerObject.getMarkerID())) {
                     addFavoutiteTable.RemoveFavourite(markerObject.getMarkerID());
                     fav_iv.setImageResource(R.drawable.icons8_heart_white_96);
@@ -117,6 +140,7 @@ public class MarkerSummaryDialog implements View.OnClickListener {
                     fav_tv.setText("Added");
                     Toast.makeText(context,"Added To Favourites",Toast.LENGTH_SHORT).show();
                 }
+                addFavoutiteTable.CloseConnection();
                 break;
             }
 
