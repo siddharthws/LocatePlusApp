@@ -6,14 +6,19 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lplus.R;
+import com.lplus.activities.DBHelper.AddFavoutiteTable;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Interfaces.ListDataChangedInterface;
+import com.lplus.activities.activities.EditPhotosActivity;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -25,8 +30,10 @@ import java.util.zip.Inflater;
 
 public class CustomFavouriteListAdapter extends BaseAdapter{
     Context context;
+    ArrayList<String> place_id;
     ArrayList<String> placeNames;
     ArrayList<String> addresses;
+    AddFavoutiteTable addFavoutiteTable = null;
     private ListDataChangedInterface listDataChangedInterface = null;
     public void setListener(ListDataChangedInterface listener)
     {
@@ -36,11 +43,13 @@ public class CustomFavouriteListAdapter extends BaseAdapter{
     LayoutInflater inflater;
     boolean isSelected = true;
 
-    public CustomFavouriteListAdapter(Context context, ArrayList<String> placeNames, ArrayList<String> addresses) {
+    public CustomFavouriteListAdapter(Context context, ArrayList<String> place_id, ArrayList<String> placeNames, ArrayList<String> addresses) {
         this.context = context;
+        this.place_id = place_id;
         this.placeNames = placeNames;
         this.addresses = addresses;
         inflater = LayoutInflater.from(context);
+        addFavoutiteTable = new AddFavoutiteTable(context);
     }
 
     @Override
@@ -61,6 +70,7 @@ public class CustomFavouriteListAdapter extends BaseAdapter{
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
         view = inflater.inflate(R.layout.list_view_item,null);
+        final LinearLayout favLayout = view.findViewById(R.id.favourite_item);
         final TextView placename = view.findViewById(R.id.fav_place);
         placename.setText(placeNames.get(position));
         TextView address = view.findViewById(R.id.fav_address);
@@ -83,8 +93,10 @@ public class CustomFavouriteListAdapter extends BaseAdapter{
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            addFavoutiteTable.RemoveFavourite(place_id.get(position));
                             placeNames.remove(position);
                             addresses.remove(position);
+                            place_id.remove(position);
                             loadingDialog.HideDialog();
                             listDataChangedInterface.onDataChanged();
 
@@ -97,6 +109,27 @@ public class CustomFavouriteListAdapter extends BaseAdapter{
                     heart.setTag("ON");
                 }
 
+            }
+        });
+
+        favLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
+                favLayout.startAnimation(myAnim);
+                myAnim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
             }
         });
 

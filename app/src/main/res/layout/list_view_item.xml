@@ -12,6 +12,7 @@
         android:orientation="horizontal"
         android:weightSum="10">
         <LinearLayout
+            android:id="@+id/favourite_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"

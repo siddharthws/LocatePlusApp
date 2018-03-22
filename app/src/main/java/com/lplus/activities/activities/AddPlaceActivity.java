@@ -202,7 +202,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             case R.id.cancel_add:
             {
                 Toast.makeText(AddPlaceActivity.this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
-                tinyDB.putListString("photoList",new ArrayList<String>());
+                tinyDB.putListString(Keys.TINYDB_PHOTO_LIST,new ArrayList<String>());
                 finish();
                 break;
             }
@@ -264,7 +264,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             if (requestCode == CAMERA_REQUEST) {
                 String PhotoPath = cameraPhoto.getPhotoPath();
                 XMEN.add(PhotoPath);
-                tinyDB.putListString("photoList",XMEN);
+                tinyDB.putListString(Keys.TINYDB_PHOTO_LIST,XMEN);
                 Toast.makeText(getApplicationContext(), "Path = " +PhotoPath, Toast.LENGTH_SHORT).show();
                 beginSlide();
             }
@@ -274,7 +274,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     public void beginSlide() {
 
         mPager =  findViewById(R.id.pager);
-        XMEN = tinyDB.getListString("photoList");
+        XMEN = tinyDB.getListString(Keys.TINYDB_PHOTO_LIST);
         /*if(XMEN == null || XMEN.size() == 0)
             return;*/
         mPager.setAdapter(new ImageSliderAdapter(AddPlaceActivity.this,XMEN));

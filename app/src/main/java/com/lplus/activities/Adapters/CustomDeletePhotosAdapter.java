@@ -32,6 +32,7 @@ import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.ListDataChangedInterface;
 import com.lplus.activities.JavaFiles.PhotoStoreInfo;
+import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.activities.AddPlaceActivity;
 import com.lplus.activities.activities.EditPhotosActivity;
 
@@ -64,7 +65,7 @@ public class CustomDeletePhotosAdapter extends RecyclerView.Adapter<CustomDelete
         inflater = LayoutInflater.from(context);
         tinyDB = new TinyDB(context);
         //ArrayList<String> photoPath = photoStoreInfos.getPhoto_array().get(position);
-        photoPath = tinyDB.getListString("photoList");
+        photoPath = tinyDB.getListString(Keys.TINYDB_PHOTO_LIST);
     }
 
     @Override
@@ -125,7 +126,7 @@ public class CustomDeletePhotosAdapter extends RecyclerView.Adapter<CustomDelete
                                 public void run() {
                                     Log.e("Length of array "," "+position);
                                     photoStoreInfos.getPhoto_array().remove(position);
-                                    tinyDB.putListString("photoList",photoStoreInfos.getPhoto_array());
+                                    tinyDB.putListString(Keys.TINYDB_PHOTO_LIST,photoStoreInfos.getPhoto_array());
                                     loadingDialog.HideDialog();
                                     notifyItemRemoved(position);
                                     //this line below gives you the animation and also updates the
