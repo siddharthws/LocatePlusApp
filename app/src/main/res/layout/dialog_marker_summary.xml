@@ -208,11 +208,12 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/favourite_image"
+                        android:id="@+id/favourite_iv"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         app:srcCompat="@drawable/icons8_heart_white_96"/>
                     <TextView
+                        android:id="@+id/favourite_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Add To Favorites"

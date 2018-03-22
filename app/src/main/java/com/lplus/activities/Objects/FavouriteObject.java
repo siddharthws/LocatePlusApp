@@ -13,6 +13,18 @@ public class FavouriteObject {
     private Double favourite_lng;
     private String favourite_place_id;
 
+    public FavouriteObject(String favourite_place_id, String favourite_name, String favourite_address, Double favourite_lat, Double favourite_lng) {
+        this.favourite_name = favourite_name;
+        this.favourite_address = favourite_address;
+        this.favourite_lat = favourite_lat;
+        this.favourite_lng = favourite_lng;
+        this.favourite_place_id = favourite_place_id;
+    }
+
+    public  FavouriteObject() {
+        
+    }
+
     public String getFavourite_name() {
         return favourite_name;
     }

@@ -70,7 +70,7 @@ public class AddFavoutiteTable extends DatabaseHelper {
     public ArrayList<FavouriteObject> ReadRecords()
     {
         ArrayList<FavouriteObject> favouriteObjectsList = new ArrayList<>();
-       FavouriteObject favouriteObject = null;
+       FavouriteObject favouriteObject;
         SQLiteDatabase Rdb = db.getReadableDatabase();
 
         Cursor dbRows = Rdb.query(TABLE_NAME,
@@ -112,12 +112,12 @@ public class AddFavoutiteTable extends DatabaseHelper {
         Cursor dbRows = Rdb.query(TABLE_NAME,
                 new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_MARKER_LAT, COLUMN_MARKER_LONG},
                 COLUMN_PLACE_ID + "=?",
-                new String[] { place_id },
+                new String[] {place_id},
                 null,
                 null,
                 null);
 
-        if(dbRows != null)
+        if(dbRows.getCount() > 0)
             return true;
 
         return false;
