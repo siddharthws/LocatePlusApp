@@ -30,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // create notes table
         db.execSQL(AddCategoryTable.CREATE_TABLE);
         db.execSQL(AddFacilityTable.CREATE_TABLE);
+        db.execSQL(AddFavoutiteTable.CREATE_TABLE);
     }
 
     // Upgrading database
@@ -38,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + AddCategoryTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AddFacilityTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AddFavoutiteTable.TABLE_NAME);
 
         // Create tables again
         onCreate(db);

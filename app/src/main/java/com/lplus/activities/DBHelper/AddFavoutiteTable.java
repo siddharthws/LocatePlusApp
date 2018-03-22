@@ -19,7 +19,7 @@ public class AddFavoutiteTable extends DatabaseHelper {
     private DatabaseHelper db;
 
     //Table Name and Columns
-    public static final String TABLE_NAME               = "FavouriteTable";
+    public static final String TABLE_NAME               = "favouriteTable";
     public static final String COLUMN_ID                = "id";
     public static final String COLUMN_PLACE_ID          = "place_id";
     public static final String COLUMN_PLACE_NAME        = "place_name";
@@ -35,7 +35,7 @@ public class AddFavoutiteTable extends DatabaseHelper {
                     + COLUMN_PLACE_ID          + " TEXT,"
                     + COLUMN_PLACE_NAME        + " TEXT,"
                     + COLUMN_PLACE_ADDRESS     + " TEXT,"
-                    + COLUMN_MARKER_LAT        + " REAL"
+                    + COLUMN_MARKER_LAT        + " REAL,"
                     + COLUMN_MARKER_LONG       + " REAL"
                     + ")";
 

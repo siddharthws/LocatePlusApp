@@ -68,6 +68,11 @@ public class FavouriteActivity extends AppCompatActivity implements ListDataChan
             listView.setVisibility(View.VISIBLE);
             no_fav.setVisibility(View.GONE);
         }
+        else {
+            fav_show_all.setVisibility(View.GONE);
+            listView.setVisibility(View.GONE);
+            no_fav.setVisibility(View.VISIBLE);
+        }
         fav_show_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
