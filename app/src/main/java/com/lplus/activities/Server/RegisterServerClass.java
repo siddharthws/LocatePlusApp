@@ -3,6 +3,7 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.lplus.activities.DBHelper.DatabaseHelper;
 import com.lplus.activities.Interfaces.ServerStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
@@ -10,8 +11,6 @@ import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Sai_Kameswari on 16-03-2018.
@@ -40,6 +39,10 @@ public class RegisterServerClass extends BaseServerClass {
     @Override
     public Void doInBackground (Void... params)
     {
+
+        //Initialize Database
+        DatabaseHelper.Init(context);
+
         // Init Request JSON
         JSONObject requestJson = new JSONObject();
 
@@ -67,16 +70,10 @@ public class RegisterServerClass extends BaseServerClass {
         // Register user in preferences if server returned OK
         if (IsResponseValid()) {
             try {
-                boolean splashResponse = responseJson.getBoolean(Keys.SERVER_RESPONSE);
+                int statusResponseFC = responseJson.getInt(Keys.SERVER_RESPONSE_FC);
+                int statusResponseGP = responseJson.getInt(Keys.SERVER_RESPONSE_GP);
 
-                if(splashResponse)
-                {
-                    app_sharePref = context.getSharedPreferences(Keys.SHARED_PREF_NAME, MODE_PRIVATE);
-                    SharedPreferences.Editor edit = app_sharePref.edit();
-                    edit.putBoolean(Keys.UPDATE_REQURED, splashResponse);
-                    edit.commit();
-                }
-                listener.onStatusSuccess();
+                listener.onStatusSuccess(statusResponseFC, statusResponseGP);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

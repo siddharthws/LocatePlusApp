@@ -28,7 +28,6 @@ import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
 import com.lplus.activities.JavaFiles.FacilityChildInfo;
-import com.lplus.activities.JavaFiles.PhotoStoreInfo;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.TempNewPlaceObject;
 import com.lplus.activities.Server.AddPlaceServerClass;
@@ -290,8 +289,3 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         }, 1500, 1500);
     }
 }
-
-
-
-
-
