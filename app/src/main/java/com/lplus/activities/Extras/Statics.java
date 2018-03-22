@@ -136,7 +136,10 @@ public class Statics {
                 markerObject.setMarkerID(marker.getString(Keys.MARKER_ID));
                 markerObject.setMarkerName(marker.getString(Keys.MARKER_NAME));
                 markerObject.setMarkerAddress(marker.getString(Keys.MARKER_ADDRESS));
-                markerObject.setMarkerCategory(marker.getString(Keys.MARKER_CATEGORY));
+
+                //fetch category object
+                JSONObject categoryObject = marker.getJSONObject(Keys.MARKER_CATEGORY);
+                markerObject.setMarkerCategory(categoryObject.getString(Keys.CAT_NAME));
                 markerObject.setMarkerLatitude(marker.getDouble(Keys.MARKER_LATITUDE));
                 markerObject.setMarkerLongitude(marker.getDouble(Keys.MARKER_LONGITUDE));
 
@@ -146,7 +149,7 @@ public class Statics {
                 for(int j=0; j<marker_facilities.length(); j++)
                 {
                     JSONObject marker_fac_object = marker_facilities.getJSONObject(j);
-                    marker_facilities_list.add(marker_fac_object.getString(Keys.FAC_ID));
+                    marker_facilities_list.add(marker_fac_object.getString(Keys.FAC_NAME));
                 }
 
                 //set marker facilities

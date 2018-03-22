@@ -15,6 +15,7 @@ public class MarkerObject {
     private String markerCategory;
     private double markerLatitude;
     private double markerLongitude;
+    private ArrayList<String> reviews_list;
 
     public String getMarkerID() {
         return markerID;
@@ -68,6 +69,14 @@ public class MarkerObject {
 
     public ArrayList<String> getMarkerFacilities() {
         return markerFacilities;
+    }
+
+    public ArrayList<String> getReviews_list() {
+        return reviews_list;
+    }
+
+    public void setReviews_list(ArrayList<String> reviews_list) {
+        this.reviews_list = reviews_list;
     }
 
     public void setMarkerFacilities(ArrayList<String> markerFacilities) {
