@@ -36,7 +36,7 @@ public class Keys {
     public static final String CENTER_LONGITUDE         =   "center_longitude";
 
     //Expandable List
-    public static final String DEPARTMENT   = "Facilities";
+    public static final String DEPARTMENT               = "Facilities";
 
     //Add Place
     public static final String AP_NAME                  = "name";
@@ -62,5 +62,6 @@ public class Keys {
     //tinyDB variables
     public static final String TINYDB_MARKERS           = "tinydb_markers";
     public static final String TINYDB_PHOTO_LIST        = "photoList";
+    public static final String MARKER_REVIEW            = "review";
 
 }

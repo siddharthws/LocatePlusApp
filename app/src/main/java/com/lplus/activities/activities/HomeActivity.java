@@ -44,6 +44,7 @@ import com.lplus.R;
 import com.lplus.activities.DBHelper.AddCategoryTable;
 import com.lplus.activities.Dialogs.FilterDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
+import com.lplus.activities.Dialogs.MarkerSummaryDialog;
 import com.lplus.activities.Extras.CheckGPSOn;
 import com.lplus.activities.Extras.InternetConnectivityCheck;
 import com.lplus.activities.Extras.TinyDB;
@@ -528,8 +529,10 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     @Override
     public boolean onMarkerClick(Marker marker) {
 
+        MarkerObject selectedMarker = (MarkerObject) marker.getTag();
         //open Dialog
-
+        MarkerSummaryDialog markerSummaryDialog = new MarkerSummaryDialog(HomeActivity.this, selectedMarker);
+        markerSummaryDialog.ShowDialog();
         return false;
     }
 
