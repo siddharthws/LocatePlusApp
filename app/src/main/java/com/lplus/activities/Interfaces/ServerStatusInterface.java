@@ -5,6 +5,6 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface ServerStatusInterface {
-    void onStatusSuccess();
+    void onStatusSuccess(int serverResponseFC, int serverResponseGP);
     void onStatusFailure();
 }

@@ -4,20 +4,19 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.lplus.activities.Objects.NewPlace;
-
 /**
  * Created by Sai_Kameswari on 17-03-2018.
  */
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    private static DatabaseHelper   dbHelper   = null;
+
     // Database Version
     private static final int DATABASE_VERSION = 1;
-    private static SQLiteDatabase db = null;
 
     // Database Name
-    private static final String DATABASE_NAME = "locateplus_db";
+    private static final String DATABASE_NAME = "LOCATEPLUS_DB";
 
 
     public DatabaseHelper(Context context) {
@@ -28,23 +27,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        this.db = db;
         // create notes table
-        db.execSQL(NewPlace.CREATE_TABLE);
+       // db.execSQL(NewPlace.CREATE_TABLE);
     }
 
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + NewPlace.TABLE_NAME);
+       // db.execSQL("DROP TABLE IF EXISTS " + NewPlace.TABLE_NAME);
 
         // Create tables again
         onCreate(db);
     }
 
-    public static SQLiteDatabase getDB()
+
+
+    public static DatabaseHelper Init(Context context)
     {
-        return db;
+        if (dbHelper == null)
+        {
+            dbHelper = new DatabaseHelper(context);
+        }
+        return dbHelper;
     }
 }

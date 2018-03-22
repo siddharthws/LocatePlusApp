@@ -37,8 +37,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.lplus.R;
+import com.lplus.activities.DBHelper.AddCategoryTable;
 import com.lplus.activities.Dialogs.FilterDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Extras.CheckGPSOn;
@@ -47,6 +49,7 @@ import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.CategorySelectedInterface;
 import com.lplus.activities.JavaFiles.Geocoding;
 import com.lplus.activities.Macros.Keys;
+import com.lplus.activities.Objects.MarkerObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -332,6 +335,8 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     {
         //move camera to Maharastra state
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 6.0f));
+
+        setAllMarkers();
     }
 
     //=======================PUBLIC API'S=====================//
@@ -351,7 +356,11 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void onFilterClick(View view)
     {
-        ArrayList<String> categoriesList = tinyDB.getListString(Keys.CATEGORY_VALUE);
+        AddCategoryTable addCategoryTable = new AddCategoryTable(this);
+        ArrayList<ArrayList> categoriesArrayList = addCategoryTable.ReadRecords();
+        addCategoryTable.CloseConnection();
+
+        ArrayList<String> categoriesList = categoriesArrayList.get(1);
 
         System.out.println("list at home: "+categoriesList.toString());
 
@@ -447,6 +456,14 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         System.gc();
         super.onLowMemory();
     }
-
-
+    public void setAllMarkers()
+    {
+        ArrayList<MarkerObject> markersList = tinyDB.getListObject(Keys.TINYDB_MARKERS, MarkerObject.class);
+        LatLng position;
+        for(MarkerObject markerObject : markersList)
+        {
+            position = new LatLng(markerObject.getMarkerLatitude(), markerObject.getMarkerLongitude());
+            mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName()));
+        }
+    }
 }

@@ -15,7 +15,10 @@ public class Keys {
 
     //sharedPreferences
     public static final String SHARED_PREF_NAME           = "app_details";
-    public static final String SERVER_RESPONSE            = "updateRequired";
+    public static final String SERVER_RESPONSE_FC         = "serverResponseFC";
+    public static final String SERVER_RESPONSE_GP         = "serverResponseGP";
+    public static final String STORED_RESPONSE_FC         = "storedResponseFC";
+    public static final String STORED_RESPONSE_GP         = "storedResponseGP";
     public static final String IMEI                       = "imei";
     public static final String UPDATE_REQURED             = "update_required";
     public static final int INVALID                       = -1;
@@ -43,5 +46,18 @@ public class Keys {
     public static final String AP_CATEGORY      = "category";
     public static final String AP_FACILITIES    = "facilities";
     public static final String AP_RESPONSE      = "sucess";
+
+    //get markers
+    public static final String KEY_MARKERS              = "markers";
+    public static final String MARKER_UPDATE_REQUIRED   = "updateRequired";
+    public static final String MARKER_ID                = "placeId";
+    public static final String MARKER_NAME              = "name";
+    public static final String MARKER_ADDRESS           = "address";
+    public static final String MARKER_CATEGORY          = "category";
+    public static final String MARKER_FACILITIES        = "facilities";
+    public static final String MARKER_LATITUDE          = "latitude";
+    public static final String MARKER_LONGITUDE         = "longitude";
+    public static final String TINYDB_MARKERS           = "tinydb_markers";
+
 
 }
