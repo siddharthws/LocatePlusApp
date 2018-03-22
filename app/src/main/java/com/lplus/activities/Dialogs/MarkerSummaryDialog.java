@@ -117,13 +117,11 @@ public class MarkerSummaryDialog implements View.OnClickListener {
                     fav_tv.setText("Added");
                     Toast.makeText(context,"Added To Favourites",Toast.LENGTH_SHORT).show();
                 }
-
                 break;
             }
 
             case R.id.rate_layout:
             {
-
                 break;
             }
 
