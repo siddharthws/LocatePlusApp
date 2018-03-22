@@ -27,10 +27,12 @@ import com.lplus.activities.Adapters.ImageSliderAdapter;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
+import com.lplus.activities.Interfaces.GetMarkerInteface;
 import com.lplus.activities.JavaFiles.FacilityChildInfo;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.TempNewPlaceObject;
 import com.lplus.activities.Server.AddPlaceServerClass;
+import com.lplus.activities.Server.GetMarkersServerClass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +42,7 @@ import java.util.TimerTask;
 
 import me.relex.circleindicator.CircleIndicator;
 
-public class AddPlaceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AddPlaceInterface, View.OnClickListener {
+public class AddPlaceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AddPlaceInterface, View.OnClickListener, GetMarkerInteface {
 
     private static final String LOG_TAG = "UCHIHA";
     private CustomExpandableListAdapter listAdapter;
@@ -54,10 +56,10 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     private ArrayList<String> XMEN = new ArrayList<>();
     private ArrayList<String> XMENArray = new ArrayList<>();
 
-    private EditText place_name,place_review;
+    private EditText place_name,place_description;
     private TextView address;
     private CardView save,cancel;
-    private String address_result, place_name_string;
+    private String address_result, place_name_string, place_description_string;
     private double latitude, longitude;
     private static String category, facilities;
     private ArrayList<String> list, fac_list, selected_fac, cat_key, fac_key;
@@ -91,7 +93,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         fac_key = new ArrayList<>();
 
         place_name = findViewById(R.id.add_place_name);
-        place_review = findViewById(R.id.addplace_review);
+        place_description = findViewById(R.id.addplace_description);
 
         cameraPhoto = new CameraPhoto(getApplicationContext());
         addphoto = findViewById(R.id.addImage);
@@ -183,7 +185,15 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
                 loadingDialog.ShowDialog();
                 //apply constraint checks everywhere and as necessary
                 place_name_string = place_name.getText().toString();
-                TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac, latitude, longitude);
+                place_description_string = place_description.getText().toString();
+
+                //Check constraints
+                if(place_name_string.length() == 0 )
+                {
+                    Toast.makeText(AddPlaceActivity.this, "Please add a name", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac, latitude, longitude, place_description_string);
                 AddPlaceServerClass addPlaceServerClass = new AddPlaceServerClass(AddPlaceActivity.this, tempNewPlaceObject);
                 addPlaceServerClass.SetListener(this);
                 addPlaceServerClass.execute();
@@ -225,7 +235,10 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     {
         loadingDialog.HideDialog();
         Toast.makeText(AddPlaceActivity.this, "Place Added Successfully", Toast.LENGTH_SHORT).show();
-        finish();
+        // add markers from database to the map
+        GetMarkersServerClass getMarkersServerClass = new GetMarkersServerClass(this);
+        getMarkersServerClass.SetListener(this);
+        getMarkersServerClass.execute();
     }
 
     @Override
@@ -301,4 +314,13 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         super.onPostResume();
     }
 
+    @Override
+    public void onMarkerFetched() {
+            finish();
+    }
+
+    @Override
+    public void onMarkerFailed() {
+            finish();
+    }
 }

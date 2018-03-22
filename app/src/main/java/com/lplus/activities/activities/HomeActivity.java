@@ -37,6 +37,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.lplus.R;
@@ -47,9 +48,11 @@ import com.lplus.activities.Extras.CheckGPSOn;
 import com.lplus.activities.Extras.InternetConnectivityCheck;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.CategorySelectedInterface;
+import com.lplus.activities.Interfaces.GetMarkerInteface;
 import com.lplus.activities.JavaFiles.Geocoding;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Server.GetMarkersServerClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +64,9 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                                                                 OnCameraIdleListener,
                                                                 OnCameraMoveCanceledListener,
                                                                 CategorySelectedInterface,
-                                                                CheckGPSOn.CheckGPSInterface, Geocoding.geocodingInterface {
+                                                                CheckGPSOn.CheckGPSInterface,
+                                                                Geocoding.geocodingInterface,
+                                                                GoogleMap.OnMarkerClickListener, GetMarkerInteface {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1;
@@ -186,16 +191,23 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     @Override
     public void onCameraIdle() {
+
+        System.out.println("Zoom Level: "+mMap.getCameraPosition().zoom);
         getSupportActionBar().show();
         ll_map.setVisibility(View.VISIBLE);
         float zoomLevel = mMap.getCameraPosition().zoom;
         if(zoomLevel > 7.2)
         {
             zoomlevel.setVisibility(View.VISIBLE);
+            setAllMarkers();
         }
         if(zoomLevel <= 7.2)
         {
             zoomlevel.setVisibility(View.GONE);
+            if(mMap != null)
+            {
+                mMap.clear();
+            }
         }
     }
 
@@ -203,6 +215,18 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public void onCameraMoveCanceled() {
         getSupportActionBar().show();
         ll_map.setVisibility(View.VISIBLE);
+        float zoomLevel = mMap.getCameraPosition().zoom;
+        if(zoomLevel > 7.2)
+        {
+            setAllMarkers();
+        }
+        if(zoomLevel <= 7.2)
+        {
+            if(mMap != null)
+            {
+                mMap.clear();
+            }
+        }
     }
 
     @Override
@@ -210,6 +234,20 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id) {
+
+            case R.id.sync_places: {
+                System.out.println("Syncing Map......");
+                if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+                    mMap.clear();
+
+                    // add markers from database to the map
+                    GetMarkersServerClass getMarkersServerClass = new GetMarkersServerClass(this);
+                    getMarkersServerClass.SetListener(this);
+                    getMarkersServerClass.execute();
+                }
+                break;
+            }
+
             case R.id.favorites: {
                 startActivity(new Intent(HomeActivity.this,FavouriteActivity.class));
                 break;
@@ -250,6 +288,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         mMap.setOnCameraIdleListener(this);
         mMap.setOnCameraMoveCanceledListener(this);
         mMap.setOnCameraMoveListener(this);
+        mMap.setOnMarkerClickListener(this);
 
         recenterMap();
     }
@@ -334,7 +373,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private void recenterMap()
     {
         //move camera to Maharastra state
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 6.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 8.0f));
 
         setAllMarkers();
     }
@@ -438,6 +477,23 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public void onResume() {
         mapFragment.onResume();
         super.onResume();
+        System.out.println("Syncing Map......");
+        if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+            mMap.clear();
+            setAllMarkers();
+        }
+    }
+
+    @Override
+    public void onMarkerFetched()
+    {
+        setAllMarkers();
+    }
+
+    @Override
+    public void onMarkerFailed()
+    {
+        Toast.makeText(this, "Failed to Sync Markers...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -456,6 +512,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         System.gc();
         super.onLowMemory();
     }
+
     public void setAllMarkers()
     {
         ArrayList<MarkerObject> markersList = tinyDB.getListObject(Keys.TINYDB_MARKERS, MarkerObject.class);
@@ -463,7 +520,18 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         for(MarkerObject markerObject : markersList)
         {
             position = new LatLng(markerObject.getMarkerLatitude(), markerObject.getMarkerLongitude());
-            mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName()));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName()));
+            marker.setTag(markerObject);
         }
     }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        //open Dialog
+
+        return false;
+    }
+
+
 }

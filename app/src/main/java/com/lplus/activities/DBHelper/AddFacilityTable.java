@@ -30,7 +30,7 @@ public class AddFacilityTable extends DatabaseHelper {
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
                     + COLUMN_ID                + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_FACILITY_ID       + " TEXT,"
-                    + COLUMN_FACILITY_VALUE    + " TEXT,"
+                    + COLUMN_FACILITY_VALUE    + " TEXT"
                     + ")";
 
     public AddFacilityTable(Context context) {

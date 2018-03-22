@@ -23,7 +23,7 @@ public class PostSplashActivity extends AppCompatActivity implements GetMarkerIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_splash);
 
-
+            loadingDialog = new LoadingDialog(PostSplashActivity.this, loading_msg);
             loadingDialog.ShowDialog();
             //Update Needed & fetch categories from server
             GetMarkersServerClass getMarkersServerClass = new GetMarkersServerClass(this);
@@ -35,6 +35,7 @@ public class PostSplashActivity extends AppCompatActivity implements GetMarkerIn
     @Override
     public void onMarkerFetched()
     {
+        System.out.println("GP update complete");
         loadingDialog.HideDialog();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

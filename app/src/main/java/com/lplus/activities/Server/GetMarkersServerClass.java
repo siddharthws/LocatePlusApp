@@ -9,6 +9,7 @@ import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -49,20 +50,13 @@ public class GetMarkersServerClass extends BaseServerClass {
             try
             {
                 System.out.println("Response JSON fetched for markers");
-                JSONArray markers =  responseJson.getJSONArray(Keys.KEY_MARKERS);
-                boolean markerUpdateRequired = responseJson.getBoolean(Keys.MARKER_UPDATE_REQUIRED);
-
-                System.out.println("Marker update required: "+markerUpdateRequired);
-
-                if(markerUpdateRequired)
-                {
+                JSONArray markers = null;
+                try {
+                    markers = responseJson.getJSONArray(Keys.KEY_MARKERS);
                     //store data in markers
-                    Statics.parseMarkers(markers);
-
-                    app_sharePref = context.getSharedPreferences(Keys.SHARED_PREF_NAME, MODE_PRIVATE);
-                    SharedPreferences.Editor edit = app_sharePref.edit();
-                    edit.putBoolean(Keys.MARKER_UPDATE_REQUIRED, markerUpdateRequired);
-                    edit.commit();
+                    Statics.parseMarkers(context, markers);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
                 listener.onMarkerFetched();
 

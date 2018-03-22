@@ -180,10 +180,10 @@
                     android:src="@drawable/icons8_pen_96"
                     />
                 <EditText
-                    android:id="@+id/addplace_review"
+                    android:id="@+id/addplace_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Write a Review (Optional)"
+                    android:hint="Write a Description (Optional)"
                     android:textColorHint="@color/GREY_7"
                     android:layout_weight="5"/>
 

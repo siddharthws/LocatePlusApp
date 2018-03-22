@@ -67,6 +67,7 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
     public void onStatusSuccess(int statusResponseFC, int statusResponseGP) {
 
             int storedResponseFC = app_sharePref.getInt(Keys.STORED_RESPONSE_FC, -1);
+            int storedResponseGP = app_sharePref.getInt(Keys.STORED_RESPONSE_GP, -1);
             System.out.println("STORED RESPONSE CODE FC: " + storedResponseFC);
 
             this.statusResponseGP = statusResponseGP;
@@ -75,18 +76,40 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
 
             if(statusResponseFC <= storedResponseFC)
             {
-                //no update needed
-                tv_splash2.setText("Ready to Roll The App...");
+                if(statusResponseGP <= storedResponseGP)
+                {
+                    //no update needed
+                    tv_splash2.setText("Ready to Roll The App...");
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(SplashActivity.this, PostSplashActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }, 2000);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, 2000);
+                }
+                else
+                {
+
+                    System.out.println("GP update required not FC update");
+                    //update shared preferences
+                    SharedPreferences.Editor edit = app_sharePref.edit();
+                    edit.putInt(Keys.STORED_RESPONSE_GP, statusResponseGP);
+                    edit.apply();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(SplashActivity.this, PostSplashActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, 2000);
+                }
             }
         else
         {
@@ -122,8 +145,12 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
     {
         int storedResponseGP = app_sharePref.getInt(Keys.STORED_RESPONSE_GP, -1);
 
+        System.out.println("StatusResponseGP: "+statusResponseGP);
+        System.out.println("StoredResponseGP: "+storedResponseGP);
+
         if(statusResponseGP <= storedResponseGP)
         {
+            System.out.println("GP update not required");
             tv_splash2.setText("Ready to Roll The App...");
 
             Handler handler = new Handler();
@@ -138,6 +165,7 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
         }
         else
         {
+            System.out.println("GP update required");
             //update shared preferences
             SharedPreferences.Editor edit = app_sharePref.edit();
             edit.putInt(Keys.STORED_RESPONSE_GP, statusResponseGP);
