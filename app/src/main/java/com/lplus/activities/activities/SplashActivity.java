@@ -25,6 +25,7 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
     private SharedPreferences app_sharePref;
     private FilterServerClass filterServerClass;
     private TextView tv_splash2;
+    private int statusResponseGP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,32 +64,37 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
         }
 
     @Override
-    public void onStatusSuccess() {
-       /*Response Codes     false - no Admin Update of Categories or Facilities
-                            true - Admin Updates in Categories and Facilities */
+    public void onStatusSuccess(int statusResponseFC, int statusResponseGP) {
 
-        boolean splashResponse = app_sharePref.getBoolean(Keys.UPDATE_REQURED, true);
-        System.out.println("RESPONSE CODE: " + splashResponse);
+            int storedResponseFC = app_sharePref.getInt(Keys.STORED_RESPONSE_FC, -1);
+            System.out.println("STORED RESPONSE CODE FC: " + storedResponseFC);
 
-        tv_splash2.setText("Fetching App Data...");
+            this.statusResponseGP = statusResponseGP;
 
-        if(!splashResponse)
-        {
-            //no update needed
-            tv_splash2.setText("Ready to Roll The App...");
+            tv_splash2.setText("Fetching App Data...");
 
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, 2000);
-        }
+            if(statusResponseFC <= storedResponseFC)
+            {
+                //no update needed
+                tv_splash2.setText("Ready to Roll The App...");
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(SplashActivity.this, PostSplashActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 2000);
+            }
         else
         {
+            //update shared preferences
+            SharedPreferences.Editor edit = app_sharePref.edit();
+            edit.putInt(Keys.STORED_RESPONSE_FC, statusResponseFC);
+            edit.apply();
+
             //Update Needed & fetch categories from server
             filterServerClass = new FilterServerClass(this);
             filterServerClass.SetListener(this);
@@ -114,29 +120,49 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
     @Override
     public void onCatFetched()
     {
+        int storedResponseGP = app_sharePref.getInt(Keys.STORED_RESPONSE_GP, -1);
 
-        //Change the status field
-        SharedPreferences.Editor edit = app_sharePref.edit();
-        edit.putBoolean(Keys.UPDATE_REQURED, false);
-        edit.commit();
+        if(statusResponseGP <= storedResponseGP)
+        {
+            tv_splash2.setText("Ready to Roll The App...");
 
-        System.out.println("Categories loaded");
-        tv_splash2.setText("Ready to Roll The App...");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 2000);
+        }
+        else
+        {
+            //update shared preferences
+            SharedPreferences.Editor edit = app_sharePref.edit();
+            edit.putInt(Keys.STORED_RESPONSE_GP, statusResponseGP);
+            edit.apply();
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 2000);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(SplashActivity.this, PostSplashActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 2000);
+        }
     }
 
     @Override
     public void onCatNotFetched()
     {
+        //update shared preferences
+        SharedPreferences.Editor edit = app_sharePref.edit();
+        edit.putInt(Keys.STORED_RESPONSE_FC, -1);
+        edit.apply();
+
         //filterLoadingDialog.HideDialog();
         Statics.onFailInit();
         tv_splash2.setText("Could not fetch the Updates.....");
@@ -145,7 +171,7 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                Intent intent = new Intent(SplashActivity.this, PostSplashActivity.class);
                 startActivity(intent);
                 finish();
             }
