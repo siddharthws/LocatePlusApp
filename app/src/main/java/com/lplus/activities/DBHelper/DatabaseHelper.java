@@ -32,8 +32,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(AddFacilityTable.CREATE_TABLE);
         db.execSQL(AddFavoutiteTable.CREATE_TABLE);
         db.execSQL(MarkersTable.CREATE_TABLE);
-        db.execSQL(AddUnSyncTable.CREATE_TABLE);
         db.execSQL(ReviewsTable.CREATE_TABLE);
+        db.execSQL(AddUnSyncTable.CREATE_TABLE);
+
     }
 
     // Upgrading database
