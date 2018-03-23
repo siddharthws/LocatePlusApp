@@ -51,6 +51,8 @@ public class CustomDeletePhotosAdapter extends RecyclerView.Adapter<CustomDelete
     private ListDataChangedInterface listDataChangedInterface = null;
     private TinyDB tinyDB;
     ArrayList<String> photoPath;
+    ArrayList<String> photouuid;
+    File file;
 
     public void setRefreshListener(ListDataChangedInterface listener)
     {
@@ -66,6 +68,7 @@ public class CustomDeletePhotosAdapter extends RecyclerView.Adapter<CustomDelete
         tinyDB = new TinyDB(context);
         //ArrayList<String> photoPath = photoStoreInfos.getPhoto_array().get(position);
         photoPath = tinyDB.getListString(Keys.TINYDB_PHOTO_LIST);
+        photouuid = tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST);
     }
 
     @Override
@@ -113,6 +116,7 @@ public class CustomDeletePhotosAdapter extends RecyclerView.Adapter<CustomDelete
                     LinearLayout cancel_photo_selection = dialog.findViewById(R.id.photo_no);
                     position=getAdapterPosition();
 
+
                     delete_photo_selection.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -125,8 +129,12 @@ public class CustomDeletePhotosAdapter extends RecyclerView.Adapter<CustomDelete
                                 @Override
                                 public void run() {
                                     Log.e("Length of array "," "+position);
+                                    file = new File(photoStoreInfos.getPhoto_array().get(position));
+                                    boolean isSuccess = file.delete();
                                     photoStoreInfos.getPhoto_array().remove(position);
+                                    photoStoreInfos.getPhoto_uuid_array().remove(position);
                                     tinyDB.putListString(Keys.TINYDB_PHOTO_LIST,photoStoreInfos.getPhoto_array());
+                                    tinyDB.putListString(Keys.TINYDB_PHOTO_UUID_LIST,photoStoreInfos.getPhoto_uuid_array());
                                     loadingDialog.HideDialog();
                                     notifyItemRemoved(position);
                                     //this line below gives you the animation and also updates the

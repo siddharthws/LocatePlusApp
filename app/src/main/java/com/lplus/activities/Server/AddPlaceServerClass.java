@@ -6,11 +6,12 @@ import com.lplus.activities.Interfaces.AddPlaceInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 import com.lplus.activities.Objects.TempNewPlaceObject;
-import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.RequestBody;
 
 /**
  * Created by Sai_Kameswari on 20-03-2018.
@@ -40,10 +41,12 @@ public class AddPlaceServerClass extends BaseServerClass {
         // Init Request JSON
         JSONObject requestJson = new JSONObject();
         JSONArray facilitiesJSON = toJSONArray();
+        JSONArray uuidJSON = toUUIDJSONArray();
         try
         {
 
             System.out.println("Facilities: "+facilitiesJSON.toString());
+            System.out.println("Facilities: "+toUUIDJSONArray().toString());
             //put in jsonObject
             requestJson.put(Keys.AP_NAME,               tempNewPlaceObject.getName());
             requestJson.put(Keys.AP_ADDRESS,            tempNewPlaceObject.getAddress());
@@ -52,6 +55,7 @@ public class AddPlaceServerClass extends BaseServerClass {
             requestJson.put(Keys.AP_LONGITUDE,          tempNewPlaceObject.getLongitude());
             requestJson.put(Keys.AP_DESCRIPTION,        tempNewPlaceObject.getDescription());
             requestJson.put(Keys.AP_FACILITIES,         facilitiesJSON);
+            requestJson.put(Keys.AP_UUIDS,         toUUIDJSONArray());
         }
         catch (JSONException e)
         {
@@ -108,5 +112,15 @@ public class AddPlaceServerClass extends BaseServerClass {
             e.printStackTrace();
         }
         return facilitiesJSON;
+    }
+
+    private JSONArray toUUIDJSONArray()
+    {
+        JSONArray uuidJSON = new JSONArray();
+        for(String id : tempNewPlaceObject.getUuids())
+        {
+            uuidJSON.put(id);
+        }
+        return uuidJSON;
     }
 }

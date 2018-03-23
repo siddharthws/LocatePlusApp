@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class PhotoStoreInfo {
     private int maxImageCount = 5;
     private ArrayList<String> photo_array;
+    private ArrayList<String> photo_uuid_array;
 
     public PhotoStoreInfo() {
         this.maxImageCount = maxImageCount;
@@ -28,5 +29,13 @@ public class PhotoStoreInfo {
 
     public void setPhoto_array(ArrayList<String> photo_array) {
         this.photo_array = photo_array;
+    }
+
+    public ArrayList<String> getPhoto_uuid_array() {
+        return photo_uuid_array;
+    }
+
+    public void setPhoto_uuid_array(ArrayList<String> photo_uuid_array) {
+        this.photo_uuid_array = photo_uuid_array;
     }
 }

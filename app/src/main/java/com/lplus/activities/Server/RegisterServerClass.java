@@ -7,7 +7,7 @@ import com.lplus.activities.DBHelper.DatabaseHelper;
 import com.lplus.activities.Interfaces.ServerStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.RequestBody;
 
 import org.json.JSONException;
 import org.json.JSONObject;
