@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.lplus.activities.Objects.CategoryObject;
 import com.lplus.activities.Objects.FavouriteObject;
 
 import java.util.ArrayList;
@@ -121,6 +120,32 @@ public class AddFavoutiteTable extends DatabaseHelper {
             return true;
 
         return false;
+
+    }
+
+    public FavouriteObject getClickedRecord(String place_id)
+    {
+        FavouriteObject selectedFavoriteObject = new FavouriteObject();
+        String favourite_place_id = place_id;
+        SQLiteDatabase Rdb = db.getReadableDatabase();
+
+        Cursor dbRows = Rdb.query(TABLE_NAME,
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_MARKER_LAT, COLUMN_MARKER_LONG},
+                COLUMN_PLACE_ID + "=?",
+                new String[] {place_id},
+                null,
+                null,
+                null);
+
+        if(dbRows.getCount() > 0) {
+            dbRows.moveToFirst();
+            selectedFavoriteObject.setFavourite_place_id(dbRows.getString(dbRows.getColumnIndex(COLUMN_PLACE_ID)));
+            selectedFavoriteObject.setFavourite_name(dbRows.getString(dbRows.getColumnIndex(COLUMN_PLACE_NAME)));
+            selectedFavoriteObject.setFavourite_address(dbRows.getString(dbRows.getColumnIndex(COLUMN_PLACE_ADDRESS)));
+            selectedFavoriteObject.setFavourite_lat(dbRows.getDouble(dbRows.getColumnIndex(COLUMN_MARKER_LAT)));
+            selectedFavoriteObject.setFavourite_lng(dbRows.getDouble(dbRows.getColumnIndex(COLUMN_MARKER_LONG)));
+        }
+        return selectedFavoriteObject;
 
     }
 

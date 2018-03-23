@@ -42,6 +42,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.lplus.R;
 import com.lplus.activities.DBHelper.AddCategoryTable;
+import com.lplus.activities.DBHelper.AddFavoutiteTable;
+import com.lplus.activities.DBHelper.MarkersTable;
 import com.lplus.activities.Dialogs.FilterDialog;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Dialogs.MarkerSummaryDialog;
@@ -53,6 +55,7 @@ import com.lplus.activities.Interfaces.CategorySelectedInterface;
 import com.lplus.activities.Interfaces.GetMarkerInteface;
 import com.lplus.activities.JavaFiles.Geocoding;
 import com.lplus.activities.Macros.Keys;
+import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Server.GetMarkersServerClass;
 
@@ -78,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private NavigationView navigationView;
     private Toolbar toolbar;
     private LinearLayout ll_map;
-    private ImageButton zoomlevel;
+    private ImageButton zoomlevel, clearFavorites;
     private LoadingDialog loadingDialog;
     private FilterDialog filterDialog;
     private SupportMapFragment mapFragment;
@@ -123,6 +126,8 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         //get Linear Layout
         ll_map = findViewById(R.id.ll_map);
         zoomlevel = findViewById(R.id.zoomlevel);
+        clearFavorites = findViewById(R.id.favorite_clear);
+        clearFavorites.setVisibility(View.GONE);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -251,7 +256,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             }
 
             case R.id.favorites: {
-                startActivity(new Intent(HomeActivity.this,FavouriteActivity.class));
+                startActivityForResult((new Intent(HomeActivity.this,FavouriteActivity.class)), 1);
                 break;
             }
             case R.id.help: {
@@ -522,9 +527,35 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         for(MarkerObject markerObject : markersList)
         {
             position = new LatLng(markerObject.getMarkerLatitude(), markerObject.getMarkerLongitude());
-            Marker marker = mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName()));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName())
+                            .snippet(markerObject.getMarkerCategory()));
             marker.setTag(markerObject);
         }
+    }
+
+    public void setFavMarkers()
+    {
+        clearFavorites.setVisibility(View.VISIBLE);
+        if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+            mMap.clear();
+        }
+        LatLng position;
+        ArrayList<MarkerObject> selectedMarkers = CacheData.cacheFavoriteMarkers;
+        for(MarkerObject markerObject : selectedMarkers)
+        {
+            position = new LatLng(markerObject.getMarkerLatitude(), markerObject.getMarkerLongitude());
+            Marker marker = mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName())
+                            .snippet(markerObject.getMarkerCategory()));
+            marker.setTag(markerObject);
+        }
+        animateCamera();
+    }
+
+    public void setFavMarker(LatLng selectedLatLng)
+    {
+        clearFavorites.setVisibility(View.VISIBLE);
+        setAllMarkers();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, 16));
     }
 
     @Override
@@ -537,5 +568,54 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         return false;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==1)
+        {
+            if(resultCode == 2)
+            {
+                double lat = data.getDoubleExtra(Keys.MARKER_LATITUDE, 0.0);
+                double lng = data.getDoubleExtra(Keys.MARKER_LONGITUDE, 0.0);
+                LatLng selectedLatLng = new LatLng(lat, lng);
+                setFavMarker(selectedLatLng);
+            }
+            if (resultCode == 1)
+            {
+                //init cache
+                if(CacheData.cacheFavoriteMarkers == null)
+                {
+                    CacheData.cacheFavoriteMarkers = new ArrayList<>();
+                }
+                //set all markers
+                AddFavoutiteTable  addFavoutiteTable = new AddFavoutiteTable(this);
+                MarkersTable markersTable = new MarkersTable(this);
+                ArrayList<FavouriteObject> favouriteObjects = addFavoutiteTable.ReadRecords();
+                ArrayList<MarkerObject> markersList = new ArrayList<>();
+                MarkerObject markerObject = null;
+                for(FavouriteObject favouriteObject : favouriteObjects)
+                {
+                   markerObject = markersTable.getObject(favouriteObject.getFavourite_place_id());
+                    markersList.add(markerObject);
+                    CacheData.cacheFavoriteMarkers.add(markerObject);
+                }
+                markersTable.CloseConnection();
+                addFavoutiteTable.CloseConnection();
+                //cal the method
+                setFavMarkers();
 
+            }
+        }
+    }
+
+    public void clearFavClick(View view)
+    {
+        clearFavorites.setVisibility(View.GONE);
+        if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+            mMap.clear();
+        }
+        setAllMarkers();
+    }
 }

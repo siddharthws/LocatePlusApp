@@ -2,42 +2,27 @@ package com.lplus.activities.Adapters;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.kosalgeek.android.photoutil.ImageLoader;
 import com.lplus.R;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.ListDataChangedInterface;
 import com.lplus.activities.JavaFiles.PhotoStoreInfo;
 import com.lplus.activities.Macros.Keys;
-import com.lplus.activities.activities.AddPlaceActivity;
-import com.lplus.activities.activities.EditPhotosActivity;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 /**
@@ -80,7 +65,7 @@ public class CustomDeletePhotosAdapter extends RecyclerView.Adapter<CustomDelete
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 //Loading image from Glide library.
-        Glide.with(context).load(Uri.fromFile(new File(photoPath.get(position)))).into(holder.photo);
+        Glide.with(context).load(FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".my.package.name.provider", new File(photoPath.get(position)))).into(holder.photo);
     }
 
     @Override

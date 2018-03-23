@@ -1,5 +1,6 @@
 package com.lplus.activities.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.lplus.R;
 import com.lplus.activities.Adapters.CustomFavouriteListAdapter;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
 import com.lplus.activities.Interfaces.ListDataChangedInterface;
+import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ public class FavouriteActivity extends AppCompatActivity implements ListDataChan
                 finish();
             }
         });
-        ArrayList<String> place_id = new ArrayList<>();
+        final ArrayList<String> place_id = new ArrayList<>();
         ArrayList<String> names = new ArrayList<>();
         ArrayList<String> address = new ArrayList<>();
         addFavoutiteTable = new AddFavoutiteTable(this);
@@ -85,6 +87,9 @@ public class FavouriteActivity extends AppCompatActivity implements ListDataChan
                     }
                     @Override
                     public void onAnimationEnd(Animation animation) {
+                        Intent intent = new Intent();
+                        intent.putStringArrayListExtra(Keys.FAVORITES_ARRAY_LIST, place_id);
+                        setResult(1,intent);
                         finish();
                     }
                     @Override
@@ -110,5 +115,15 @@ public class FavouriteActivity extends AppCompatActivity implements ListDataChan
             listView.setVisibility(View.VISIBLE);
             no_fav.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onItemClicked(FavouriteObject selectedObject)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(Keys.MARKER_LATITUDE, selectedObject.getFavourite_lat());
+        intent.putExtra(Keys.MARKER_LONGITUDE, selectedObject.getFavourite_lng());
+        setResult(2,intent);
+        finish();
     }
 }

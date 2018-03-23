@@ -70,4 +70,7 @@ public class Keys {
     public static final String PHOTO_UPDATE_RESPONSE            = "photoResponse";
     public static final String ALL_REVIEWS                      = "reviews";
 
+    public static final String SELECTED_OBJECT                  = "selectedObject";
+    public static final String FAVORITES_ARRAY_LIST             = "fav_array_list";
+
 }

@@ -7,6 +7,7 @@ import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Interfaces.CategoryFetchInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
+import com.squareup.okhttp.RequestBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +54,10 @@ public class FilterServerClass extends BaseServerClass {
         {
             return null;
         }
+
+        // Add data to request Builder
+        requestBuilder.method("POST", RequestBody.create(JSON, requestJson.toString()));
+
         // Call Super
         super.doInBackground(params);
         return null;

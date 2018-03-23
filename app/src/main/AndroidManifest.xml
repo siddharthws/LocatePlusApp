@@ -44,6 +44,16 @@
         </activity>
         <activity android:name=".activities.activities.EditPhotosActivity" />
         <activity android:name=".activities.activities.PostSplashActivity"></activity>
+
+        <provider
+            android:name=".activities.JavaFiles.GenericFileProvider"
+            android:authorities="${applicationId}.my.package.name.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
 </manifest>
