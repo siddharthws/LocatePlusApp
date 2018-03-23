@@ -29,6 +29,7 @@ public class EditPhotosActivity extends AppCompatActivity implements ListDataCha
     CustomDeletePhotosAdapter customDeletePhotosAdapter = null;
     PhotoStoreInfo photoStoreInfo = null;
     ArrayList<String> photos = null;
+    ArrayList<String> photos_uuid = null;
     private TinyDB tinyDB;
 
     @Override
@@ -37,6 +38,7 @@ public class EditPhotosActivity extends AppCompatActivity implements ListDataCha
         setContentView(R.layout.activity_edit_photos);
         tinyDB = new TinyDB(EditPhotosActivity.this);
         photos = tinyDB.getListString(Keys.TINYDB_PHOTO_LIST);
+        photos_uuid = tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST);
         delete_listView = findViewById(R.id.selected_photo_list);
         delete_photo_save = findViewById(R.id.delete_photo_save);
         no_photo_selected = findViewById(R.id.no_photo_selected);
@@ -56,6 +58,7 @@ public class EditPhotosActivity extends AppCompatActivity implements ListDataCha
 
         photoStoreInfo = new PhotoStoreInfo();
         photoStoreInfo.setPhoto_array(photos);
+        photoStoreInfo.setPhoto_uuid_array(photos_uuid);
         customDeletePhotosAdapter = new CustomDeletePhotosAdapter(this,photoStoreInfo);
         customDeletePhotosAdapter.setRefreshListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);

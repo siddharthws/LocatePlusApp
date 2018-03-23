@@ -23,28 +23,37 @@ import android.widget.Toast;
 import com.lplus.R;
 import com.lplus.activities.Adapters.CustomExpandableListAdapter;
 import com.lplus.activities.Adapters.ImageSliderAdapter;
+import com.lplus.activities.DBHelper.AddUnSyncTable;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Extras.TinyDB;
+import com.lplus.activities.Interfaces.AddPhotoInterface;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
 import com.lplus.activities.Interfaces.GetMarkerInteface;
 import com.lplus.activities.JavaFiles.CameraPhoto;
 import com.lplus.activities.JavaFiles.FacilityChildInfo;
 import com.lplus.activities.Macros.Keys;
+import com.lplus.activities.Objects.TempNewPhotoObject;
 import com.lplus.activities.Objects.TempNewPlaceObject;
+import com.lplus.activities.Objects.UnSyncObject;
+import com.lplus.activities.Server.AddPhotoFirstServerClass;
 import com.lplus.activities.Server.AddPlaceServerClass;
 import com.lplus.activities.Server.GetMarkersServerClass;
 
+import java.io.File;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import me.relex.circleindicator.CircleIndicator;
 
-public class AddPlaceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AddPlaceInterface, View.OnClickListener, GetMarkerInteface {
+public class AddPlaceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AddPlaceInterface, View.OnClickListener, GetMarkerInteface, AddPhotoInterface {
 
     private static final String LOG_TAG = "UCHIHA";
     private CustomExpandableListAdapter listAdapter;
     private ExpandableListView simpleExpandableListView;
+    File file;
 
     CameraPhoto cameraPhoto;
     final int CAMERA_REQUEST = 13323;
@@ -52,7 +61,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     private static ViewPager mPager;
     private static int currentPage = 0;
     private ArrayList<String> XMEN = new ArrayList<>();
-    private ArrayList<String> XMENArray = new ArrayList<>();
+    private ArrayList<String> XMENUUID = new ArrayList<>();
 
     private EditText place_name,place_description;
     private TextView address;
@@ -191,16 +200,84 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
                     Toast.makeText(AddPlaceActivity.this, "Please add a name", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac, latitude, longitude, place_description_string);
+                if(tinyDB.getListString(Keys.TINYDB_PHOTO_LIST).size() == 0)
+                {
+                    Toast.makeText(AddPlaceActivity.this, "Please add a photo", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ArrayList<String> photo_uuid_array = new ArrayList<>();
+                ArrayList<String> photo_path_array = new ArrayList<>();
+
+                photo_uuid_array = tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST);
+                photo_path_array = tinyDB.getListString(Keys.TINYDB_PHOTO_LIST);
+                UnSyncObject unSyncObject = new UnSyncObject();
+
+                if(photo_path_array.size()>0 && photo_uuid_array.size()>0 && selected_fac.size()>0)
+                {
+                    StringBuilder photo_uuids=new StringBuilder();
+                    StringBuilder photo_paths=new StringBuilder();
+                    StringBuilder place_fac=new StringBuilder();
+                    photo_uuids.insert(0,photo_uuid_array.get(0));
+                    photo_paths.insert(0,photo_path_array.get(0));
+                    place_fac.insert(0,selected_fac.get(0));
+                    int j=1;
+                    for (int i = 1; i < photo_uuid_array.size(); i++)
+                    {
+                        j=i+1;
+                        photo_uuids.insert(j, "_");
+                        photo_uuids.insert(i, photo_uuid_array.get(i));
+                    }
+                    j=1;
+                    for (int i = 1; i < photo_path_array.size(); i++)
+                    {
+                        j=i+1;
+                        photo_paths.insert(j, "_");
+                        photo_paths.insert(i, photo_path_array.get(i));
+                    }
+                    j=1;
+                    for (int i = 1; i < selected_fac.size(); i++)
+                    {
+                        j=i+1;
+                        place_fac.insert(j, "_");
+                        place_fac.insert(i, selected_fac.get(i));
+                    }
+
+                    //set members of unsync object
+                    unSyncObject.setPhoto_ids(photo_uuids.toString());
+                    unSyncObject.setPhoto_paths(photo_paths.toString());
+                    unSyncObject.setPlace_lat(latitude);
+                    unSyncObject.setPlace_lng(longitude);
+                    unSyncObject.setPlace_name(place_name_string);
+                    unSyncObject.setPlace_addres(address_result);
+                    unSyncObject.setPlace_category(category);
+                    unSyncObject.setPlace_facilities(place_fac.toString());
+                    unSyncObject.setPlace_decription(place_description_string);
+                }
+                //Add Data to Database
+                AddToUnsync(unSyncObject);
+
+                TempNewPhotoObject tempNewPhotoObject = new TempNewPhotoObject(photo_uuid_array, photo_path_array);
+                AddPhotoFirstServerClass addPhotoFirstServerClass = new AddPhotoFirstServerClass(AddPlaceActivity.this,tempNewPhotoObject);
+                addPhotoFirstServerClass.SetListener(this);
+                addPhotoFirstServerClass.execute();
+
+                TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac,tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST), latitude, longitude, place_description_string);
                 AddPlaceServerClass addPlaceServerClass = new AddPlaceServerClass(AddPlaceActivity.this, tempNewPlaceObject);
                 addPlaceServerClass.SetListener(this);
                 addPlaceServerClass.execute();
+
                 break;
             }
             case R.id.cancel_add:
             {
                 Toast.makeText(AddPlaceActivity.this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
+                for(int i = 0;i<tinyDB.getListString(Keys.TINYDB_PHOTO_LIST).size();i++)
+                {
+                    file = new File(tinyDB.getListString(Keys.TINYDB_PHOTO_LIST).get(i));
+                    boolean isSuccess = file.delete();
+                }
                 tinyDB.putListString(Keys.TINYDB_PHOTO_LIST,new ArrayList<String>());
+                tinyDB.putListString(Keys.TINYDB_PHOTO_UUID_LIST,new ArrayList<String>());
                 finish();
                 break;
             }
@@ -262,7 +339,9 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             if (requestCode == CAMERA_REQUEST) {
                 String PhotoPath = cameraPhoto.getPhotoPath();
                 XMEN.add(PhotoPath);
+                XMENUUID.add(UUID.randomUUID().toString());
                 tinyDB.putListString(Keys.TINYDB_PHOTO_LIST,XMEN);
+                tinyDB.putListString(Keys.TINYDB_PHOTO_UUID_LIST,XMENUUID);
                 Toast.makeText(getApplicationContext(), "Path = " +PhotoPath, Toast.LENGTH_SHORT).show();
                 beginSlide();
             }
@@ -319,5 +398,23 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onMarkerFailed() {
             finish();
+    }
+
+    public void AddToUnsync(UnSyncObject unSyncObject) {
+        AddUnSyncTable addUnSyncTable = new AddUnSyncTable(AddPlaceActivity.this);
+        addUnSyncTable.SaveRecord(unSyncObject);
+    }
+
+    @Override
+    public void onPhotoAddSucces() {
+        TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac,tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST), latitude, longitude, place_description_string);
+        AddPlaceServerClass addPlaceServerClass = new AddPlaceServerClass(AddPlaceActivity.this, tempNewPlaceObject);
+        addPlaceServerClass.SetListener(this);
+        addPlaceServerClass.execute();
+    }
+
+    @Override
+    public void onPhotoAddFailed() {
+
     }
 }

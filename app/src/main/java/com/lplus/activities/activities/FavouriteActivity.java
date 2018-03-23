@@ -57,6 +57,7 @@ public class FavouriteActivity extends AppCompatActivity implements ListDataChan
 
         //extract data from database
         favouriteObjects = addFavoutiteTable.ReadRecords();
+        addFavoutiteTable.CloseConnection();
         for(FavouriteObject fav: favouriteObjects) {
             place_id.add(fav.getFavourite_place_id());
             names.add(fav.getFavourite_name());

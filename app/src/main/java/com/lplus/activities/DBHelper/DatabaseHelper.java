@@ -33,6 +33,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(AddFavoutiteTable.CREATE_TABLE);
         db.execSQL(MarkersTable.CREATE_TABLE);
         db.execSQL(ReviewsTable.CREATE_TABLE);
+        db.execSQL(AddUnSyncTable.CREATE_TABLE);
+
     }
 
     // Upgrading database
@@ -43,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + AddFacilityTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AddFavoutiteTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MarkersTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AddUnSyncTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ReviewsTable.TABLE_NAME);
 
         // Create tables again

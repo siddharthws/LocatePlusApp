@@ -7,7 +7,7 @@ import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Interfaces.CategoryFetchInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.RequestBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;

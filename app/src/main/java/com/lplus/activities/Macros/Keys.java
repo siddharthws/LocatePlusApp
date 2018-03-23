@@ -47,6 +47,9 @@ public class Keys {
     public static final String AP_FACILITIES            = "facilities";
     public static final String AP_DESCRIPTION           = "description";
     public static final String AP_RESPONSE              = "sucess";
+    public static final String AP_PHOTO_RESPONSE        = "photo";
+    public static final String AP_UUIDS                 = "uuids";
+    public static final String AP_PHOTOSTREAM           = "photostream";
 
     //get markers
     public static final String KEY_MARKERS              = "markers";
@@ -62,6 +65,7 @@ public class Keys {
     //tinyDB variables
     public static final String TINYDB_MARKERS           = "tinydb_markers";
     public static final String TINYDB_PHOTO_LIST        = "photoList";
+    public static final String TINYDB_PHOTO_UUID_LIST   = "photoUUIDList";
     public static final String MARKER_REVIEW            = "review";
 
 

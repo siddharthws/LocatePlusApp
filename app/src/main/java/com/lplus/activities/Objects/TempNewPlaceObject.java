@@ -12,11 +12,19 @@ public class TempNewPlaceObject {
     private String address;
     private String category;
     private ArrayList<String> facilities;
+    private ArrayList<String> uuids;
     private String photos;
     private double latitude;
     private double longitude;
     private String description;
 
+    public ArrayList<String> getUuids() {
+        return uuids;
+    }
+
+    public void setUuids(ArrayList<String> uuids) {
+        this.uuids = uuids;
+    }
 
     public String getName() {
         return name;
@@ -82,11 +90,12 @@ public class TempNewPlaceObject {
         this.description = description;
     }
 
-    public TempNewPlaceObject(String name, String address, String category, ArrayList<String> facilities, double latitude, double longitude, String description) {
+    public TempNewPlaceObject(String name, String address, String category, ArrayList<String> facilities, ArrayList<String> uuids,double latitude, double longitude, String description) {
         this.name = name;
         this.address = address;
         this.category = category;
         this.facilities = facilities;
+        this.uuids = uuids;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
