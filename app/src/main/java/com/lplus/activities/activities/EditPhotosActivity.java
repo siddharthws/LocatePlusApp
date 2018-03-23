@@ -1,8 +1,8 @@
 package com.lplus.activities.activities;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lplus.R;
@@ -19,9 +18,9 @@ import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.ListDataChangedInterface;
 import com.lplus.activities.JavaFiles.PhotoStoreInfo;
 import com.lplus.activities.Macros.Keys;
+import com.lplus.activities.Objects.FavouriteObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EditPhotosActivity extends AppCompatActivity implements ListDataChangedInterface{
     RecyclerView delete_listView = null;
@@ -107,5 +106,10 @@ public class EditPhotosActivity extends AppCompatActivity implements ListDataCha
             delete_listView.setVisibility(View.VISIBLE);
             no_photo_selected.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onItemClicked(FavouriteObject favouriteObject) {
+
     }
 }

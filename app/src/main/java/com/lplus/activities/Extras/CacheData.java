@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class CacheData {
 
-    public static ArrayList<MarkerObject>  cacheMarkers;
+    public static ArrayList<MarkerObject>  cacheMarkers, cacheFavoriteMarkers;
     public static ArrayList<ReviewsObject> cacheAllReviews;
-
 }

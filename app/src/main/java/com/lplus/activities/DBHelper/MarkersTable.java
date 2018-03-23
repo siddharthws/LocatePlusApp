@@ -122,6 +122,46 @@ public class MarkersTable extends DatabaseHelper {
         return marker_objects_list;
     }
 
+    public MarkerObject getObject(String placeId)
+    {
+        MarkerObject markerObject = null;
+        ArrayList<String> facii;
+        String[] array;
+        SQLiteDatabase Rdb = db.getReadableDatabase();
+
+        Cursor dbRows = Rdb.query(TABLE_NAME,
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION},
+                COLUMN_PLACE_ID + "=?",
+                new String[] {placeId},
+                null,
+                null,
+                null);
+
+        if(dbRows.getCount() > 0) {
+            dbRows.moveToFirst();
+            facii = new ArrayList<>();
+
+            String place_id                 = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_ID));
+            String name                     = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_NAME));
+            String address                  = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_ADDRESS));
+            String category                 = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_CATEGORY));
+            String facilities_string        = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_FACILITIES));
+            array = facilities_string.split("_");
+            for(int i=0; i<array.length; i++)
+            {
+                if(!array[i].equals(""))
+                {
+                    facii.add(array[i]);
+                }
+            }
+            double latitude                 = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LATITUDE));
+            double longitude                = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LONGITUDE));
+            String description              = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_DESCRIPTION));
+
+            markerObject = new MarkerObject(place_id, name, address, facii, category, latitude, longitude, description);
+        }
+        return markerObject;
+    }
 
     //methods to add data to table......only accepts content values
     private void Add(ContentValues contentData)
