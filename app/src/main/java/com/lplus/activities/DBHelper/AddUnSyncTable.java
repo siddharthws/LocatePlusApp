@@ -107,6 +107,16 @@ public class AddUnSyncTable extends DatabaseHelper {
         return unSyncDataList;
     }
 
+    public Boolean DeleteAll()
+    {
+        SQLiteDatabase WDB = db.getWritableDatabase();
+        int value = WDB.delete(TABLE_NAME, null, null);
+        if(value != 0) {
+            return true;
+        }
+        return false;
+    }
+
     public Boolean DeleteUnSyncData(String place_id)
     {
         SQLiteDatabase WDB = db.getWritableDatabase();

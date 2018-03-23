@@ -56,7 +56,7 @@ public class FilterServerClass extends BaseServerClass {
         }
 
         // Add data to request Builder
-        requestBuilder.method("POST", RequestBody.create(JSON, requestJson.toString()));
+        //requestBuilder.method("POST", RequestBody.create(JSON, requestJson.toString()));
 
         // Call Super
         super.doInBackground(params);

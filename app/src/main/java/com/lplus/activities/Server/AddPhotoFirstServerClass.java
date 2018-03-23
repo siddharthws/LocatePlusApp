@@ -93,7 +93,7 @@ public class AddPhotoFirstServerClass extends BaseServerClass {
 
             //MultipartRequestBody fileBody = new MultipartRequestBody(path);
             RequestBody rq = RequestBody.create(MediaType.parse("image/jpeg"), new File(imagePaths.get(i)));
-            mpartBuilder.addFormDataPart("uploadImage", imageUUIDs.get(i), rq);
+            mpartBuilder.addFormDataPart(Keys.AP_PHOTOSTREAM, imageUUIDs.get(i), rq);
         }
         requestBuilder.method("POST", mpartBuilder.build());
 

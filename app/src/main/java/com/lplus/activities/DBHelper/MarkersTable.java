@@ -122,6 +122,16 @@ public class MarkersTable extends DatabaseHelper {
         return marker_objects_list;
     }
 
+    public Boolean DeleteAll()
+    {
+        SQLiteDatabase WDB = db.getWritableDatabase();
+        int value = WDB.delete(TABLE_NAME, null, null);
+        if(value != 0) {
+            return true;
+        }
+        return false;
+    }
+
     public MarkerObject getObject(String placeId)
     {
         MarkerObject markerObject = null;

@@ -123,6 +123,16 @@ public class AddFavoutiteTable extends DatabaseHelper {
 
     }
 
+    public Boolean DeleteAll()
+    {
+        SQLiteDatabase WDB = db.getWritableDatabase();
+        int value = WDB.delete(TABLE_NAME, null, null);
+        if(value != 0) {
+            return true;
+        }
+        return false;
+    }
+
     public FavouriteObject getClickedRecord(String place_id)
     {
         FavouriteObject selectedFavoriteObject = new FavouriteObject();
