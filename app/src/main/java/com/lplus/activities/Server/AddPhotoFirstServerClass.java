@@ -2,17 +2,12 @@ package com.lplus.activities.Server;
 
 import android.content.Context;
 
-import com.lplus.activities.Extras.Statics;
 import com.lplus.activities.Interfaces.AddPhotoInterface;
-import com.lplus.activities.Interfaces.AddPlaceInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 import com.lplus.activities.Objects.TempNewPhotoObject;
-import com.lplus.activities.Objects.TempNewPlaceObject;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;

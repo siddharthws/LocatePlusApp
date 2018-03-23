@@ -7,7 +7,7 @@ import com.lplus.activities.Interfaces.GetReviewsInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 import com.lplus.activities.Objects.MarkerObject;
-import com.squareup.okhttp.RequestBody;
+import okhttp3.RequestBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
