@@ -13,12 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lplus.R;
-import com.lplus.activities.Extras.Statics;
+import com.lplus.activities.DBHelper.MarkersTable;
+import com.lplus.activities.Extras.CacheData;
+import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Interfaces.CategoryFetchInterface;
 import com.lplus.activities.Interfaces.ServerStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Server.FilterServerClass;
 import com.lplus.activities.Server.RegisterServerClass;
+
+import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity implements ServerStatusInterface, CategoryFetchInterface {
 
@@ -78,6 +82,15 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
             {
                 if(statusResponseGP <= storedResponseGP)
                 {
+                    //store places in statics object
+                    if(CacheData.cacheMarkers == null)
+                    {
+                        CacheData.cacheMarkers = new ArrayList<>();
+                        MarkersTable markersTable = new MarkersTable(this);
+                        CacheData.cacheMarkers.addAll(markersTable.ReadRecords());
+                        markersTable.CloseConnection();
+                    }
+
                     //no update needed
                     tv_splash2.setText("Ready to Roll The App...");
 
@@ -150,6 +163,15 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
 
         if(statusResponseGP <= storedResponseGP)
         {
+            //store markers in statics
+            if(CacheData.cacheMarkers == null)
+            {
+                CacheData.cacheMarkers = new ArrayList<>();
+                MarkersTable markersTable = new MarkersTable(this);
+                CacheData.cacheMarkers.addAll(markersTable.ReadRecords());
+                markersTable.CloseConnection();
+            }
+
             System.out.println("GP update not required");
             tv_splash2.setText("Ready to Roll The App...");
 
@@ -192,7 +214,7 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
         edit.apply();
 
         //filterLoadingDialog.HideDialog();
-        Statics.onFailInit();
+        ServerParseStatics.onFailInit();
         tv_splash2.setText("Could not fetch the Updates.....");
 
         Handler handler = new Handler();

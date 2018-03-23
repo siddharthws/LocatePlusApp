@@ -3,7 +3,7 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.lplus.activities.Extras.Statics;
+import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Interfaces.CategoryFetchInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
@@ -67,7 +67,7 @@ public class FilterServerClass extends BaseServerClass {
                 System.out.println("Response JSON fetched");
                 JSONArray categories = responseJson.getJSONArray(Keys.CATEGORIES);
                 JSONArray facilities = responseJson.getJSONArray(Keys.FACILITIES);
-                Statics.Init(context, categories, facilities);
+                ServerParseStatics.Init(context, categories, facilities);
                 listener.onCatFetched();
 
             } catch (Exception e) {

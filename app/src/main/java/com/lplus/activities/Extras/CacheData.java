@@ -1,6 +1,7 @@
 package com.lplus.activities.Extras;
 
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Objects.ReviewsObject;
 
 import java.util.ArrayList;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 public class CacheData {
 
-    public static ArrayList<MarkerObject> cacheMarkers;
+    public static ArrayList<MarkerObject>  cacheMarkers;
+    public static ArrayList<ReviewsObject> cacheAllReviews;
 
 }

@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -11,11 +13,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lplus.R;
+import com.lplus.activities.Adapters.ReviewSliderAdapter;
+import com.lplus.activities.DBHelper.ReviewsTable;
+import com.lplus.activities.Extras.CacheData;
 import com.lplus.activities.Interfaces.MarkerReviewInterface;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Objects.ReviewsObject;
 import com.lplus.activities.Server.MarkerReviewServerClass;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Sai_Kameswari on 22-03-2018.
@@ -30,6 +38,8 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
     private LinearLayout direction_layout, desc_layout;
     private ImageButton review_send;
     private LoadingDialog loadingDialog;
+    private ViewPager mPager;
+    private static int currentPage = 0;
 
     public MarkerDescriptionDialog(Context context, MarkerObject markerObject)
     {
@@ -52,6 +62,7 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
         dec_facilities = markerdescriptionDialog.findViewById(R.id.dec_facilities);
         tv_review = markerdescriptionDialog.findViewById(R.id.tv_review);
         review_send = markerdescriptionDialog.findViewById(R.id.review_send);
+
 
         direction_layout = markerdescriptionDialog.findViewById(R.id.direction_layout);
         desc_layout = markerdescriptionDialog.findViewById(R.id.desc_layout);
@@ -76,6 +87,16 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
             facility_item = facility_item + items.get(i) + "\n";
         }
         dec_facilities.setText(facility_item);
+
+        //check if Reviews are there
+        if(CacheData.cacheAllReviews == null)
+        {
+            CacheData.cacheAllReviews = new ArrayList<>();
+            ReviewsTable reviewsTable = new ReviewsTable(context);
+            CacheData.cacheAllReviews.addAll(reviewsTable.ReadRecords());
+            reviewsTable.CloseConnection();
+        }
+        beginSlide();
     }
 
     public void ShowDialog()
@@ -139,4 +160,35 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
         loadingDialog.HideDialog();
         Toast.makeText(context, "Review Not Sent..", Toast.LENGTH_SHORT).show();
     }
+
+    public void beginSlide() {
+
+        mPager =  markerdescriptionDialog.findViewById(R.id.review_pager);
+        final ArrayList<String> reviews = new ArrayList<>();
+        for(ReviewsObject reviewsObject : CacheData.cacheAllReviews)
+        {
+            reviews.addAll(reviewsObject.getReviews());
+        }
+        System.out.println("Reviews data: "+reviews.toString());
+        mPager.setAdapter(new ReviewSliderAdapter(context,reviews));
+
+        // Auto start of viewpager
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == reviews.size()) {
+                    currentPage = 0;
+                }
+                mPager.setCurrentItem(currentPage++, true);
+            }
+        };
+        Timer swipeTimer = new Timer();
+        swipeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, 4000, 3000);
+    }
+
 }
