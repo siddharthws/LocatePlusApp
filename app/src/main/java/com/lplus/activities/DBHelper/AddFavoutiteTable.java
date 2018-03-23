@@ -156,7 +156,6 @@ public class AddFavoutiteTable extends DatabaseHelper {
             selectedFavoriteObject.setFavourite_lng(dbRows.getDouble(dbRows.getColumnIndex(COLUMN_MARKER_LONG)));
         }
         return selectedFavoriteObject;
-
     }
 
 

@@ -46,7 +46,7 @@ public class FavouriteActivity extends AppCompatActivity implements ListDataChan
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Your code
+                setResult(3);
                 finish();
             }
         });
