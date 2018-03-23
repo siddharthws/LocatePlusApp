@@ -3,7 +3,7 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.lplus.activities.Extras.Statics;
+import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Interfaces.GetMarkerInteface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
@@ -54,7 +54,7 @@ public class GetMarkersServerClass extends BaseServerClass {
                 try {
                     markers = responseJson.getJSONArray(Keys.KEY_MARKERS);
                     //store data in markers
-                    Statics.parseMarkers(context, markers);
+                    ServerParseStatics.parseMarkers(context, markers);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

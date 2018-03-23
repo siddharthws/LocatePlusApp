@@ -68,4 +68,10 @@ public class Keys {
     public static final String TINYDB_PHOTO_UUID_LIST   = "photoUUIDList";
     public static final String MARKER_REVIEW            = "review";
 
+
+    //Review Updates on Know More Click
+    public static final String REVIEW_UPDATE_RESPONSE           = "reviewResponse";
+    public static final String PHOTO_UPDATE_RESPONSE            = "photoResponse";
+    public static final String ALL_REVIEWS                      = "reviews";
+
 }
