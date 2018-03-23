@@ -20,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kosalgeek.android.photoutil.CameraPhoto;
 import com.lplus.R;
 import com.lplus.activities.Adapters.CustomExpandableListAdapter;
 import com.lplus.activities.Adapters.ImageSliderAdapter;
@@ -30,6 +29,7 @@ import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.AddPhotoInterface;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
 import com.lplus.activities.Interfaces.GetMarkerInteface;
+import com.lplus.activities.JavaFiles.CameraPhoto;
 import com.lplus.activities.JavaFiles.FacilityChildInfo;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.TempNewPhotoObject;
@@ -42,8 +42,6 @@ import com.lplus.activities.Server.GetMarkersServerClass;
 import java.io.File;
 import java.security.Key;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -351,7 +349,6 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void beginSlide() {
-
         mPager =  findViewById(R.id.pager);
         XMEN = tinyDB.getListString(Keys.TINYDB_PHOTO_LIST);
         /*if(XMEN == null || XMEN.size() == 0)

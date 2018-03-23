@@ -31,6 +31,26 @@
         app:titleTextColor="@color/WHITE"/>
 
     <LinearLayout
+        android:id="@+id/ll_maps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical">
+
+
+        <ImageButton
+            android:id="@+id/favorite_clear"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/ic_layers_clear_white_24dp"
+            android:onClick="clearFavClick"/>
+
+    </LinearLayout>
+
+    <LinearLayout
     android:id="@+id/ll_map"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

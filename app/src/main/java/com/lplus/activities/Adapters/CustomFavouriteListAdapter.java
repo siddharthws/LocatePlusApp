@@ -1,7 +1,6 @@
 package com.lplus.activities.Adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +17,9 @@ import com.lplus.R;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Interfaces.ListDataChangedInterface;
-import com.lplus.activities.activities.EditPhotosActivity;
+import com.lplus.activities.Objects.FavouriteObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 /**
  * Created by CHANDEL on 3/19/2018.
@@ -34,6 +31,7 @@ public class CustomFavouriteListAdapter extends BaseAdapter{
     ArrayList<String> placeNames;
     ArrayList<String> addresses;
     AddFavoutiteTable addFavoutiteTable = null;
+    private FavouriteObject selectedFavoriteObject;;
     private ListDataChangedInterface listDataChangedInterface = null;
     public void setListener(ListDataChangedInterface listener)
     {
@@ -115,6 +113,7 @@ public class CustomFavouriteListAdapter extends BaseAdapter{
         favLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
                 favLayout.startAnimation(myAnim);
                 myAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -122,8 +121,10 @@ public class CustomFavouriteListAdapter extends BaseAdapter{
                     public void onAnimationStart(Animation animation) {
                     }
                     @Override
-                    public void onAnimationEnd(Animation animation) {
-
+                    public void onAnimationEnd(Animation animation)
+                    {
+                        selectedFavoriteObject = addFavoutiteTable.getClickedRecord(place_id.get(position));
+                        listDataChangedInterface.onItemClicked(selectedFavoriteObject);
                     }
                     @Override
                     public void onAnimationRepeat(Animation animation) {
