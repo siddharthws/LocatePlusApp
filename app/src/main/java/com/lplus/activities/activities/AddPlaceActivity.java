@@ -311,9 +311,16 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         loadingDialog.HideDialog();
         Toast.makeText(AddPlaceActivity.this, "Place Added Successfully", Toast.LENGTH_SHORT).show();
         // add markers from database to the map
-        GetMarkersServerClass getMarkersServerClass = new GetMarkersServerClass(this);
-        getMarkersServerClass.SetListener(this);
-        getMarkersServerClass.execute();
+        AddUnSyncTable addUnSyncTable = new AddUnSyncTable(AddPlaceActivity.this);
+        if(addUnSyncTable.DeleteAll())
+        {
+            GetMarkersServerClass getMarkersServerClass = new GetMarkersServerClass(this);
+            getMarkersServerClass.SetListener(this);
+            getMarkersServerClass.execute();
+        } else {
+
+        }
+
     }
 
     @Override

@@ -97,6 +97,15 @@ public class ReviewsTable extends DatabaseHelper {
         return reviews_object_list;
     }
 
+    public Boolean DeleteAll()
+    {
+        SQLiteDatabase WDB = db.getWritableDatabase();
+        int value = WDB.delete(TABLE_NAME, null, null);
+        if(value != 0) {
+            return true;
+        }
+        return false;
+    }
 
     //methods to add data to table......only accepts content values
     private void Add(ContentValues contentData)

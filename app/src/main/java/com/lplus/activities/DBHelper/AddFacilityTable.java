@@ -84,7 +84,15 @@ public class AddFacilityTable extends DatabaseHelper {
         return result;
     }
 
-
+    public Boolean DeleteAll()
+    {
+        SQLiteDatabase WDB = db.getWritableDatabase();
+        int value = WDB.delete(TABLE_NAME, null, null);
+        if(value != 0) {
+            return true;
+        }
+        return false;
+    }
 
     //methods to add data to table......only accepts content values
     private void Add(String tableName, ContentValues contentData)

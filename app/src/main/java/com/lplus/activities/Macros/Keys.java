@@ -48,8 +48,8 @@ public class Keys {
     public static final String AP_DESCRIPTION           = "description";
     public static final String AP_RESPONSE              = "sucess";
     public static final String AP_PHOTO_RESPONSE        = "photo";
-    public static final String AP_UUIDS                 = "uuids";
-    public static final String AP_PHOTOSTREAM           = "photostream";
+    public static final String AP_UUIDS                 = "photouuid";
+    public static final String AP_PHOTOSTREAM           = "uploadImage";
 
     //get markers
     public static final String KEY_MARKERS              = "markers";
