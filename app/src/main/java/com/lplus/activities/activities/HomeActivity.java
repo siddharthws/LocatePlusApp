@@ -243,15 +243,14 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         switch (id) {
 
             case R.id.sync_places: {
-                System.out.println("Syncing Map......");
-                if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
-                    mMap.clear();
+                    System.out.println("Syncing Map......");
+                    ClearMap();
 
                     // add markers from database to the map
                     GetMarkersServerClass getMarkersServerClass = new GetMarkersServerClass(this);
                     getMarkersServerClass.SetListener(this);
                     getMarkersServerClass.execute();
-                }
+
                 break;
             }
 
@@ -450,7 +449,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         mBundle.putDouble(Keys.CENTER_LONGITUDE, longi);
         mBundle.putString(Keys.CENTER_ADDRESS, result);
         addPlaceIntent.putExtras(mBundle);
-        startActivity(addPlaceIntent);
+        startActivityForResult(addPlaceIntent, 2);
     }
 
     @Override
@@ -541,6 +540,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         }
         LatLng position;
         ArrayList<MarkerObject> selectedMarkers = CacheData.cacheFavoriteMarkers;
+        System.out.println("Fav size: "+selectedMarkers.size());
         for(MarkerObject markerObject : selectedMarkers)
         {
             position = new LatLng(markerObject.getMarkerLatitude(), markerObject.getMarkerLongitude());
@@ -548,12 +548,12 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                             .snippet(markerObject.getMarkerCategory()));
             marker.setTag(markerObject);
         }
-        animateCamera();
+        //move camera to Maharastra state
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 8.0f));
     }
 
     public void setFavMarker(LatLng selectedLatLng)
     {
-        clearFavorites.setVisibility(View.VISIBLE);
         setAllMarkers();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, 16));
     }
@@ -573,39 +573,44 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     {
         super.onActivityResult(requestCode, resultCode, data);
         // check if the request code is same as what is passed  here it is 2
-        if(requestCode==1)
-        {
-            if(resultCode == 2)
-            {
-                double lat = data.getDoubleExtra(Keys.MARKER_LATITUDE, 0.0);
-                double lng = data.getDoubleExtra(Keys.MARKER_LONGITUDE, 0.0);
-                LatLng selectedLatLng = new LatLng(lat, lng);
-                setFavMarker(selectedLatLng);
+        switch(requestCode) {
+            case 1: {
+                if (resultCode == 2) {
+                    double lat = data.getDoubleExtra(Keys.MARKER_LATITUDE, 0.0);
+                    double lng = data.getDoubleExtra(Keys.MARKER_LONGITUDE, 0.0);
+                    LatLng selectedLatLng = new LatLng(lat, lng);
+                    setFavMarker(selectedLatLng);
+                }
+                if (resultCode == 1) {
+                    //init cache
+                    if (CacheData.cacheFavoriteMarkers == null) {
+                        CacheData.cacheFavoriteMarkers = new ArrayList<>();
+                    }
+                    //set all markers
+                    AddFavoutiteTable addFavoutiteTable = new AddFavoutiteTable(this);
+                    MarkersTable markersTable = new MarkersTable(this);
+                    ArrayList<FavouriteObject> favouriteObjects = addFavoutiteTable.ReadRecords();
+                    ArrayList<MarkerObject> markersList = new ArrayList<>();
+                    MarkerObject markerObject = null;
+                    for (FavouriteObject favouriteObject : favouriteObjects) {
+                        markerObject = markersTable.getObject(favouriteObject.getFavourite_place_id());
+                        markersList.add(markerObject);
+                        CacheData.cacheFavoriteMarkers.add(markerObject);
+                    }
+                    markersTable.CloseConnection();
+                    addFavoutiteTable.CloseConnection();
+                    //cal the method
+                    setFavMarkers();
+                }
+                if (resultCode == 3) {
+                    setAllMarkers();
+                }
+                break;
             }
-            if (resultCode == 1)
+            case 2:
             {
-                //init cache
-                if(CacheData.cacheFavoriteMarkers == null)
-                {
-                    CacheData.cacheFavoriteMarkers = new ArrayList<>();
-                }
-                //set all markers
-                AddFavoutiteTable  addFavoutiteTable = new AddFavoutiteTable(this);
-                MarkersTable markersTable = new MarkersTable(this);
-                ArrayList<FavouriteObject> favouriteObjects = addFavoutiteTable.ReadRecords();
-                ArrayList<MarkerObject> markersList = new ArrayList<>();
-                MarkerObject markerObject = null;
-                for(FavouriteObject favouriteObject : favouriteObjects)
-                {
-                   markerObject = markersTable.getObject(favouriteObject.getFavourite_place_id());
-                    markersList.add(markerObject);
-                    CacheData.cacheFavoriteMarkers.add(markerObject);
-                }
-                markersTable.CloseConnection();
-                addFavoutiteTable.CloseConnection();
-                //cal the method
-                setFavMarkers();
-
+                setAllMarkers();
+                break;
             }
         }
     }
@@ -613,9 +618,14 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public void clearFavClick(View view)
     {
         clearFavorites.setVisibility(View.GONE);
+        ClearMap();
+        setAllMarkers();
+    }
+
+    private void ClearMap()
+    {
         if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
             mMap.clear();
         }
-        setAllMarkers();
     }
 }

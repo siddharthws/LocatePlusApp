@@ -40,7 +40,6 @@ import com.lplus.activities.Server.AddPlaceServerClass;
 import com.lplus.activities.Server.GetMarkersServerClass;
 
 import java.io.File;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -321,6 +320,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     {
         loadingDialog.HideDialog();
         Toast.makeText(AddPlaceActivity.this, "Place not added..Try again", Toast.LENGTH_SHORT).show();
+        setResult(2);
         finish();
     }
 
@@ -391,12 +391,16 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
-    public void onMarkerFetched() {
-            finish();
+    public void onMarkerFetched()
+    {
+        setResult(2);
+        finish();
     }
 
     @Override
-    public void onMarkerFailed() {
+    public void onMarkerFailed()
+    {
+            setResult(2);
             finish();
     }
 
