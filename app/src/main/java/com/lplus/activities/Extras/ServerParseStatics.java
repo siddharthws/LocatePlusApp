@@ -5,10 +5,12 @@ import android.content.Context;
 import com.lplus.activities.DBHelper.AddCategoryTable;
 import com.lplus.activities.DBHelper.AddFacilityTable;
 import com.lplus.activities.DBHelper.MarkersTable;
+import com.lplus.activities.DBHelper.ReviewsTable;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.CategoryObject;
 import com.lplus.activities.Objects.FacilityObject;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Objects.ReviewsObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,18 +22,18 @@ import java.util.ArrayList;
  * Created by Sai_Kameswari on 19-03-2018.
  */
 
-public class Statics {
+public class ServerParseStatics {
     private static ArrayList<String> categories_key;
     private static ArrayList<String> facilities_key;
     private static ArrayList<String> categories_value;
     private static ArrayList<String> facilities_value;
     private static Context context;
-    private static TinyDB tinydb;
+    private static TinyDB tinyDB;
 
     public static TinyDB getTinyDBObject(Context context)
     {
-        tinydb = new TinyDB(context);
-        return tinydb;
+        tinyDB = TinyDB.Init(context);
+        return tinyDB;
     }
 
     public static void onFailInit()
@@ -46,7 +48,7 @@ public class Statics {
     public static void Init(Context contexts, JSONArray categoriesarray, JSONArray facilitiesarray)
     {
         context = contexts;
-        tinydb = new TinyDB(context);
+        tinyDB = TinyDB.Init(context);
         setCategories(categoriesarray);
         setFacilities(facilitiesarray);
     }
@@ -82,8 +84,8 @@ public class Statics {
         addCategoryTable.CloseConnection();
 
         //Save in TinyDb
-        tinydb.putListString(Keys.CATEGORY_KEY, categories_key);
-        tinydb.putListString(Keys.CATEGORY_VALUE, categories_value);
+        tinyDB.putListString(Keys.CATEGORY_KEY, categories_key);
+        tinyDB.putListString(Keys.CATEGORY_VALUE, categories_value);
     }
 
     public static void setFacilities(JSONArray facilitiesarray)
@@ -116,8 +118,8 @@ public class Statics {
         addFacilityTable.SaveRecords(facilityObject);
         addFacilityTable.CloseConnection();
 
-        tinydb.putListString(Keys.FACILITIES_KEY, facilities_key);
-        tinydb.putListString(Keys.FACILITIES_VALUE, facilities_value);
+        tinyDB.putListString(Keys.FACILITIES_KEY, facilities_key);
+        tinyDB.putListString(Keys.FACILITIES_VALUE, facilities_value);
 
     }
 
@@ -132,7 +134,7 @@ public class Statics {
         }
         MarkersTable markersTable = new MarkersTable(context);
         context = contexts;
-        tinydb = new TinyDB(context);
+        tinyDB = TinyDB.Init(context);
         System.out.println("Reaching the statics part");
         MarkerObject markerObject;
         for(int i=0; i<markers.length();i++)
@@ -169,5 +171,33 @@ public class Statics {
             }
         }
         markersTable.CloseConnection();
+    }
+
+    public static void parseReviews(Context contexts, String placeId, JSONArray reviews)
+    {
+        //Initialise the cache variable
+        if(CacheData.cacheAllReviews == null)
+        {
+            CacheData.cacheAllReviews = new ArrayList<>();
+        }
+        ReviewsTable reviewsTable = new ReviewsTable(context);
+        context = contexts;
+        System.out.println("Reaching the statics part of reviews");
+        ReviewsObject reviewsObject = new ReviewsObject();
+        reviewsObject.setPlaceId(placeId);
+        ArrayList<String> reviews_array = new ArrayList<>();
+        for(int i=0; i< reviews.length();i++)
+        {
+            try {
+                reviews_array.add(reviews.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            reviewsObject.setReviews(reviews_array);
+            reviewsTable.SaveRecord(reviewsObject);
+            System.out.println("Statcis Review: "+reviews_array.toString());
+            CacheData.cacheAllReviews.add(reviewsObject);
+            reviewsTable.CloseConnection();
+        }
     }
 }

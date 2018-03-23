@@ -16,7 +16,15 @@ public class MarkerObject {
     private double markerLatitude;
     private double markerLongitude;
     private String markerDescription;
+    private ArrayList<String> reviews;
 
+    public ArrayList<String> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(ArrayList<String> reviews) {
+        this.reviews = reviews;
+    }
 
     public String getMarkerDescription() {
         return markerDescription;

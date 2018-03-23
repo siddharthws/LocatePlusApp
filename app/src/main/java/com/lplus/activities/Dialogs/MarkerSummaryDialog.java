@@ -12,14 +12,19 @@ import android.widget.Toast;
 
 import com.lplus.R;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
+import com.lplus.activities.Extras.TinyDB;
+import com.lplus.activities.Interfaces.GetReviewsInterface;
+import com.lplus.activities.Interfaces.ReviewsStatusInterface;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Server.GetReviewsServerClass;
+import com.lplus.activities.Server.ReviewsStatusServerClass;
 
 /**
  * Created by Sai_Kameswari on 22-03-2018.
  */
 
-public class MarkerSummaryDialog implements View.OnClickListener {
+public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusInterface, GetReviewsInterface {
 
     private Context context;
     private Dialog markerSummaryDialog;
@@ -28,6 +33,7 @@ public class MarkerSummaryDialog implements View.OnClickListener {
     private LinearLayout direction_layout, desc_layout, fav_layout, rate_layout;
     private AddFavoutiteTable addFavoutiteTable;
     private ImageView fav_iv;
+    private  TinyDB tinyDB;
 
     public MarkerSummaryDialog(Context context, MarkerObject markerObject)
     {
@@ -116,8 +122,10 @@ public class MarkerSummaryDialog implements View.OnClickListener {
             case R.id.desc_layout:
             {
                 markerSummaryDialog.dismiss();
-                MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
-                markerDescriptionDialog.ShowDialog();
+                //Check if Review update required
+                ReviewsStatusServerClass reviewsStatusServerClass = new ReviewsStatusServerClass(context, markerObject);
+                reviewsStatusServerClass.SetListener(this);
+                reviewsStatusServerClass.execute();
                 break;
             }
 
@@ -150,5 +158,50 @@ public class MarkerSummaryDialog implements View.OnClickListener {
             }
 
         }
+    }
+
+    @Override
+    public void onUpdateRequired(int reviewResponse, int photoResponse)
+    {
+        tinyDB = TinyDB.Init(context);
+        int savedReviewStatus = tinyDB.getInt(markerObject.getMarkerID());
+        if(savedReviewStatus < reviewResponse)
+        {
+            //Request for Reviews
+            tinyDB.putInt(markerObject.getMarkerID(), reviewResponse);
+            GetReviewsServerClass getReviewsServerClass = new GetReviewsServerClass(context, markerObject);
+            getReviewsServerClass.SetListener(this);
+            getReviewsServerClass.execute();
+        }
+        else
+        {
+            System.out.println("Reviews fetched: ");
+            MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
+            markerDescriptionDialog.ShowDialog();
+        }
+    }
+
+    @Override
+    public void onUpdateNotRequired()
+    {
+        Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
+        MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
+        markerDescriptionDialog.ShowDialog();
+    }
+
+    @Override
+    public void onReviewFetched()
+    {
+        System.out.println("Reviews fetched: ");
+        MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
+        markerDescriptionDialog.ShowDialog();
+    }
+
+    @Override
+    public void onReviewNotFetched() {
+
+        Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
+        MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
+        markerDescriptionDialog.ShowDialog();
     }
 }
