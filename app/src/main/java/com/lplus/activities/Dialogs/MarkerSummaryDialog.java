@@ -50,6 +50,7 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         markerSummaryDialog.setContentView(R.layout.dialog_marker_summary);
         markerSummaryDialog.setCancelable(true);
         markerSummaryDialog.setCanceledOnTouchOutside(true);
+        markerSummaryDialog.getWindow().getAttributes().windowAnimations = R.style.SlideHorizontalAnimation;
 
         fav_iv = markerSummaryDialog.findViewById(R.id.favourite_iv);
         fav_tv = markerSummaryDialog.findViewById(R.id.favourite_tv);

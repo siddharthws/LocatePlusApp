@@ -1,6 +1,7 @@
 package com.lplus.activities.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -260,7 +262,12 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                 break;
             }
             case R.id.help: {
+                SharedPreferences ref = getApplicationContext().getSharedPreferences("HelpSlider", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = ref.edit();
+                editor.putBoolean(Keys.HELP_SLIDER, false);
+                editor.commit();
 
+                startActivity(new Intent(HomeActivity.this,HelpSliderActivity.class));
                 break;
             }
             case R.id.rate_us: {
@@ -420,8 +427,14 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         //check for internet connection
         if(!InternetConnectivityCheck.isConnectedToNetwork(HomeActivity.this))
         {
-            Toast.makeText(this, "Please connect to internet and try again...", Toast.LENGTH_SHORT).show();
-            return;
+            Snackbar snackbar = Snackbar.make(view,"Please connect to internet and try again...", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("RETRY", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(HomeActivity.this,HomeActivity.class));
+                }
+            });
+
         }
         loadingDialog = new LoadingDialog(this, "Fetching Coordinates..");
         loadingDialog.ShowDialog();
