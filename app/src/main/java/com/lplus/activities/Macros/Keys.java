@@ -67,6 +67,7 @@ public class Keys {
     public static final String TINYDB_PHOTO_LIST        = "photoList";
     public static final String TINYDB_PHOTO_UUID_LIST   = "photoUUIDList";
     public static final String MARKER_REVIEW            = "review";
+    public static final String HELP_SLIDER              = "helpSlider";
 
 
     //Review Updates on Know More Click

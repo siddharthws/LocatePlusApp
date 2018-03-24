@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/appbackground</item>
     </style>
 
 
@@ -37,5 +38,19 @@
         <!--dialog background-->
         <item name="android:windowBackground">@drawable/background_dialog</item>
     </style>
+    
+    <style name="SlideHorizontalAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_left</item>
+        <item name="android:windowExitAnimation">@anim/slide_right</item>
+    </style>
+    <style name="SlideVerticalAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+    <style name="ScaleAnimation">
+        <item name="android:windowEnterAnimation">@anim/scale_in</item>
+        <item name="android:windowExitAnimation">@anim/scale_out</item>
+    </style>
+
 
 </resources>

@@ -25,6 +25,7 @@ import com.lplus.activities.Adapters.CustomExpandableListAdapter;
 import com.lplus.activities.Adapters.ImageSliderAdapter;
 import com.lplus.activities.DBHelper.AddUnSyncTable;
 import com.lplus.activities.Dialogs.LoadingDialog;
+import com.lplus.activities.Extras.CustomToast;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.AddPhotoInterface;
 import com.lplus.activities.Interfaces.AddPlaceInterface;
@@ -45,6 +46,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import es.dmoral.toasty.Toasty;
 import me.relex.circleindicator.CircleIndicator;
 
 public class AddPlaceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AddPlaceInterface, View.OnClickListener, GetMarkerInteface, AddPhotoInterface {
@@ -80,6 +82,9 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_place);
+
+        CustomToast.configToast();
+
         app_sharePref = getSharedPreferences(Keys.SHARED_PREF_NAME, MODE_PRIVATE);
         loadingDialog = new LoadingDialog(this, "Adding Place...");
         //Get Extras from Intent
@@ -188,7 +193,6 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         {
             case R.id.save_add:
             {
-                loadingDialog.ShowDialog();
                 //apply constraint checks everywhere and as necessary
                 place_name_string = place_name.getText().toString();
                 place_description_string = place_description.getText().toString();
@@ -196,14 +200,15 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
                 //Check constraints
                 if(place_name_string.length() == 0 )
                 {
-                    Toast.makeText(AddPlaceActivity.this, "Please add a name", Toast.LENGTH_SHORT).show();
+                    Toasty.error(AddPlaceActivity.this, "Please add a name", Toast.LENGTH_SHORT,true).show();
                     return;
                 }
                 if(tinyDB.getListString(Keys.TINYDB_PHOTO_LIST).size() == 0)
                 {
-                    Toast.makeText(AddPlaceActivity.this, "Please add a photo", Toast.LENGTH_SHORT).show();
+                    Toasty.error(AddPlaceActivity.this, "Please add a photo", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
+                loadingDialog.ShowDialog();
                 ArrayList<String> photo_uuid_array = new ArrayList<>();
                 ArrayList<String> photo_path_array = new ArrayList<>();
 
