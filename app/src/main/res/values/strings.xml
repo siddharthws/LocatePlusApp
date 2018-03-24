@@ -8,4 +8,10 @@
     //navigation drawer
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    //size
+    <dimen name="text_size_18">18sp</dimen>
+
+    //spinner data
+    <string name="category">Select a Category</string>
 </resources>
