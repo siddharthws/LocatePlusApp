@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_gravity="center_horizontal"
-    android:padding="5dp">
+    android:layout_gravity="center_horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:id="@+id/rr"
-            android:layout_weight="3"
+            android:layout_weight="6"
             android:layout_height="170dp">
 
             <android.support.v4.view.ViewPager
@@ -36,14 +35,15 @@
         </RelativeLayout>
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
             android:orientation="vertical">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/edit_photo"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="20dp"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:src="@drawable/icons8_pen_96"
@@ -52,10 +52,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/addImage"
-                android:padding="10dp"
                 android:layout_gravity="bottom"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
                 android:src="@drawable/add_photo_white"
                 />
         </LinearLayout>
@@ -80,6 +78,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_gravity="center_vertical"
                     android:singleLine="true"
+                    android:textSize="@dimen/text_size_18"
                     android:text="Name :"
                     android:textColor="@color/BLACK"
                     android:textStyle="bold"/>
@@ -87,11 +86,11 @@
                     android:id="@+id/add_place_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_size_18"
                     android:singleLine="true"
                     android:layout_marginStart="20dp"
                     android:layout_marginLeft="20dp"
-                    android:hint="Place Name"
+                    android:hint="Enter The Place Name"
                     android:textColor="@color/BLACK"
                     android:textStyle="bold"/>
 
@@ -109,6 +108,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_gravity="center_vertical"
                     android:singleLine="true"
+                    android:textSize="@dimen/text_size_18"
                     android:text="Address :"
                     android:gravity="center_vertical"
                     android:textColor="@color/BLACK"
@@ -120,15 +120,16 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_gravity="left"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/text_size_18"
                     android:singleLine="false"
-                    android:text="AddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddressAddress"
+                    android:text="Complete Address"
                     android:textColor="@color/BLACK"
                     android:textStyle="bold"/>
 
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -139,6 +140,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"
                     android:singleLine="true"
+                    android:textSize="@dimen/text_size_18"
                     android:text="Category :"
                     android:textColor="@color/BLACK"
                     android:textStyle="bold"/>
@@ -147,11 +149,60 @@
                     android:id="@+id/category_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAlignment="gravity"
+                    android:spinnerMode="dialog"
+                    android:prompt="@string/category"
+                    android:layout_gravity="left|center_vertical"
                     android:gravity="center"/>
 
             </LinearLayout>
 
-            <ExpandableListView
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/fac_list_on_off"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="70dp"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginRight="70dp"
+                    android:layout_marginEnd="70dp"
+                    card_view:contentPadding="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/navy_blue"
+                    app:cardBackgroundColor="@color/navy_blue"
+                    app:cardCornerRadius="20dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:singleLine="true"
+                            android:textSize="@dimen/text_size_18"
+                            android:text="Select Facilities"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fac_list_image"
+                            android:layout_gravity="bottom"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/icons8_drop_down_48"
+                            />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+            <ListView
                 android:id="@+id/simpleExpandableListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -159,12 +210,18 @@
                 android:dividerHeight="1dp"
                 android:childDivider="@color/Purple"
                 android:padding="10dp"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="@color/navy_blue"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
@@ -177,7 +234,7 @@
                     android:layout_gravity="bottom"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/icons8_pen_96"
+                    android:src="@drawable/description_editing_24"
                     />
                 <EditText
                     android:id="@+id/addplace_description"
@@ -185,6 +242,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Write a Description (Optional)"
                     android:textColorHint="@color/GREY_7"
+                    android:textSize="@dimen/text_size_18"
                     android:layout_weight="5"/>
 
             </LinearLayout>
@@ -197,7 +255,7 @@
                 android:background="@color/colorPrimary" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="5dp"

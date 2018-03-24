@@ -55,6 +55,7 @@ import com.lplus.activities.Extras.InternetConnectivityCheck;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.CategorySelectedInterface;
 import com.lplus.activities.Interfaces.GetMarkerInteface;
+import com.lplus.activities.JavaFiles.CameraPhoto;
 import com.lplus.activities.JavaFiles.Geocoding;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
@@ -92,12 +93,9 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private TinyDB tinyDB;
 
     final int REQUEST_LOCATION = 199;
-    /*CameraPhoto cameraPhoto;
+   /* CameraPhoto cameraPhoto;
 
-    final int CAMERA_REQUEST = 13323;
-
-    ImageView showPhoto = null,addphoto = null;
-    Dialog dialog = null;*/
+    final int CAMERA_REQUEST = 13323;*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

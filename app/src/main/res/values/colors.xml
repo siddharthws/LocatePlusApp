@@ -27,6 +27,6 @@
     <color name="success_color">#FFC107</color>
 
     //App Background
-    <color name="appbackground">#FF0000 </color>
+    <color name="appbackground">#FFFF </color>
 
 </resources>
