@@ -42,20 +42,34 @@ public class Geocoding extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
-
-        geocoder = new Geocoder(context, Locale.getDefault());
-
         try {
+            geocoder = new Geocoder(context, Locale.getDefault());
             List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
             if (addressList != null && addressList.size() > 0) {
                 Address address = addressList.get(0);
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                    sb.append(address.getAddressLine(i)).append("\n");
+                    if(address.getAddressLine(i) != null)
+                    {
+                        sb.append(address.getAddressLine(i)).append(",");
+                    }
                 }
-                sb.append(address.getLocality()).append("\n");
-                sb.append(address.getPostalCode()).append("\n");
-                sb.append(address.getCountryName());
+                if(address.getAdminArea() != null)
+                {
+                    sb.append(address.getAdminArea()).append(",");
+                }
+                if(address.getLocality() != null)
+                {
+                    sb.append(address.getLocality()).append(",");
+                }
+                if(address.getPostalCode() != null)
+                {
+                    sb.append(address.getPostalCode()).append(",");
+                }
+                if(address.getCountryName() != null)
+                {
+                    sb.append(address.getCountryName());
+                }
                 result = sb.toString();
             }
         } catch (IOException e) {

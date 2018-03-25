@@ -2,16 +2,18 @@ package com.lplus.activities.Server;
 
 import android.content.Context;
 
+import com.lplus.activities.DBHelper.ReviewsTable;
 import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Interfaces.GetReviewsInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 import com.lplus.activities.Objects.MarkerObject;
-import okhttp3.RequestBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.RequestBody;
 
 /**
  * Created by Sai_Kameswari on 23-03-2018.
@@ -64,6 +66,13 @@ public class GetReviewsServerClass extends BaseServerClass{
         if (IsResponseValid()) {
             JSONArray reviews = null;
             try {
+
+                //delete the stored database
+                ReviewsTable reviewsTable = new ReviewsTable(context);
+                reviewsTable.DeleteAll();
+                reviewsTable.CloseConnection();
+
+                //Fetch new Records
                 String placeID = responseJson.getString(Keys.MARKER_ID);
                 reviews = responseJson.getJSONArray(Keys.ALL_REVIEWS);
                 //store data in markers

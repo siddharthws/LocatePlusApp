@@ -3,6 +3,8 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.lplus.activities.DBHelper.AddCategoryTable;
+import com.lplus.activities.DBHelper.AddFacilityTable;
 import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Interfaces.CategoryFetchInterface;
 import com.lplus.activities.Macros.Keys;
@@ -65,7 +67,16 @@ public class FilterServerClass extends BaseServerClass {
         if (IsResponseValid()) {
             try
             {
-                System.out.println("Response JSON fetched");
+                //Clear Both Tables
+                AddFacilityTable addFacilityTable = new AddFacilityTable(context);
+                addFacilityTable.DeleteAll();
+                AddCategoryTable addCategoryTable = new AddCategoryTable(context);
+                addCategoryTable.DeleteAll();
+                addCategoryTable.CloseConnection();
+                addFacilityTable.CloseConnection();
+
+                //fetch New Records
+
                 JSONArray categories = responseJson.getJSONArray(Keys.CATEGORIES);
                 JSONArray facilities = responseJson.getJSONArray(Keys.FACILITIES);
                 ServerParseStatics.Init(context, categories, facilities);

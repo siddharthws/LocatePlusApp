@@ -1,7 +1,6 @@
 package com.lplus.activities.activities;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -42,6 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.android.clustering.ClusterManager;
 import com.lplus.R;
 import com.lplus.activities.DBHelper.AddCategoryTable;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
@@ -55,8 +55,8 @@ import com.lplus.activities.Extras.InternetConnectivityCheck;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.CategorySelectedInterface;
 import com.lplus.activities.Interfaces.GetMarkerInteface;
-import com.lplus.activities.JavaFiles.CameraPhoto;
 import com.lplus.activities.JavaFiles.Geocoding;
+import com.lplus.activities.JavaFiles.MyItem;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
@@ -77,6 +77,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                                                                 GoogleMap.OnMarkerClickListener, GetMarkerInteface {
 
     private GoogleMap mMap;
+    private ClusterManager<MyItem> mClusterManager;
     private final int REQUEST_PERMISSION = 1;
     private static LatLng currentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -163,6 +164,33 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
+    private void setUpClusterer() {
+
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<>(this, mMap);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        // Add cluster items (markers) to the cluster manager.
+        addItems();
+    }
+    private void addItems() {
+        ArrayList<MarkerObject> markersList = CacheData.cacheMarkers;
+        System.out.println("Total markers: "+ markersList.size());
+
+        // Add ten cluster items in close proximity, for purposes of this example.
+
+        for(MarkerObject item : markersList)
+        {
+            MyItem offsetItem = new MyItem(item.getMarkerLatitude(), item.getMarkerLongitude());
+            mClusterManager.addItem(offsetItem);
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -204,18 +232,18 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         getSupportActionBar().show();
         ll_map.setVisibility(View.VISIBLE);
         float zoomLevel = mMap.getCameraPosition().zoom;
-        if(zoomLevel > 7.2)
+        if(zoomLevel > 8.0)
         {
             zoomlevel.setVisibility(View.VISIBLE);
-            setAllMarkers();
+            //setAllMarkers();
         }
-        if(zoomLevel <= 7.2)
+        if(zoomLevel <= 8.0)
         {
             zoomlevel.setVisibility(View.GONE);
-            if(mMap != null)
+           /* if(mMap != null)
             {
                 mMap.clear();
-            }
+            }*/
         }
     }
 
@@ -288,6 +316,9 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     }
 
     private void displayMap() {
+
+        //setup Cluster
+        setUpClusterer();
         //set UI Settings
         setUISettings();
 
@@ -428,9 +459,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                     startActivity(new Intent(HomeActivity.this,HomeActivity.class));
                 }
             });
-
         }
-        loadingDialog = new LoadingDialog(this, "Fetching Coordinates..");
         loadingDialog.ShowDialog();
 
         center = mMap.getCameraPosition().target;
@@ -445,11 +474,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public void onAddressFetched(String result, double latit, double longi) {
 
         loadingDialog.HideDialog();
-        Toast.makeText(this, "Clicked Latitude: "+latit+" Longitude: "+longi,Toast.LENGTH_SHORT).show();
-
-        System.out.println("Addrs fetched: "+result);
-        System.out.println("Latit fetched: "+latit);
-        System.out.println("Longi fetched: "+longi);
 
         Intent addPlaceIntent = new Intent(HomeActivity.this, AddPlaceActivity.class);
         Bundle mBundle = new Bundle();
@@ -470,11 +494,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     @Override
     public void onApplyClick(List<String> selectedcategories)
     {
-        Toast.makeText(this, "selected: "+selectedcategories.toString(), Toast.LENGTH_SHORT).show();
         filterDialog.HideDialog();
-
-        //LoadingDialog loadingDialog = new LoadingDialog(this, "Applying Filters......");
-        //loadingDialog.ShowDialog();
     }
 
     @Override
@@ -483,7 +503,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         if(selectedcategories!=null)
         {
             filterDialog.HideDialog();
-            Toast.makeText(this, "selected: "+selectedcategories.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -493,11 +512,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         tinyDB.putListString(Keys.TINYDB_PHOTO_UUID_LIST,new ArrayList<String>());
         mapFragment.onResume();
         super.onResume();
-        System.out.println("Syncing Map......");
-        if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
-            mMap.clear();
-            setAllMarkers();
-        }
     }
 
     @Override
