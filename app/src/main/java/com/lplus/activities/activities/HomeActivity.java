@@ -108,8 +108,8 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         tinyDB.putListString(Keys.TINYDB_PHOTO_UUID_LIST,new ArrayList<String>());
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ScrollView parentScroll=findViewById(R.id.parent_scroll_desc);
-        ScrollView childScroll=findViewById(R.id.child_scroll_facility);
+        /*ScrollView parentScroll=findViewById(R.id.parent_scroll_desc);
+        ScrollView childScroll=findViewById(R.id.child_scroll_facility);*/
 
         navigationView = findViewById(R.id.nav_view);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
