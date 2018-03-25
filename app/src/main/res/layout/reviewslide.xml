@@ -8,6 +8,7 @@
         android:textAlignment="center"
         android:textStyle="italic"
         android:textSize="20dp"
+        android:gravity="center_vertical"
         android:text="Reviews"
         android:adjustViewBounds="true"
         android:layout_gravity="center"
