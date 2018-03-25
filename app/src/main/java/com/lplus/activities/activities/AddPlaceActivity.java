@@ -295,11 +295,6 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
                         AddPhotoFirstServerClass addPhotoFirstServerClass = new AddPhotoFirstServerClass(AddPlaceActivity.this,tempNewPhotoObject);
                         addPhotoFirstServerClass.SetListener(AddPlaceActivity.this);
                         addPhotoFirstServerClass.execute();
-
-                        TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac,tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST), latitude, longitude, place_description_string);
-                        AddPlaceServerClass addPlaceServerClass = new AddPlaceServerClass(AddPlaceActivity.this, tempNewPlaceObject);
-                        addPlaceServerClass.SetListener(AddPlaceActivity.this);
-                        addPlaceServerClass.execute();
                     }
                     @Override
                     public void onAnimationRepeat(Animation animation) {

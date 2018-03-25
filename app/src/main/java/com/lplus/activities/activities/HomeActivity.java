@@ -232,12 +232,12 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         getSupportActionBar().show();
         ll_map.setVisibility(View.VISIBLE);
         float zoomLevel = mMap.getCameraPosition().zoom;
-        if(zoomLevel > 8.0)
+        if(zoomLevel > 7.2)
         {
             zoomlevel.setVisibility(View.VISIBLE);
             //setAllMarkers();
         }
-        if(zoomLevel <= 8.0)
+        if(zoomLevel <= 7.2)
         {
             zoomlevel.setVisibility(View.GONE);
            /* if(mMap != null)
@@ -412,7 +412,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private void recenterMap()
     {
         //move camera to Maharastra state
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 8.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 7.2f));
 
         setAllMarkers();
     }
@@ -460,6 +460,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                 }
             });
         }
+        loadingDialog = new LoadingDialog(this, "Fetching Coordinates");
         loadingDialog.ShowDialog();
 
         center = mMap.getCameraPosition().target;

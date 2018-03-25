@@ -54,13 +54,13 @@ public class Geocoding extends AsyncTask<Void, Integer, Void> {
                         sb.append(address.getAddressLine(i)).append(",");
                     }
                 }
-                if(address.getAdminArea() != null)
-                {
-                    sb.append(address.getAdminArea()).append(",");
-                }
                 if(address.getLocality() != null)
                 {
                     sb.append(address.getLocality()).append(",");
+                }
+                if(address.getAdminArea() != null)
+                {
+                    sb.append(address.getAdminArea()).append(",");
                 }
                 if(address.getPostalCode() != null)
                 {
