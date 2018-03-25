@@ -39,7 +39,6 @@
         android:layout_alignParentLeft="true"
         android:orientation="vertical">
 
-
         <ImageButton
             android:id="@+id/favorite_clear"
             android:layout_width="50dp"

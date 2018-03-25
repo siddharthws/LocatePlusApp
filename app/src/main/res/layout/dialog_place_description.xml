@@ -40,13 +40,13 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:orientation="vertical">
-                <ImageView
+                <ImageButton
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:id="@+id/flag_photo"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="20dp"
-                    android:src="@drawable/icons8_flag_48_white"
+                    android:background="@drawable/icons8_flag_48_white"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -160,12 +160,13 @@
                         android:textSize="@dimen/text_size_18"
                         android:textStyle="bold" />
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/flag_name_address_category"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        app:srcCompat="@drawable/icons8_flag_48_black" />
+                        android:background="@drawable/icons8_flag_48_black" />
+
                 </LinearLayout>
 
                 <TextView
@@ -208,12 +209,13 @@
                         android:textSize="@dimen/text_size_18"
                         android:textStyle="bold" />
 
-                    <ImageView
+                    <ImageButton
                         android:id="@+id/flag_facility"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
-                        app:srcCompat="@drawable/icons8_flag_48_black" />
+                        android:background="@drawable/icons8_flag_48_black" />
+
                 </LinearLayout>
 
                 <ScrollView

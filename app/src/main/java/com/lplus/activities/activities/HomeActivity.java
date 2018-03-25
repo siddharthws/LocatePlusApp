@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -52,6 +51,7 @@ import com.lplus.activities.Dialogs.MarkerSummaryDialog;
 import com.lplus.activities.Extras.CacheData;
 import com.lplus.activities.Extras.CheckGPSOn;
 import com.lplus.activities.Extras.InternetConnectivityCheck;
+import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.CategorySelectedInterface;
 import com.lplus.activities.Interfaces.GetMarkerInteface;
@@ -434,6 +434,10 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void onFilterClick(View view)
     {
+        //clear any filters applied
+        clearFavorites.setVisibility(View.GONE);
+        setAllMarkers();
+
         AddCategoryTable addCategoryTable = new AddCategoryTable(this);
         ArrayList<ArrayList> categoriesArrayList = addCategoryTable.ReadRecords();
         addCategoryTable.CloseConnection();
@@ -496,6 +500,24 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public void onApplyClick(List<String> selectedcategories)
     {
         filterDialog.HideDialog();
+        loadingDialog = new LoadingDialog(this, "Applying Filters...");
+        loadingDialog.ShowDialog();
+
+        //fetch All Records
+        ClearMap();
+        ArrayList<MarkerObject> filteredMarkers = ServerParseStatics.filteredMarkers(selectedcategories, this);
+        tinyDB = new TinyDB(this);
+        tinyDB.putListString("selectedCategories", (ArrayList<String>) selectedcategories);
+        if(filteredMarkers.size() > 0)
+        {
+            loadingDialog.HideDialog();
+            setFilteredeMarkers(filteredMarkers);
+        }
+        else
+        {
+            loadingDialog.HideDialog();
+            Toast.makeText(this, "No Markers Existing", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -574,7 +596,27 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             marker.setTag(markerObject);
         }
         //move camera to Maharastra state
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 8.0f));
+        mMap.
+                animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.65222, 75.82802), 8.0f));
+    }
+
+    public void setFilteredeMarkers(ArrayList<MarkerObject> filteredMarkers)
+    {
+        clearFavorites.setImageResource(R.drawable.ic_clear_all_white_24dp);
+        clearFavorites.setVisibility(View.VISIBLE);
+        if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+            mMap.clear();
+        }
+        LatLng position;
+        for(MarkerObject markerObject : filteredMarkers)
+        {
+            position = new LatLng(markerObject.getMarkerLatitude(), markerObject.getMarkerLongitude());
+            Marker marker = mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName())
+                    .snippet(markerObject.getMarkerCategory()));
+            marker.setTag(markerObject);
+        }
+        //move camera to Maharastra state
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(filteredMarkers.get(0).getMarkerLatitude(), filteredMarkers.get(0).getMarkerLongitude()), 8.0f));
     }
 
     public void setFavMarker(LatLng selectedLatLng)

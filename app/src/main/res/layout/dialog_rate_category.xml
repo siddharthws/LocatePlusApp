@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="330dp"
     android:layout_height="250dp"
     android:background="#00555555"
@@ -33,7 +32,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/facility_title"
+                    android:id="@+id/rate_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
@@ -46,7 +45,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/facility_que"
+                    android:id="@+id/category_que"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="30dp"
@@ -69,6 +68,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/LL_yes"
                     android:layout_width="103dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="20px"
@@ -91,6 +91,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/LL_no"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1100"
@@ -112,6 +113,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/LL_not_sure"
                     android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_weight="500"

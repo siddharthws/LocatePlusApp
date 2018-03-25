@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="330dp"
     android:layout_height="200dp"
     android:background="#00555555"
@@ -92,6 +91,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/not_sure_LL"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="500"

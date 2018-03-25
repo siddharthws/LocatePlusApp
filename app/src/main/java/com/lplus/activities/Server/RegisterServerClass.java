@@ -7,7 +7,6 @@ import com.lplus.activities.DBHelper.DatabaseHelper;
 import com.lplus.activities.Interfaces.ServerStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
-import okhttp3.RequestBody;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,9 +53,6 @@ public class RegisterServerClass extends BaseServerClass {
         {
             return null;
         }
-
-        // Add data to request Builder
-        requestBuilder.method("POST", RequestBody.create(JSON, requestJson.toString()));
 
         // Call Super
         super.doInBackground(params);

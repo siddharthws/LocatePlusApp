@@ -173,6 +173,51 @@ public class MarkersTable extends DatabaseHelper {
         return markerObject;
     }
 
+    public ArrayList<MarkerObject> getRecordsOnCategory(String category)
+    {
+        ArrayList<MarkerObject> marker_objects_list = new ArrayList<>();
+        MarkerObject markerObject = null;
+        ArrayList<String> facii;
+        String[] array;
+        SQLiteDatabase Rdb = db.getReadableDatabase();
+
+        Cursor dbRows = Rdb.query(TABLE_NAME,
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION},
+                COLUMN_PLACE_CATEGORY + "=?",
+                new String[] {category},
+                null,
+                null,
+                null);
+
+        if(dbRows.getCount() > 0) {
+            dbRows.moveToFirst();
+            while (dbRows.moveToNext()) {
+                facii = new ArrayList<>();
+
+                String placeId                  = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_ID));
+                String name                     = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_NAME));
+                String address                  = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_ADDRESS));
+                String cat                      = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_CATEGORY));
+                String facilities_string        = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_FACILITIES));
+                array = facilities_string.split("_");
+                for(int i=0; i<array.length; i++)
+                {
+                    if(!array[i].equals(""))
+                    {
+                        facii.add(array[i]);
+                    }
+                }
+                double latitude                 = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LATITUDE));
+                double longitude                = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LONGITUDE));
+                String description              = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_DESCRIPTION));
+
+                markerObject = new MarkerObject(placeId, name, address, facii, cat, latitude, longitude, description);
+                marker_objects_list.add(markerObject);
+            }
+        }
+        return marker_objects_list;
+    }
+
     //methods to add data to table......only accepts content values
     private void Add(ContentValues contentData)
     {
