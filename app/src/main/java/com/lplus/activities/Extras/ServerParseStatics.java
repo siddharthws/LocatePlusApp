@@ -165,7 +165,6 @@ public class ServerParseStatics {
                 markerObject.setMarkerFacilities(marker_facilities_list);
                 markersTable.SaveRecord(markerObject);
                 CacheData.cacheMarkers.add(markerObject);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

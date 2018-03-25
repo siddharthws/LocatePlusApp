@@ -3,6 +3,7 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.lplus.activities.DBHelper.MarkersTable;
 import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Interfaces.GetMarkerInteface;
 import com.lplus.activities.Macros.Keys;
@@ -52,6 +53,12 @@ public class GetMarkersServerClass extends BaseServerClass {
                 System.out.println("Response JSON fetched for markers");
                 JSONArray markers = null;
                 try {
+                    //delete the stored database
+                    MarkersTable markersTable = new MarkersTable(context);
+                    markersTable.DeleteAll();
+                    markersTable.CloseConnection();
+
+                    //Fetch new Records
                     markers = responseJson.getJSONArray(Keys.KEY_MARKERS);
                     //store data in markers
                     ServerParseStatics.parseMarkers(context, markers);
