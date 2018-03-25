@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Sai_Kameswari on 19-03-2018.
@@ -134,7 +135,6 @@ public class ServerParseStatics {
         }
         MarkersTable markersTable = new MarkersTable(context);
         context = contexts;
-        tinyDB = TinyDB.Init(context);
         System.out.println("Reaching the statics part");
         MarkerObject markerObject;
         for(int i=0; i<markers.length();i++)
@@ -179,8 +179,8 @@ public class ServerParseStatics {
         {
             CacheData.cacheAllReviews = new ArrayList<>();
         }
-        ReviewsTable reviewsTable = new ReviewsTable(context);
         context = contexts;
+        ReviewsTable reviewsTable = new ReviewsTable(context);
         System.out.println("Reaching the statics part of reviews");
         ReviewsObject reviewsObject = new ReviewsObject();
         reviewsObject.setPlaceId(placeId);
@@ -198,5 +198,19 @@ public class ServerParseStatics {
             CacheData.cacheAllReviews.add(reviewsObject);
             reviewsTable.CloseConnection();
         }
+    }
+
+    //Parse the selected Category MArkers
+    public static ArrayList<MarkerObject> filteredMarkers(List<String> selectedcategories, Context context)
+    {
+        ArrayList<MarkerObject> filteredMarkers = new ArrayList<>();
+        MarkersTable markersTable = new MarkersTable(context);
+        for(int i = 0; i < selectedcategories.size(); i++)
+        {
+            System.out.println("Selected Cat: "+ selectedcategories.get(i));
+            filteredMarkers.addAll(markersTable.getRecordsOnCategory(selectedcategories.get(i)));
+        }
+        markersTable.CloseConnection();
+        return filteredMarkers;
     }
 }

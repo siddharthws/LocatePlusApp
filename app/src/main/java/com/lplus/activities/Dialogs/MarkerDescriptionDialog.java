@@ -36,7 +36,7 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
     private MarkerObject markerObject;
     private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review;
     private LinearLayout direction_layout, desc_layout;
-    private ImageButton review_send;
+    private ImageButton review_send, flag_photo, flag_name_address_category, flag_facility;
     private LoadingDialog loadingDialog;
     private ViewPager mPager;
     private static int currentPage = 0;
@@ -62,6 +62,10 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
         dec_facilities = markerdescriptionDialog.findViewById(R.id.dec_facilities);
         tv_review = markerdescriptionDialog.findViewById(R.id.tv_review);
         review_send = markerdescriptionDialog.findViewById(R.id.review_send);
+        flag_photo = markerdescriptionDialog.findViewById(R.id.flag_photo);
+        flag_name_address_category = markerdescriptionDialog.findViewById(R.id.flag_name_address_category);
+        flag_facility = markerdescriptionDialog.findViewById(R.id.flag_facility);
+
 
 
         direction_layout = markerdescriptionDialog.findViewById(R.id.direction_layout);
@@ -72,6 +76,9 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
         direction_layout.setOnClickListener(this);
         desc_layout.setOnClickListener(this);
         review_send.setOnClickListener(this);
+        flag_photo.setOnClickListener(this);
+        flag_name_address_category.setOnClickListener(this);
+        flag_facility.setOnClickListener(this);
     }
 
     private void setData()
@@ -125,6 +132,9 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
 
             case R.id.desc_layout:
             {
+                //call Rate place dialog
+                RatePlaceDialog ratePlaceDialog = new RatePlaceDialog(context, markerObject);
+                ratePlaceDialog.ShowDialog();
                 break;
             }
 
@@ -141,6 +151,27 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
                 MarkerReviewServerClass markerReviewServerClass = new MarkerReviewServerClass(context, markerObject, review);
                 markerReviewServerClass.SetListener(this);
                 markerReviewServerClass.execute();
+                break;
+            }
+
+            case R.id.flag_photo:
+            {
+                //call Rate place dialog
+                RatePhotoDialog ratePhotoDialog = new RatePhotoDialog(context, markerObject);
+                ratePhotoDialog.ShowDialog();
+                break;
+            }
+
+            case R.id.flag_name_address_category:
+            {
+                RateCategoryDialog rateCategoryDialog = new RateCategoryDialog(context, markerObject);
+                rateCategoryDialog.ShowDialog();
+                break;
+            }
+            case R.id.flag_facility:
+            {
+                RateCategoryDialog rateCategoryDialog = new RateCategoryDialog(context, markerObject);
+                rateCategoryDialog.ShowDialog();
                 break;
             }
         }
