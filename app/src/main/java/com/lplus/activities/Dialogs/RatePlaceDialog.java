@@ -2,6 +2,7 @@ package com.lplus.activities.Dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ public class RatePlaceDialog implements View.OnClickListener {
     private MarkerObject markerObject;
     private TextView rate_que;
     private ImageView star1, star2, star3, star4, star5;
+    private Bitmap bitmap;
 
     public RatePlaceDialog(Context context, MarkerObject markerObject)
     {
