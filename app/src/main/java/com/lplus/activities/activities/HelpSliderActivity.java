@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.lplus.R;
 import com.lplus.activities.Adapters.CustomPagerAdapter;
+import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Macros.Keys;
 
 public class HelpSliderActivity extends AppCompatActivity {
@@ -28,9 +29,11 @@ public class HelpSliderActivity extends AppCompatActivity {
     private Button btnSkip;
     private Button btnNext;
     private CustomPagerAdapter pagerAdapter;
+    TinyDB tinyDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tinyDB = new TinyDB(HelpSliderActivity.this);
         if(!isFirstTimeStartApp()) {
             startHomeActivity();
             finish();
@@ -97,15 +100,11 @@ public class HelpSliderActivity extends AppCompatActivity {
     }
 
     private boolean isFirstTimeStartApp() {
-        SharedPreferences ref = getApplicationContext().getSharedPreferences("HelpSlider", Context.MODE_PRIVATE);
-        return ref.getBoolean(Keys.HELP_SLIDER, true);
+        return tinyDB.getBoolean(Keys.HELP_SLIDER);
     }
 
     private void setFirstTimeStartStatus(boolean fetch) {
-        SharedPreferences ref = getApplicationContext().getSharedPreferences("HelpSlider", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = ref.edit();
-        editor.putBoolean(Keys.HELP_SLIDER, fetch);
-        editor.commit();
+        tinyDB.putBoolean(Keys.HELP_SLIDER, fetch);
     }
 
     private void setDotStatus(int page){

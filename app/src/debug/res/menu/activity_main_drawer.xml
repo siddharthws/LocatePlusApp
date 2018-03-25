@@ -7,24 +7,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/sync_places"
-            android:icon="@drawable/ic_filter_list_white_24dp"
+            android:icon="@drawable/icons8_synchronize_48"
             android:title="Sync Places" />
 
         <item
             android:id="@+id/favorites"
-            android:icon="@drawable/ic_filter_list_white_24dp"
+            android:icon="@drawable/icons8_heart_black_96"
             android:title="Favorites" />
         <item
             android:id="@+id/help"
-            android:icon="@drawable/ic_filter_list_white_24dp"
+            android:icon="@drawable/icons8_inquiry_48"
             android:title="Help" />
         <item
             android:id="@+id/rate_us"
-            android:icon="@drawable/ic_filter_list_white_24dp"
+            android:icon="@drawable/icons8_star_48_black"
             android:title="Rate Us" />
         <item
             android:id="@+id/exit"
-            android:icon="@drawable/ic_filter_list_white_24dp"
+            android:icon="@drawable/icons8_shutdown_48"
             android:title="Exit" />
 
     </group>

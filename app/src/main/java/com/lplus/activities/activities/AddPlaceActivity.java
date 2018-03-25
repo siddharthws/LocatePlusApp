@@ -69,12 +69,13 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     private ArrayList<String> XMENUUID = new ArrayList<>();
 
     private EditText place_name,place_description;
-    private TextView address;
+    private LinearLayout selected_fac_layout;
+    private TextView address, selected_fac_value;
     private CardView save,cancel;
     private String address_result, place_name_string, place_description_string;
     private double latitude, longitude;
     private static String category, facilities;
-    private ArrayList<String> list, fac_list, selected_fac, cat_key, fac_key;
+    private ArrayList<String> list, fac_list, selected_fac, cat_key, fac_key, fac_value;
     private SharedPreferences app_sharePref;
     private LoadingDialog loadingDialog =null;
     private TinyDB tinyDB;
@@ -119,6 +120,9 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         address = findViewById(R.id.address_add);
         address.setText(address_result);
 
+        selected_fac_layout = findViewById(R.id.selected_fac_layout);
+        selected_fac_value = findViewById(R.id.selected_fac);
+
         facilityListLayout = findViewById(R.id.fac_list_on_off);
         facility_drop_image = findViewById(R.id.fac_list_image);
         facility_drop_image.setTag("OFF");
@@ -128,12 +132,13 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         //select category
         Spinner spinner = findViewById(R.id.category_spinner);
 
-        /*list = tinyDB.getListString(Keys.CATEGORY_VALUE);
+        list = tinyDB.getListString(Keys.CATEGORY_VALUE);
         fac_list = tinyDB.getListString(Keys.FACILITIES_VALUE);
         cat_key = tinyDB.getListString(Keys.CATEGORY_KEY);
-        fac_key = tinyDB.getListString(Keys.FACILITIES_KEY);*/
+        fac_key = tinyDB.getListString(Keys.FACILITIES_KEY);
+        fac_value = new ArrayList<>();
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,list);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
 
@@ -141,15 +146,11 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
 
         // add data for displaying in expandable list view
         final ArrayList<FacilityChildInfo> facility = new ArrayList<>();
-        for(int i=0; i<9;i++)
-        {
-            facility.add( new FacilityChildInfo("asd", i+1, "wow"));
-        }
-        /*for(int i=0; i<fac_list.size();i++)
+        for(int i=0; i<fac_list.size();i++)
         {
             System.out.println("Fac key i list: "+fac_key.get(i)+"having: "+fac_list.get(i));
             facility.add( new FacilityChildInfo(fac_key.get(i), i+1, fac_list.get(i)));
-        }*/
+        }
         simpleExpandableListView = findViewById(R.id.simpleExpandableListView);
 
         listAdapter = new CustomExpandableListAdapter(this,facility);
@@ -162,9 +163,23 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
                 if(selected_fac.contains(facility.get(position).getFac_id()))
                 {
                     selected_fac.remove(facility.get(position).getFac_id());
+                    fac_value.remove(facility.get(position).getFacility_name());
                 }
                 else{
                     selected_fac.add(facility.get(position).getFac_id());
+                    fac_value.add(facility.get(position).getFacility_name());
+                }
+                if(fac_value.size() == 0) {
+                    selected_fac_value.setText(" ");
+                    selected_fac_layout.setVisibility(View.GONE);
+                } else {
+                    selected_fac_layout.setVisibility(View.VISIBLE);
+                    selected_fac_value.setText(" ");
+                    for(int i = 0;i<fac_value.size()-1;i++ ) {
+                        selected_fac_value.append(fac_value.get(i));
+                        selected_fac_value.append(", ");
+                    }
+                    selected_fac_value.append(fac_value.get(fac_value.size()-1));
                 }
                 if( cb != null )
                     if (cb.isChecked())
@@ -491,7 +506,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
             public void run() {
                 handler.post(Update);
             }
-        }, 5000, 5000);
+        }, 1500, 5000);
     }
 
     @Override
