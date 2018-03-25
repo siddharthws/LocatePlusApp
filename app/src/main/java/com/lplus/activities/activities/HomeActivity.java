@@ -260,11 +260,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                 break;
             }
             case R.id.help: {
-                SharedPreferences ref = getApplicationContext().getSharedPreferences("HelpSlider", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = ref.edit();
-                editor.putBoolean(Keys.HELP_SLIDER, false);
-                editor.commit();
-
+                tinyDB.putBoolean(Keys.HELP_SLIDER, true);
                 startActivity(new Intent(HomeActivity.this,HelpSliderActivity.class));
                 break;
             }
