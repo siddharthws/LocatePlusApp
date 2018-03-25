@@ -1,22 +1,31 @@
-package com.lplus.activities.Dialogs;
+package com.lplus.activities.activities;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.lplus.R;
 import com.lplus.activities.Adapters.ReviewSliderAdapter;
 import com.lplus.activities.DBHelper.ReviewsTable;
+import com.lplus.activities.Dialogs.LoadingDialog;
+import com.lplus.activities.Dialogs.RateCategoryDialog;
+import com.lplus.activities.Dialogs.RatePhotoDialog;
+import com.lplus.activities.Dialogs.RatePlaceDialog;
 import com.lplus.activities.Extras.CacheData;
+import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.MarkerReviewInterface;
+import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Objects.ReviewsObject;
 import com.lplus.activities.Server.MarkerReviewServerClass;
@@ -25,14 +34,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Created by Sai_Kameswari on 22-03-2018.
- */
+public class MarkerDescriptionActivity extends HomeActivity implements View.OnClickListener, MarkerReviewInterface {
 
-public class MarkerDescriptionDialog implements View.OnClickListener, MarkerReviewInterface {
-
-    private Context context;
-    private Dialog markerdescriptionDialog;
     private MarkerObject markerObject;
     private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review;
     private LinearLayout direction_layout, desc_layout;
@@ -40,32 +43,47 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
     private LoadingDialog loadingDialog;
     private ViewPager mPager;
     private static int currentPage = 0;
+    private TinyDB tinyDB;
 
-    public MarkerDescriptionDialog(Context context, MarkerObject markerObject)
-    {
-        this.context = context;
-        this.markerObject = markerObject;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dialog_place_description);
+
+        Toolbar mToolbar =  findViewById(R.id.toolbar);
+        mToolbar.setTitle("Marker Description");
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         Init();
     }
-
     private void Init()
     {
+        //fetch marker object
+        tinyDB = new TinyDB(this);
+        markerObject = tinyDB.getObject(Keys.MARKER_OBJECT, MarkerObject.class);
 
         //fetch all ID's from View
-        dec_place_name = markerdescriptionDialog.findViewById(R.id.dec_place_name);
-        dec_category = markerdescriptionDialog.findViewById(R.id.dec_category);
-        desc_address = markerdescriptionDialog.findViewById(R.id.desc_address);
-        dec_facilities = markerdescriptionDialog.findViewById(R.id.dec_facilities);
-        tv_review = markerdescriptionDialog.findViewById(R.id.tv_review);
-        review_send = markerdescriptionDialog.findViewById(R.id.review_send);
-        flag_photo = markerdescriptionDialog.findViewById(R.id.flag_photo);
-        flag_name_address_category = markerdescriptionDialog.findViewById(R.id.flag_name_address_category);
-        flag_facility = markerdescriptionDialog.findViewById(R.id.flag_facility);
+        dec_place_name = findViewById(R.id.dec_place_name);
+        dec_category = findViewById(R.id.dec_category);
+        desc_address = findViewById(R.id.desc_address);
+        dec_facilities = findViewById(R.id.dec_facilities);
+        tv_review = findViewById(R.id.tv_review);
+        review_send = findViewById(R.id.review_send);
+        flag_photo = findViewById(R.id.flag_photo);
+        flag_name_address_category = findViewById(R.id.flag_name_address_category);
+        flag_facility = findViewById(R.id.flag_facility);
 
 
 
-        direction_layout = markerdescriptionDialog.findViewById(R.id.direction_layout);
-        desc_layout = markerdescriptionDialog.findViewById(R.id.desc_layout);
+        direction_layout = findViewById(R.id.direction_layout);
+        desc_layout = findViewById(R.id.desc_layout);
 
         setData();
         //set listeners for linear layouts
@@ -95,21 +113,11 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
         if(CacheData.cacheAllReviews == null)
         {
             CacheData.cacheAllReviews = new ArrayList<>();
-            ReviewsTable reviewsTable = new ReviewsTable(context);
+            ReviewsTable reviewsTable = new ReviewsTable(this);
             CacheData.cacheAllReviews.addAll(reviewsTable.ReadRecords());
             reviewsTable.CloseConnection();
         }
         beginSlide();
-    }
-
-    public void ShowDialog()
-    {
-        markerdescriptionDialog.show();
-    }
-
-    public void HideDialog()
-    {
-        markerdescriptionDialog.cancel();
     }
 
     @Override
@@ -122,14 +130,13 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
                 Uri gmmIntentUri = Uri.parse("google.navigation:q="+markerObject.getMarkerLatitude()+","+markerObject.getMarkerLongitude());
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
-                context.startActivity(mapIntent);
+                startActivity(mapIntent);
                 break;
             }
 
             case R.id.desc_layout:
             {
-                //call Rate place dialog
-                RatePlaceDialog ratePlaceDialog = new RatePlaceDialog(context, markerObject);
+                RatePlaceDialog ratePlaceDialog = new RatePlaceDialog(this, markerObject);
                 ratePlaceDialog.ShowDialog();
                 break;
             }
@@ -139,12 +146,12 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
                 String review = tv_review.getText().toString();
                 if (review.length() == 0)
                 {
-                    Toast.makeText(context, "Write Something", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Write Something", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                loadingDialog = new LoadingDialog(context, "Sending Review...");
+                loadingDialog = new LoadingDialog(this, "Sending Review...");
                 loadingDialog.ShowDialog();
-                MarkerReviewServerClass markerReviewServerClass = new MarkerReviewServerClass(context, markerObject, review);
+                MarkerReviewServerClass markerReviewServerClass = new MarkerReviewServerClass(this, markerObject, review);
                 markerReviewServerClass.SetListener(this);
                 markerReviewServerClass.execute();
                 break;
@@ -153,18 +160,35 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
             case R.id.flag_photo:
             {
                 //call Rate place dialog
-                RatePhotoDialog ratePhotoDialog = new RatePhotoDialog(context, markerObject);
+                RatePhotoDialog ratePhotoDialog = new RatePhotoDialog(this, markerObject);
                 ratePhotoDialog.ShowDialog();
                 break;
             }
 
             case R.id.flag_name_address_category:
             {
+                //call Rate place dialog
+                final GoogleMap googleMap = getMap();
+                if(googleMap != null)
+                {
+                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
+                            // Make a snapshot when map's done loading
+                            googleMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
+                                @Override
+                                public void onSnapshotReady(Bitmap bitmap) {
+                                    RateCategoryDialog rateCategoryDialog = new RateCategoryDialog(MarkerDescriptionActivity.this, markerObject, bitmap);
+                                    rateCategoryDialog.ShowDialog();
+                                }
+                            });
+                        }
+                    });
+                }
                 break;
             }
             case R.id.flag_facility:
             {
-
                 break;
             }
         }
@@ -174,7 +198,7 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
     public void onReviewSent()
     {
         loadingDialog.HideDialog();
-        Toast.makeText(context, "Review Submitted..", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Review Submitted..", Toast.LENGTH_SHORT).show();
         tv_review.setText("");
     }
 
@@ -182,19 +206,19 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
     public void onReviewFailed()
     {
         loadingDialog.HideDialog();
-        Toast.makeText(context, "Review Not Sent..", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Review Not Sent..", Toast.LENGTH_SHORT).show();
     }
 
     public void beginSlide() {
 
-        mPager =  markerdescriptionDialog.findViewById(R.id.review_pager);
+        mPager =  findViewById(R.id.review_pager);
         final ArrayList<String> reviews = new ArrayList<>();
         for(ReviewsObject reviewsObject : CacheData.cacheAllReviews)
         {
             reviews.addAll(reviewsObject.getReviews());
         }
         System.out.println("Reviews data: "+reviews.toString());
-        mPager.setAdapter(new ReviewSliderAdapter(context,reviews));
+        mPager.setAdapter(new ReviewSliderAdapter(this,reviews));
 
         // Auto start of viewpager
         final Handler handler = new Handler();

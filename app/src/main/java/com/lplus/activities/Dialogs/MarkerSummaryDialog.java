@@ -15,10 +15,12 @@ import com.lplus.activities.DBHelper.AddFavoutiteTable;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.GetReviewsInterface;
 import com.lplus.activities.Interfaces.ReviewsStatusInterface;
+import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Server.GetReviewsServerClass;
 import com.lplus.activities.Server.ReviewsStatusServerClass;
+import com.lplus.activities.activities.MarkerDescriptionActivity;
 
 /**
  * Created by Sai_Kameswari on 22-03-2018.
@@ -132,7 +134,6 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
 
             case R.id.fav_layout:
             {
-
                 if(addFavoutiteTable ==null)
                 {
                     addFavoutiteTable = new AddFavoutiteTable(context);
@@ -177,8 +178,10 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         else
         {
             System.out.println("Reviews fetched: ");
-            MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
-            markerDescriptionDialog.ShowDialog();
+            Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+            tinyDB = new TinyDB(context);
+            tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
+            context.startActivity(intent);
         }
     }
 
@@ -186,23 +189,23 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     public void onUpdateNotRequired()
     {
         Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
-        MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
-        markerDescriptionDialog.ShowDialog();
+        Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+        context.startActivity(intent);
     }
 
     @Override
     public void onReviewFetched()
     {
         System.out.println("Reviews fetched: ");
-        MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
-        markerDescriptionDialog.ShowDialog();
+        Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+        context.startActivity(intent);
     }
 
     @Override
     public void onReviewNotFetched() {
 
         Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
-        MarkerDescriptionDialog markerDescriptionDialog = new MarkerDescriptionDialog(context, markerObject);
-        markerDescriptionDialog.ShowDialog();
+        Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+        context.startActivity(intent);
     }
 }

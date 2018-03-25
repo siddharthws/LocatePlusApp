@@ -30,9 +30,11 @@
         <!-- Activities -->
         <activity
             android:name=".activities.activities.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.activities.SplashActivity" />
-        <activity android:name=".activities.activities.AddPlaceActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activities.activities.AddPlaceActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.activities.FavouriteActivity" />
         <activity android:name=".activities.activities.PreSplashActivity">
             <intent-filter>
@@ -54,8 +56,10 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".activities.activities.HelpSliderActivity" android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity
+            android:name=".activities.activities.HelpSliderActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activities.activities.MarkerDescriptionActivity"></activity>
     </application>
 
 </manifest>

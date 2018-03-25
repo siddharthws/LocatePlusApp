@@ -57,17 +57,17 @@ public class Keys {
     public static final String MARKER_ID                = "placeId";
     public static final String MARKER_NAME              = "name";
     public static final String MARKER_ADDRESS           = "address";
-    public static final String MARKER_CATEGORY          = "category";
-    public static final String MARKER_FACILITIES        = "facilities";
-    public static final String MARKER_LATITUDE          = "latitude";
-    public static final String MARKER_LONGITUDE         = "longitude";
+    public static final String MARKER_CATEGORY                  = "category";
+    public static final String MARKER_FACILITIES                = "facilities";
+    public static final String MARKER_LATITUDE                  = "latitude";
+    public static final String MARKER_LONGITUDE                 = "longitude";
 
     //tinyDB variables
-    public static final String TINYDB_MARKERS           = "tinydb_markers";
-    public static final String TINYDB_PHOTO_LIST        = "photoList";
-    public static final String TINYDB_PHOTO_UUID_LIST   = "photoUUIDList";
-    public static final String MARKER_REVIEW            = "review";
-    public static final String HELP_SLIDER              = "helpSlider";
+    public static final String TINYDB_MARKERS                   = "tinydb_markers";
+    public static final String TINYDB_PHOTO_LIST                = "photoList";
+    public static final String TINYDB_PHOTO_UUID_LIST           = "photoUUIDList";
+    public static final String MARKER_REVIEW                    = "review";
+    public static final String HELP_SLIDER                      = "helpSlider";
 
 
     //Review Updates on Know More Click
@@ -77,5 +77,7 @@ public class Keys {
 
     public static final String SELECTED_OBJECT                  = "selectedObject";
     public static final String FAVORITES_ARRAY_LIST             = "fav_array_list";
+
+    public static final String MARKER_OBJECT                    = "clickedMarker";
 
 }

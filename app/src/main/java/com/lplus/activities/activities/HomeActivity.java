@@ -308,10 +308,13 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        if(drawer != null)
+        {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -694,5 +697,14 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
             mMap.clear();
         }
+    }
+
+    public GoogleMap getMap()
+    {
+        if(mMap != null)
+        {
+            return mMap;
+        }
+        return null;
     }
 }

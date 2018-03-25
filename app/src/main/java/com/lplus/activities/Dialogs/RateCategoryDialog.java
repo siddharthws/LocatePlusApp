@@ -2,6 +2,7 @@ package com.lplus.activities.Dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,11 +21,13 @@ public class RateCategoryDialog implements View.OnClickListener {
     private MarkerObject markerObject;
     private TextView rate_title, category_que;
     private LinearLayout LL_yes, LL_no, LL_not_sure;
+    private Bitmap bitmap;
 
-    public RateCategoryDialog(Context context, MarkerObject markerObject)
+    public RateCategoryDialog(Context context, MarkerObject markerObject, Bitmap bitmap)
     {
         this.context = context;
         this.markerObject = markerObject;
+        this.bitmap = bitmap;
         Init();
     }
 
