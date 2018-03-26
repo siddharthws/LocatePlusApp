@@ -19,7 +19,8 @@ import com.lplus.R;
 import com.lplus.activities.Adapters.ReviewSliderAdapter;
 import com.lplus.activities.DBHelper.ReviewsTable;
 import com.lplus.activities.Dialogs.LoadingDialog;
-import com.lplus.activities.Dialogs.RateCategoryDialog;
+import com.lplus.activities.Dialogs.RateCANDialog;
+import com.lplus.activities.Dialogs.RateFacilityDialog;
 import com.lplus.activities.Dialogs.RatePhotoDialog;
 import com.lplus.activities.Dialogs.RatePlaceDialog;
 import com.lplus.activities.Extras.CacheData;
@@ -38,12 +39,14 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
 
     private MarkerObject markerObject;
     private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review;
-    private LinearLayout direction_layout, desc_layout;
+    private LinearLayout direction_layout, desc_layout, rate_place;
     private ImageButton review_send, flag_photo, flag_name_address_category, flag_facility;
     private LoadingDialog loadingDialog;
     private ViewPager mPager;
     private static int currentPage = 0;
     private TinyDB tinyDB;
+    private ArrayList<String> photo_uuid_array;
+    private ArrayList<String> photo_path_array;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,8 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
     {
         //fetch marker object
         tinyDB = TinyDB.Init(this);
+        photo_uuid_array = new ArrayList<>();
+        photo_path_array = new ArrayList<>();
         markerObject = tinyDB.getObject(Keys.MARKER_OBJECT, MarkerObject.class);
 
         //fetch all ID's from View
@@ -79,11 +84,12 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         flag_photo = findViewById(R.id.flag_photo);
         flag_name_address_category = findViewById(R.id.flag_name_address_category);
         flag_facility = findViewById(R.id.flag_facility);
+        rate_place = findViewById(R.id.rate_place_layout);
 
 
 
         direction_layout = findViewById(R.id.direction_layout);
-        desc_layout = findViewById(R.id.desc_layout);
+        desc_layout = findViewById(R.id.rate_place_layout);
 
         setData();
         //set listeners for linear layouts
@@ -91,6 +97,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         desc_layout.setOnClickListener(this);
         review_send.setOnClickListener(this);
         flag_photo.setOnClickListener(this);
+        flag_facility.setOnClickListener(this);
         flag_name_address_category.setOnClickListener(this);
         flag_facility.setOnClickListener(this);
     }
@@ -160,8 +167,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
             case R.id.flag_photo:
             {
                 //call Rate place dialog
-                RatePhotoDialog ratePhotoDialog = new RatePhotoDialog(this, markerObject);
-                ratePhotoDialog.ShowDialog();
+                RatePhotoDialog ratePhotoDialog = new RatePhotoDialog(this, markerObject, photo_uuid_array, photo_path_array);
                 break;
             }
 
@@ -178,7 +184,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
                             googleMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
                                 @Override
                                 public void onSnapshotReady(Bitmap bitmap) {
-                                    RateCategoryDialog rateCategoryDialog = new RateCategoryDialog(MarkerDescriptionActivity.this, markerObject, bitmap);
+                                    RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject, bitmap);
                                     rateCategoryDialog.ShowDialog();
                                 }
                             });
@@ -189,6 +195,13 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
             }
             case R.id.flag_facility:
             {
+                RateFacilityDialog rateFacilityDialog = new RateFacilityDialog(this, markerObject);
+                break;
+            }
+            case R.id.rate_place_layout:
+            {
+                RatePlaceDialog ratePlaceDialog = new RatePlaceDialog(this, markerObject);
+                ratePlaceDialog.ShowDialog();
                 break;
             }
         }

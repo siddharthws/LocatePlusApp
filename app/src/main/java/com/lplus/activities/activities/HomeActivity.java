@@ -321,7 +321,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private void displayMap() {
 
         //setup Cluster
-        setUpClusterer();
+        //setUpClusterer();
         //set UI Settings
         setUISettings();
 

@@ -40,6 +40,8 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
     private LoadingDialog loadingDialog;
     private ViewPager mPager;
     private static int currentPage = 0;
+    ArrayList<String> photo_uuid;
+    ArrayList<String> photo_path;
 
     public MarkerDescriptionDialog(Context context, MarkerObject markerObject)
     {
@@ -153,8 +155,7 @@ public class MarkerDescriptionDialog implements View.OnClickListener, MarkerRevi
             case R.id.flag_photo:
             {
                 //call Rate place dialog
-                RatePhotoDialog ratePhotoDialog = new RatePhotoDialog(context, markerObject);
-                ratePhotoDialog.ShowDialog();
+                RatePhotoDialog ratePhotoDialog = new RatePhotoDialog(context, markerObject, photo_uuid, photo_path);
                 break;
             }
 

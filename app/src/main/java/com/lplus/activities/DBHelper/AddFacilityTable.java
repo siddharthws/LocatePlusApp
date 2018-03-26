@@ -84,6 +84,28 @@ public class AddFacilityTable extends DatabaseHelper {
         return result;
     }
 
+    public String ReadID(String fac_names)
+    {
+        ArrayList<String> facility_ids = new ArrayList<>();
+        SQLiteDatabase Rdb = db.getReadableDatabase();
+        String id = " ";
+
+        Cursor dbRows = Rdb.query(TABLE_NAME,
+                new String[]{COLUMN_ID, COLUMN_FACILITY_ID, COLUMN_FACILITY_VALUE},
+                COLUMN_FACILITY_VALUE+"=?",
+                new String[] {fac_names},
+                null,
+                null,
+                null);
+
+        while (dbRows.moveToNext()) {
+
+            id = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_FACILITY_ID));
+        }
+
+        return id;
+    }
+
     public Boolean DeleteAll()
     {
         SQLiteDatabase WDB = db.getWritableDatabase();
