@@ -109,7 +109,7 @@ public class RateFacilityDialog implements RateFacillityInterface{
     }
         loadingDialog = new LoadingDialog(context, "Please Wait...");
         loadingDialog.ShowDialog();
-        RateFacilityServerClass rateFacilityServerClass = new RateFacilityServerClass(context, fac_id, fac_rate);
+        RateFacilityServerClass rateFacilityServerClass = new RateFacilityServerClass(context, markerObject, fac_id, fac_rate);
         rateFacilityServerClass.SetListener(this);
         rateFacilityServerClass.execute();
 
