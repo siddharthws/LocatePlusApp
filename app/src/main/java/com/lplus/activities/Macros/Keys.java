@@ -46,7 +46,7 @@ public class Keys {
     public static final String AP_CATEGORY              = "category";
     public static final String AP_FACILITIES            = "facilities";
     public static final String AP_DESCRIPTION           = "description";
-    public static final String AP_RESPONSE              = "sucess";
+    public static final String AP_RESPONSE              = "success";
     public static final String AP_PHOTO_RESPONSE        = "photo";
     public static final String AP_UUIDS                 = "photouuid";
     public static final String AP_PHOTOSTREAM           = "uploadImage";
@@ -68,6 +68,8 @@ public class Keys {
     public static final String TINYDB_PHOTO_UUID_LIST           = "photoUUIDList";
     public static final String MARKER_REVIEW                    = "review";
     public static final String HELP_SLIDER                      = "helpSlider";
+    public static final String RATE_EXIST                      = "rateExist";
+    public static final String RATE_VALUE                      = "rateValue";
 
 
     //Review Updates on Know More Click
@@ -79,5 +81,17 @@ public class Keys {
     public static final String FAVORITES_ARRAY_LIST             = "fav_array_list";
 
     public static final String MARKER_OBJECT                    = "clickedMarker";
+
+    //Rate Keys
+    public static final String RATE_CAN_NAME                    = "canRateName";
+    public static final String RATE_CAN_CATEGORY                = "canRateCategory";
+    public static final String RATE_CAN_ADDRESS                 = "canRateAddress";
+    public static final String RATE_FAC                         = "facility";
+    public static final String RATE_FAC_ID                      = "facilityID";
+    public static final String RATE_FAC_RATE                    = "facilityRate";
+    public static final String RATE_PLACE                       = "placeRate";
+    public static final String RATE_PHOTO                       = "photo";
+    public static final String RATE_PHOTO_UUID                  = "photoUuid";
+    public static final String RATE_PHOTO_RATE                  = "photoRate";
 
 }
