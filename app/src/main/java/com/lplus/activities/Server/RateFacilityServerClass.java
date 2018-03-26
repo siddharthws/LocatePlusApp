@@ -32,11 +32,12 @@ public class RateFacilityServerClass extends BaseServerClass {
         this.listener = listener;
     }
 
-    public RateFacilityServerClass(Context context, ArrayList<String> fac_ids, ArrayList<String> fac_rates)
+    public RateFacilityServerClass(Context context, MarkerObject markerObject, ArrayList<String> fac_ids, ArrayList<String> fac_rates)
     {
         super(context, UrlMappings.RATE_FACILITY);
         this.context = context;
         this.fac_ids = fac_ids;
+        this.markerObject = markerObject;
         this.fac_rates = fac_rates;
     }
 

@@ -89,7 +89,7 @@ public class Keys {
     public static final String RATE_FAC                         = "facility";
     public static final String RATE_FAC_ID                      = "facilityID";
     public static final String RATE_FAC_RATE                    = "facilityRate";
-    public static final String RATE_PLACE                       = "placeRate";
+    public static final String RATE_PLACE                       = "rating";
     public static final String RATE_PHOTO                       = "photo";
     public static final String RATE_PHOTO_UUID                  = "photoUuid";
     public static final String RATE_PHOTO_RATE                  = "photoRate";

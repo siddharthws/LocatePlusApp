@@ -25,7 +25,7 @@ import es.dmoral.toasty.Toasty;
  * Created by Sai_Kameswari on 25-03-2018.
  */
 
-public class RatePlaceDialog implements View.OnClickListener,View.OnTouchListener, RatePlaceInterface {
+public class RatePlaceDialog implements View.OnClickListener, RatePlaceInterface {
 
     private Context context;
     private Dialog ratePlaceDialog;
@@ -157,15 +157,14 @@ public class RatePlaceDialog implements View.OnClickListener,View.OnTouchListene
             }
             case R.id.sure_LL:
             {
-                if(previous == 0) {
-                    Toasty.error(context,"Change your rating", Toast.LENGTH_SHORT,true);
+                if(tinyDB.getInt(markerObject.getMarkerID()+"value") == 0) {
+                    Toasty.error(context,"Change your rating", Toast.LENGTH_SHORT,true).show();
                     return;
                 }
                 if(previous == tinyDB.getInt(markerObject.getMarkerID()+"value")) {
-                    Toasty.error(context,"Select a rating", Toast.LENGTH_SHORT,true);
+                    Toasty.error(context,"Select a rating", Toast.LENGTH_SHORT,true).show();
                     return;
                 }
-                tinyDB.putBoolean(markerObject.getMarkerID()+"exist",true);
                 loadingDialog = new LoadingDialog(context, "Please Wait...");
                 loadingDialog.ShowDialog();
                 RatePlaceServerClass ratePlaceServerClass = new RatePlaceServerClass(context, markerObject, String.valueOf(tinyDB.getInt(Keys.RATE_VALUE)));
@@ -231,54 +230,21 @@ public class RatePlaceDialog implements View.OnClickListener,View.OnTouchListene
 
     @Override
     public void onRatePlaceSuccess() {
+        tinyDB.putBoolean(markerObject.getMarkerID()+"exist",true);
         loadingDialog.HideDialog();
-        Toasty.success(context,"Rate Successfully Updated", Toast.LENGTH_SHORT,true);
+        Toasty.success(context,"Rate Successfully Updated", Toast.LENGTH_SHORT,true).show();
     }
 
     @Override
     public void onRatePlaceFailed() {
-        loadingDialog.HideDialog();
-        Toasty.error(context,"Rate Upload Failed", Toast.LENGTH_SHORT,true);
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (v.getId()) {
-            case R.id.star1:
-            {
-                selectOneStar();
-                tinyDB.putInt(markerObject.getMarkerID()+"value",1);
-                break;
-            }
-
-            case R.id.star2:
-            {
-                selectTwoStar();
-                tinyDB.putInt(markerObject.getMarkerID()+"value",2);
-                break;
-            }
-
-            case R.id.star3:
-            {
-                selectThreeStar();
-                tinyDB.putInt(markerObject.getMarkerID()+"value",3);
-                break;
-            }
-
-            case R.id.star4:
-            {
-                selectFourStar();
-                tinyDB.putInt(markerObject.getMarkerID()+"value",4);
-                break;
-            }
-
-            case R.id.star5:
-            {
-                selectFiveStar();
-                tinyDB.putInt(markerObject.getMarkerID()+"value",5);
-                break;
-            }
+        if(tinyDB.getBoolean(markerObject.getMarkerID()+"exist")) {
+            tinyDB.putInt(markerObject.getMarkerID()+"value",previous);
+        }else {
+            tinyDB.putInt(markerObject.getMarkerID()+"value",0);
+            tinyDB.putBoolean(markerObject.getMarkerID()+"exist",false);
         }
-        return false;
+        loadingDialog.HideDialog();
+        Toasty.error(context,"Rate Upload Failed", Toast.LENGTH_SHORT,true).show();
     }
+
 }

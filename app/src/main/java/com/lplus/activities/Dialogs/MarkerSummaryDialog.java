@@ -179,7 +179,7 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         {
             System.out.println("Reviews fetched: ");
             Intent intent = new Intent(context, MarkerDescriptionActivity.class);
-            tinyDB = new TinyDB(context);
+            tinyDB = TinyDB.Init(context);
             tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
             context.startActivity(intent);
         }
@@ -190,6 +190,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     {
         Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+        tinyDB = TinyDB.Init(context);
+        tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
         context.startActivity(intent);
     }
 
@@ -198,6 +200,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     {
         System.out.println("Reviews fetched: ");
         Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+        tinyDB = TinyDB.Init(context);
+        tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
         context.startActivity(intent);
     }
 
@@ -206,6 +210,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
 
         Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+        tinyDB = TinyDB.Init(context);
+        tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
         context.startActivity(intent);
     }
 }

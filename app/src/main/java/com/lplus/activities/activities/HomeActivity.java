@@ -571,6 +571,12 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void setAllMarkers()
     {
+        if(CacheData.cacheMarkers == null)
+        {
+            MarkersTable markersTable = new MarkersTable(this);
+            CacheData.cacheMarkers = markersTable.ReadRecords();
+            markersTable.CloseConnection();
+        }
         ArrayList<MarkerObject> markersList = CacheData.cacheMarkers;
         LatLng position;
         for(MarkerObject markerObject : markersList)
