@@ -66,7 +66,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
     private void Init()
     {
         //fetch marker object
-        tinyDB = new TinyDB(this);
+        tinyDB = TinyDB.Init(this);
         markerObject = tinyDB.getObject(Keys.MARKER_OBJECT, MarkerObject.class);
 
         //fetch all ID's from View
