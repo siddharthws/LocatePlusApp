@@ -7,6 +7,5 @@ import java.util.List;
  */
 
 public interface CategorySelectedInterface {
-    void onApplyClick(List<String> selectedcategories);
-    void onCancelClick(List<String> selectedcategories);
+    void onApplyClick(boolean status, List<String> selectedcategories);
 }

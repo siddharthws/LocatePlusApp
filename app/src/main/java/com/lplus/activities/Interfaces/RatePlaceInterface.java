@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface RatePlaceInterface {
-    void onRatePlaceSuccess();
-    void onRatePlaceFailed();
+    void onRatePlaceSuccess(boolean status);
 }

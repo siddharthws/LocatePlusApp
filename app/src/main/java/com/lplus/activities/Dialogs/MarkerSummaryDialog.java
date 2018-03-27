@@ -218,7 +218,6 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
             {
                 break;
             }
-
         }
     }
 
@@ -248,26 +247,6 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     @Override
     public void onUpdateNotRequired()
     {
-        Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(context, MarkerDescriptionActivity.class);
-        tinyDB = TinyDB.Init(context);
-        tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
-        context.startActivity(intent);
-    }
-
-    @Override
-    public void onReviewFetched()
-    {
-        System.out.println("Reviews fetched: ");
-        Intent intent = new Intent(context, MarkerDescriptionActivity.class);
-        tinyDB = TinyDB.Init(context);
-        tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
-        context.startActivity(intent);
-    }
-
-    @Override
-    public void onReviewNotFetched() {
-
         Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context, MarkerDescriptionActivity.class);
         tinyDB = TinyDB.Init(context);
@@ -322,5 +301,25 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         star3.setImageResource(R.drawable.icons8_star_96);
         star4.setImageResource(R.drawable.icons8_star_96);
         star5.setImageResource(R.drawable.icons8_star_96);
+    }
+
+    @Override
+    public void onReviewFetchStatus(boolean status) {
+        if (status)
+        {
+            System.out.println("Reviews fetched: ");
+            Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+            tinyDB = TinyDB.Init(context);
+            tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
+            context.startActivity(intent);
+        }
+        else
+        {
+            Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+            tinyDB = TinyDB.Init(context);
+            tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
+            context.startActivity(intent);
+        }
     }
 }

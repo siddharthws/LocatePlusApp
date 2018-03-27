@@ -6,10 +6,11 @@ import com.lplus.activities.Interfaces.MarkerReviewInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 import com.lplus.activities.Objects.MarkerObject;
-import okhttp3.RequestBody;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.RequestBody;
 
 /**
  * Created by Sai_Kameswari on 22-03-2018.
@@ -70,11 +71,11 @@ public class MarkerReviewServerClass extends BaseServerClass {
                 boolean sucess = responseJson.getBoolean(Keys.AP_RESPONSE);
                 if(sucess)
                 {
-                    listener.onReviewSent();
+                    listener.onReviewSentStatus(true);
                 }
                 else
                 {
-                    listener.onReviewFailed();
+                    listener.onReviewSentStatus(false);
                 }
 
             } catch (JSONException e) {
@@ -82,7 +83,7 @@ public class MarkerReviewServerClass extends BaseServerClass {
             }
         }
         else {
-            listener.onReviewFailed();
+            listener.onReviewSentStatus(false);
         }
     }
 }

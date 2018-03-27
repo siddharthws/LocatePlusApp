@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface AddPhotoInterface {
-    void onPhotoAddSucces();
-    void onPhotoAddFailed();
+    void onPhotoRecieve(boolean status);
 }

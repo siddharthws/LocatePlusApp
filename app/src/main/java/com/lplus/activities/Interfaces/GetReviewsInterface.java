@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface GetReviewsInterface {
-    void onReviewFetched();
-    void onReviewNotFetched();
+    void onReviewFetchStatus(boolean status);
 }

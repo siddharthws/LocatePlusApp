@@ -2,7 +2,6 @@ package com.lplus.activities.Server;
 
 import android.content.Context;
 
-import com.lplus.activities.Interfaces.MarkerReviewInterface;
 import com.lplus.activities.Interfaces.RatePhotosInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
@@ -76,11 +75,11 @@ public class RatePhotoServerClass extends BaseServerClass {
                 boolean sucess = responseJson.getBoolean(Keys.AP_RESPONSE);
                 if(sucess)
                 {
-                    listener.onPhotoSent();
+                    listener.onPhotoSent(true);
                 }
                 else
                 {
-                    listener.onPhotosFailed();
+                    listener.onPhotoSent(false);
                 }
 
             } catch (JSONException e) {
@@ -88,7 +87,7 @@ public class RatePhotoServerClass extends BaseServerClass {
             }
         }
         else {
-            listener.onPhotosFailed();
+            listener.onPhotoSent(false);
         }
     }
 

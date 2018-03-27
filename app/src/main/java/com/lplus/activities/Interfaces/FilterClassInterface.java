@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface FilterClassInterface {
-    void onFilterListFetched();
-    void onFilterListFailed();
+    void onFilterFetchStatus(boolean status);
 }

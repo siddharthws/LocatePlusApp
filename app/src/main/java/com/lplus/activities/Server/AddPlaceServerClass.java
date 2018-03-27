@@ -82,18 +82,18 @@ public class AddPlaceServerClass extends BaseServerClass {
 
                 if(success)
                 {
-                    listener.onPlaceAddSucces();
+                    listener.onPlaceAddStatus(true);
                 }
                 else
                 {
-                    listener.onPlaceAddFailed();
+                    listener.onPlaceAddStatus(false);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         else {
-            listener.onPlaceAddFailed();
+            listener.onPlaceAddStatus(false);
         }
     }
 

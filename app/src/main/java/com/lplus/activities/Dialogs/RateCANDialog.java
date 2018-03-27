@@ -3,7 +3,6 @@ package com.lplus.activities.Dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,7 +13,6 @@ import com.lplus.R;
 import com.lplus.activities.Interfaces.RateCANInterface;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Server.RateCANServerClass;
-import com.lplus.activities.Server.RatePhotoServerClass;
 
 import java.util.ArrayList;
 
@@ -203,14 +201,16 @@ public class RateCANDialog implements RateCANInterface {
     }
 
     @Override
-    public void onCANSuccess() {
-        loadingDialog.HideDialog();
-        Toasty.success(context,"Rate Uploaded", Toast.LENGTH_SHORT,true);
-    }
-
-    @Override
-    public void onCANFailed() {
-        loadingDialog.HideDialog();
-        Toasty.error(context,"Rating Failed", Toast.LENGTH_SHORT,true);
+    public void onCANStatus(boolean status) {
+        if (status)
+        {
+            loadingDialog.HideDialog();
+            Toasty.success(context,"Rate Uploaded", Toast.LENGTH_SHORT,true);
+        }
+        else
+        {
+            loadingDialog.HideDialog();
+            Toasty.error(context,"Rating Failed", Toast.LENGTH_SHORT,true);
+        }
     }
 }

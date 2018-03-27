@@ -80,13 +80,13 @@ public class FilterServerClass extends BaseServerClass {
                 JSONArray categories = responseJson.getJSONArray(Keys.CATEGORIES);
                 JSONArray facilities = responseJson.getJSONArray(Keys.FACILITIES);
                 ServerParseStatics.Init(context, categories, facilities);
-                listener.onCatFetched();
+                listener.onCatStatus(true);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            listener.onCatNotFetched();
+            listener.onCatStatus(false);
         }
 
     }

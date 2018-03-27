@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface RatePhotosInterface {
-    void onPhotoSent();
-    void onPhotosFailed();
+    void onPhotoSent(boolean status);
 }

@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface MarkerReviewInterface {
-    void onReviewSent();
-    void onReviewFailed();
+    void onReviewSentStatus(boolean status);
 }

@@ -33,29 +33,6 @@ public class PostSplashActivity extends AppCompatActivity implements GetMarkerIn
     }
 
     @Override
-    public void onMarkerFetched()
-    {
-        System.out.println("GP update complete");
-        loadingDialog.HideDialog();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(PostSplashActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 500);
-    }
-
-    @Override
-    public void onMarkerFailed()
-    {
-        loadingDialog.HideDialog();
-        Toast.makeText(this, "Failed to load Markers...", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onPause() {
         loadingDialog.HideDialog();
         super.onPause();
@@ -67,4 +44,26 @@ public class PostSplashActivity extends AppCompatActivity implements GetMarkerIn
         super.onResume();
     }
 
+    @Override
+    public void onMarkerFetchStatus(boolean status) {
+        if (status)
+        {
+            System.out.println("GP update complete");
+            loadingDialog.HideDialog();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(PostSplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, 500);
+        }
+        else
+        {
+            loadingDialog.HideDialog();
+            Toast.makeText(this, "Failed to load Markers...", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

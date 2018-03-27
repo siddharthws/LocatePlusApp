@@ -154,44 +154,67 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
     }
 
     @Override
-    public void onCatFetched()
-    {
-        int storedResponseGP = app_sharePref.getInt(Keys.STORED_RESPONSE_GP, -1);
-
-        System.out.println("StatusResponseGP: "+statusResponseGP);
-        System.out.println("StoredResponseGP: "+storedResponseGP);
-
-        if(statusResponseGP <= storedResponseGP)
+    public void onCatStatus(boolean status) {
+        if (status)
         {
-            //store markers in statics
-            if(CacheData.cacheMarkers == null)
+            int storedResponseGP = app_sharePref.getInt(Keys.STORED_RESPONSE_GP, -1);
+
+            System.out.println("StatusResponseGP: "+statusResponseGP);
+            System.out.println("StoredResponseGP: "+storedResponseGP);
+
+            if(statusResponseGP <= storedResponseGP)
             {
-                CacheData.cacheMarkers = new ArrayList<>();
-                MarkersTable markersTable = new MarkersTable(this);
-                CacheData.cacheMarkers.addAll(markersTable.ReadRecords());
-                markersTable.CloseConnection();
-            }
-
-            System.out.println("GP update not required");
-            tv_splash2.setText("Ready to Roll The App...");
-
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
+                //store markers in statics
+                if(CacheData.cacheMarkers == null)
+                {
+                    CacheData.cacheMarkers = new ArrayList<>();
+                    MarkersTable markersTable = new MarkersTable(this);
+                    CacheData.cacheMarkers.addAll(markersTable.ReadRecords());
+                    markersTable.CloseConnection();
                 }
-            }, 2000);
+
+                System.out.println("GP update not required");
+                tv_splash2.setText("Ready to Roll The App...");
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 2000);
+            }
+            else
+            {
+                System.out.println("GP update required");
+                //update shared preferences
+                SharedPreferences.Editor edit = app_sharePref.edit();
+                edit.putInt(Keys.STORED_RESPONSE_GP, statusResponseGP);
+                edit.apply();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(SplashActivity.this, PostSplashActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 2000);
+            }
         }
         else
         {
-            System.out.println("GP update required");
             //update shared preferences
             SharedPreferences.Editor edit = app_sharePref.edit();
-            edit.putInt(Keys.STORED_RESPONSE_GP, statusResponseGP);
+            edit.putInt(Keys.STORED_RESPONSE_FC, -1);
             edit.apply();
+
+            //filterLoadingDialog.HideDialog();
+            ServerParseStatics.onFailInit();
+            tv_splash2.setText("Could not fetch the Updates.....");
 
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -203,28 +226,5 @@ public class SplashActivity extends AppCompatActivity implements ServerStatusInt
                 }
             }, 2000);
         }
-    }
-
-    @Override
-    public void onCatNotFetched()
-    {
-        //update shared preferences
-        SharedPreferences.Editor edit = app_sharePref.edit();
-        edit.putInt(Keys.STORED_RESPONSE_FC, -1);
-        edit.apply();
-
-        //filterLoadingDialog.HideDialog();
-        ServerParseStatics.onFailInit();
-        tv_splash2.setText("Could not fetch the Updates.....");
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, PostSplashActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 2000);
     }
 }

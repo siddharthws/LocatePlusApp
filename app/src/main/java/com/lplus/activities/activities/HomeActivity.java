@@ -500,56 +500,11 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     }
 
     @Override
-    public void onApplyClick(List<String> selectedcategories)
-    {
-        filterDialog.HideDialog();
-        loadingDialog = new LoadingDialog(this, "Applying Filters...");
-        loadingDialog.ShowDialog();
-
-        //fetch All Records
-        ClearMap();
-        ArrayList<MarkerObject> filteredMarkers = ServerParseStatics.filteredMarkers(selectedcategories, this);
-        tinyDB = new TinyDB(this);
-        tinyDB.putListString("selectedCategories", (ArrayList<String>) selectedcategories);
-        if(filteredMarkers.size() > 0)
-        {
-            loadingDialog.HideDialog();
-            setFilteredeMarkers(filteredMarkers);
-        }
-        else
-        {
-            loadingDialog.HideDialog();
-            Toast.makeText(this, "No Markers Existing", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onCancelClick(List<String> selectedcategories)
-    {
-        if(selectedcategories!=null)
-        {
-            filterDialog.HideDialog();
-        }
-    }
-
-    @Override
     public void onResume() {
         tinyDB.putListString(Keys.TINYDB_PHOTO_LIST,new ArrayList<String>());
         tinyDB.putListString(Keys.TINYDB_PHOTO_UUID_LIST,new ArrayList<String>());
         mapFragment.onResume();
         super.onResume();
-    }
-
-    @Override
-    public void onMarkerFetched()
-    {
-        setAllMarkers();
-    }
-
-    @Override
-    public void onMarkerFailed()
-    {
-        Toast.makeText(this, "Failed to Sync Markers...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -712,5 +667,51 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             return mMap;
         }
         return null;
+    }
+
+    @Override
+    public void onMarkerFetchStatus(boolean status) {
+        if (status)
+        {
+            setAllMarkers();
+        }
+        else
+        {
+            Toast.makeText(this, "Failed to Sync Markers...", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onApplyClick(boolean status, List<String> selectedcategories)
+    {
+        if (status)
+        {
+            filterDialog.HideDialog();
+            loadingDialog = new LoadingDialog(this, "Applying Filters...");
+            loadingDialog.ShowDialog();
+
+            //fetch All Records
+            ClearMap();
+            ArrayList<MarkerObject> filteredMarkers = ServerParseStatics.filteredMarkers(selectedcategories, this);
+            tinyDB = new TinyDB(this);
+            tinyDB.putListString("selectedCategories", (ArrayList<String>) selectedcategories);
+            if(filteredMarkers.size() > 0)
+            {
+                loadingDialog.HideDialog();
+                setFilteredeMarkers(filteredMarkers);
+            }
+            else
+            {
+                loadingDialog.HideDialog();
+                Toast.makeText(this, "No Markers Existing", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            if(selectedcategories!=null)
+            {
+                filterDialog.HideDialog();
+            }
+        }
     }
 }

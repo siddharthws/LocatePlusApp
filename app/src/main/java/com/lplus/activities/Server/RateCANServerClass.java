@@ -2,7 +2,6 @@ package com.lplus.activities.Server;
 
 import android.content.Context;
 
-import com.lplus.activities.Interfaces.MarkerReviewInterface;
 import com.lplus.activities.Interfaces.RateCANInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
@@ -75,11 +74,11 @@ public class RateCANServerClass extends BaseServerClass {
                 boolean sucess = responseJson.getBoolean(Keys.AP_RESPONSE);
                 if(sucess)
                 {
-                    listener.onCANSuccess();
+                    listener.onCANStatus(true);
                 }
                 else
                 {
-                    listener.onCANFailed();
+                    listener.onCANStatus(false);
                 }
 
             } catch (JSONException e) {
@@ -87,7 +86,7 @@ public class RateCANServerClass extends BaseServerClass {
             }
         }
         else {
-            listener.onCANFailed();
+            listener.onCANStatus(true);
         }
     }
 }

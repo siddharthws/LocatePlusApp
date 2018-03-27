@@ -2,7 +2,6 @@ package com.lplus.activities.Server;
 
 import android.content.Context;
 
-import com.lplus.activities.Interfaces.MarkerReviewInterface;
 import com.lplus.activities.Interfaces.RateFacillityInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
@@ -76,11 +75,11 @@ public class RateFacilityServerClass extends BaseServerClass {
                 boolean sucess = responseJson.getBoolean(Keys.AP_RESPONSE);
                 if(sucess)
                 {
-                    listener.onFacilitySent();
+                    listener.onFacilityFetchStatus(true);
                 }
                 else
                 {
-                    listener.onFacilityFailed();
+                    listener.onFacilityFetchStatus(false);
                 }
 
             } catch (JSONException e) {
@@ -88,7 +87,7 @@ public class RateFacilityServerClass extends BaseServerClass {
             }
         }
         else {
-            listener.onFacilityFailed();
+            listener.onFacilityFetchStatus(false);
         }
     }
 
