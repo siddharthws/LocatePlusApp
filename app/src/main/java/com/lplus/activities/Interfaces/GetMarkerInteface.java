@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface GetMarkerInteface {
-    void onMarkerFetched();
-    void onMarkerFailed();
+    void onMarkerFetchStatus(boolean status);
 }

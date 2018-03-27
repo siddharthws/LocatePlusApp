@@ -80,11 +80,11 @@ public class GetReviewsServerClass extends BaseServerClass{
                 {
                     ServerParseStatics.parseReviews(context, placeID, reviews);
                 }
-                listener.onReviewFetched();
+                listener.onReviewFetchStatus(true);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        else {listener.onReviewNotFetched();}
+        else {listener.onReviewFetchStatus(false);}
     }
 }

@@ -2,8 +2,6 @@ package com.lplus.activities.Dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,7 +14,6 @@ import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.RatePlaceInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.MarkerObject;
-import com.lplus.activities.Server.MarkerReviewServerClass;
 import com.lplus.activities.Server.RatePlaceServerClass;
 
 import es.dmoral.toasty.Toasty;
@@ -229,22 +226,23 @@ public class RatePlaceDialog implements View.OnClickListener, RatePlaceInterface
     }
 
     @Override
-    public void onRatePlaceSuccess() {
-        tinyDB.putBoolean(markerObject.getMarkerID()+"exist",true);
-        loadingDialog.HideDialog();
-        Toasty.success(context,"Rate Successfully Updated", Toast.LENGTH_SHORT,true).show();
-    }
-
-    @Override
-    public void onRatePlaceFailed() {
-        if(tinyDB.getBoolean(markerObject.getMarkerID()+"exist")) {
-            tinyDB.putInt(markerObject.getMarkerID()+"value",previous);
-        }else {
-            tinyDB.putInt(markerObject.getMarkerID()+"value",0);
-            tinyDB.putBoolean(markerObject.getMarkerID()+"exist",false);
+    public void onRatePlaceSuccess(boolean status) {
+        if (status)
+        {
+            tinyDB.putBoolean(markerObject.getMarkerID()+"exist",true);
+            loadingDialog.HideDialog();
+            Toasty.success(context,"Rate Successfully Updated", Toast.LENGTH_SHORT,true).show();
         }
-        loadingDialog.HideDialog();
-        Toasty.error(context,"Rate Upload Failed", Toast.LENGTH_SHORT,true).show();
+        else
+        {
+            if(tinyDB.getBoolean(markerObject.getMarkerID()+"exist")) {
+                tinyDB.putInt(markerObject.getMarkerID()+"value",previous);
+            }else {
+                tinyDB.putInt(markerObject.getMarkerID()+"value",0);
+                tinyDB.putBoolean(markerObject.getMarkerID()+"exist",false);
+            }
+            loadingDialog.HideDialog();
+            Toasty.error(context,"Rate Upload Failed", Toast.LENGTH_SHORT,true).show();
+        }
     }
-
 }

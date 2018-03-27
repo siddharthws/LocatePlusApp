@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface RateFacillityInterface {
-    void onFacilitySent();
-    void onFacilityFailed();
+    void onFacilityFetchStatus(boolean status);
 }

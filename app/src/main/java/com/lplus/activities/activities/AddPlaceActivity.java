@@ -52,16 +52,18 @@ import java.util.UUID;
 import es.dmoral.toasty.Toasty;
 import me.relex.circleindicator.CircleIndicator;
 
-public class AddPlaceActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AddPlaceInterface, View.OnClickListener, GetMarkerInteface, AddPhotoInterface {
+public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.OnItemSelectedListener,
+                                                                    AddPlaceInterface,
+                                                                    View.OnClickListener,
+                                                                    GetMarkerInteface,
+                                                                    AddPhotoInterface {
 
-    private static final String LOG_TAG = "UCHIHA";
     private CustomExpandableListAdapter listAdapter;
     private ListView simpleExpandableListView;
     File file;
 
     CameraPhoto cameraPhoto;
     final int CAMERA_REQUEST = 13323;
-    final int GALLERY_REQUEST = 22131;
     private static ViewPager mPager;
     private static int currentPage = 0;
     private ArrayList<String> XMEN = new ArrayList<>();
@@ -157,7 +159,7 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         simpleExpandableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d( LOG_TAG, "onChildClick: "+position );
+
                 CheckBox cb = view.findViewById( R.id.facility_child_check );
                 if(selected_fac.contains(facility.get(position).getFac_id()))
                 {
@@ -205,7 +207,6 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
 
     public void onContentChanged  () {
         super.onContentChanged();
-        Log.d( LOG_TAG, "onContentChanged" );
     }
 
     @Override
@@ -415,33 +416,6 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
-    public void onPlaceAddSucces()
-    {
-        loadingDialog.HideDialog();
-        Toast.makeText(AddPlaceActivity.this, "Place Added Successfully", Toast.LENGTH_SHORT).show();
-        // add markers from database to the map
-        AddUnSyncTable addUnSyncTable = new AddUnSyncTable(AddPlaceActivity.this);
-        if(addUnSyncTable.DeleteAll())
-        {
-            GetMarkersServerClass getMarkersServerClass = new GetMarkersServerClass(this);
-            getMarkersServerClass.SetListener(this);
-            getMarkersServerClass.execute();
-        } else {
-
-        }
-
-    }
-
-    @Override
-    public void onPlaceAddFailed()
-    {
-        loadingDialog.HideDialog();
-        Toast.makeText(AddPlaceActivity.this, "Place not added..Try again", Toast.LENGTH_SHORT).show();
-        setResult(2);
-        finish();
-    }
-
-    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
         category = cat_key.get(position);
@@ -509,35 +483,57 @@ public class AddPlaceActivity extends AppCompatActivity implements AdapterView.O
         super.onPostResume();
     }
 
-    @Override
-    public void onMarkerFetched()
-    {
-        setResult(2);
-        finish();
-    }
 
-    @Override
-    public void onMarkerFailed()
-    {
-            setResult(2);
-            finish();
-    }
 
     public void AddToUnsync(UnSyncObject unSyncObject) {
         AddUnSyncTable addUnSyncTable = new AddUnSyncTable(AddPlaceActivity.this);
         addUnSyncTable.SaveRecord(unSyncObject);
     }
 
+
+
+
+
     @Override
-    public void onPhotoAddSucces() {
-        TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac,tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST), latitude, longitude, place_description_string);
-        AddPlaceServerClass addPlaceServerClass = new AddPlaceServerClass(AddPlaceActivity.this, tempNewPlaceObject);
-        addPlaceServerClass.SetListener(this);
-        addPlaceServerClass.execute();
+    public void onPhotoRecieve(boolean status) {
+
+        if (status)
+        {
+            TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac,tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST), latitude, longitude, place_description_string);
+            AddPlaceServerClass addPlaceServerClass = new AddPlaceServerClass(AddPlaceActivity.this, tempNewPlaceObject);
+            addPlaceServerClass.SetListener(this);
+            addPlaceServerClass.execute();
+        }
     }
 
     @Override
-    public void onPhotoAddFailed() {
+    public void onPlaceAddStatus(boolean status) {
+        if (status)
+        {
+            loadingDialog.HideDialog();
+            Toast.makeText(AddPlaceActivity.this, "Place Added Successfully", Toast.LENGTH_SHORT).show();
+            // add markers from database to the map
+            AddUnSyncTable addUnSyncTable = new AddUnSyncTable(AddPlaceActivity.this);
+            if(addUnSyncTable.DeleteAll())
+            {
+                GetMarkersServerClass getMarkersServerClass = new GetMarkersServerClass(this);
+                getMarkersServerClass.SetListener(this);
+                getMarkersServerClass.execute();
+            }
+        }
+        else
+        {
+            loadingDialog.HideDialog();
+            Toast.makeText(AddPlaceActivity.this, "Place not added..Try again", Toast.LENGTH_SHORT).show();
+            setResult(2);
+            finish();
+        }
+    }
 
+    @Override
+    public void onMarkerFetchStatus(boolean status) {
+
+        setResult(2);
+        finish();
     }
 }

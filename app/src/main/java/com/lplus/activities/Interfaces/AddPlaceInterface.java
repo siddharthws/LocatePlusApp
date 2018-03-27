@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface AddPlaceInterface {
-    void onPlaceAddSucces();
-    void onPlaceAddFailed();
+    void onPlaceAddStatus(boolean status);
 }

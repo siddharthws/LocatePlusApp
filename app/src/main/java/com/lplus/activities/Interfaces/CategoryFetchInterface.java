@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface CategoryFetchInterface {
-    void onCatFetched();
-    void onCatNotFetched();
+    void onCatStatus(boolean status);
 }

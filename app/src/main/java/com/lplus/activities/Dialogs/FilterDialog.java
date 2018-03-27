@@ -58,14 +58,14 @@ public class FilterDialog implements CustomAdapterListener {
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onApplyClick(selectedCategories);
+                listener.onApplyClick(true, selectedCategories);
             }
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onCancelClick(selectedCategories);
+                listener.onApplyClick(false, selectedCategories);
             }
         });
     }

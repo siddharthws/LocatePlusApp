@@ -3,17 +3,13 @@ package com.lplus.activities.Server;
 import android.content.Context;
 
 import com.lplus.activities.DBHelper.AddRateTable;
-import com.lplus.activities.DBHelper.ReviewsTable;
-import com.lplus.activities.Extras.ServerParseStatics;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.GetRateInterface;
-import com.lplus.activities.Interfaces.GetReviewsInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Objects.RateObject;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -82,19 +78,19 @@ public class GetRateServerClass extends BaseServerClass {
                     RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate);
                     boolean update = addRateTable.UpdateRateByID(rateObject);
                     if(update) {
-                        listener.onRateReceiveSuccess();
+                        listener.onRateReceiveStatus(true);
                     }
                 }
                 else {
                     RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate);
                     addRateTable.SaveRecord(rateObject);
-                    listener.onRateReceiveSuccess();
+                    listener.onRateReceiveStatus(false);
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        else {listener.onRateReceiveFailed();}
+        else {listener.onRateReceiveStatus(false);}
     }
 }

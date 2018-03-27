@@ -59,18 +59,18 @@ public class AddPhotoFirstServerClass extends BaseServerClass {
 
                 if(success)
                 {
-                    listener.onPhotoAddSucces();
+                    listener.onPhotoRecieve(true);
                 }
                 else
                 {
-                    listener.onPhotoAddFailed();
+                    listener.onPhotoRecieve(false);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         else {
-            listener.onPhotoAddFailed();
+            listener.onPhotoRecieve(false);
         }
     }
 

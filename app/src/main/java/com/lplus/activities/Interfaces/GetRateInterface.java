@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface GetRateInterface {
-    void onRateReceiveSuccess();
-    void onRateReceiveFailed();
+    void onRateReceiveStatus(boolean status);
 }

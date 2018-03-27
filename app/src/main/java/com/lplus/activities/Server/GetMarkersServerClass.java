@@ -65,13 +65,13 @@ public class GetMarkersServerClass extends BaseServerClass {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                listener.onMarkerFetched();
+                listener.onMarkerFetchStatus(true);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            listener.onMarkerFailed();
+            listener.onMarkerFetchStatus(false);
         }
 
     }

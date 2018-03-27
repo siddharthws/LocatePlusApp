@@ -5,6 +5,5 @@ package com.lplus.activities.Interfaces;
  */
 
 public interface RateCANInterface {
-    void onCANSuccess();
-    void onCANFailed();
+    void onCANStatus(boolean status);
 }

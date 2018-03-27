@@ -51,8 +51,13 @@ import java.util.TimerTask;
 
 import es.dmoral.toasty.Toasty;
 
-public class MarkerDescriptionActivity extends HomeActivity implements View.OnClickListener,
-        MarkerReviewInterface, PhotoFetchStatusInterface,FacilityDialogClickInterface, PhotosDialogClickInterface, RateFacillityInterface, RatePhotosInterface {
+public class MarkerDescriptionActivity extends HomeActivity implements  View.OnClickListener,
+                                                                        MarkerReviewInterface,
+                                                                        PhotoFetchStatusInterface,
+                                                                        FacilityDialogClickInterface,
+                                                                        PhotosDialogClickInterface,
+                                                                        RateFacillityInterface,
+                                                                        RatePhotosInterface {
 
     private MarkerObject markerObject;
     private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total;
@@ -224,7 +229,8 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
                 selectFourStar();
                 star5.setImageResource(R.drawable.icons8_star_half_empty_96);
             }
-        }else {
+        }
+        else {
             clearAllStar();
         }
         addRateTable.CloseConnection();
@@ -298,6 +304,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
 
             case R.id.flag_name_address_category:
             {
+                System.out.println("Reaching to the flag of address");
                 //call Rate place dialog
                 final GoogleMap googleMap = getMap();
                 if(googleMap != null)
@@ -305,16 +312,23 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
                     googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                         @Override
                         public void onMapLoaded() {
+                            System.out.println("Map ready");
                             // Make a snapshot when map's done loading
                             googleMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
                                 @Override
                                 public void onSnapshotReady(Bitmap bitmap) {
+                                    System.out.println("Shot ready");
                                     RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject, bitmap);
                                     rateCategoryDialog.ShowDialog();
                                 }
                             });
                         }
                     });
+
+                }
+                else
+                {
+                    System.out.println("GetMap is null");
                 }
                 break;
             }
@@ -338,21 +352,6 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         }
     }
 
-    @Override
-    public void onReviewSent()
-    {
-        loadingDialog.HideDialog();
-        Toast.makeText(this, "Review Submitted..", Toast.LENGTH_SHORT).show();
-        tv_review.setText("");
-    }
-
-    @Override
-    public void onReviewFailed()
-    {
-        loadingDialog.HideDialog();
-        Toast.makeText(this, "Review Not Sent..", Toast.LENGTH_SHORT).show();
-    }
-
     public void beginSlide() {
 
         mPager =  findViewById(R.id.review_pager);
@@ -361,7 +360,6 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         {
             reviews.addAll(reviewsObject.getReviews());
         }
-        System.out.println("Reviews data: "+reviews.toString());
         mPager.setAdapter(new ReviewSliderAdapter(this,reviews));
 
         // Auto start of viewpager
@@ -529,28 +527,47 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
     }
 
     @Override
-    public void onFacilitySent() {
-        fac_rate.clear();
-        loadingDialog.HideDialog();
-        Toasty.success(this,"Facilities Successfully Rated", Toast.LENGTH_SHORT,true).show();
+    public void onPhotoSent(boolean status) {
+        if (status)
+        {
+            loadingDialog.HideDialog();
+            Toasty.success(this,"Photos Successfully Rated", Toast.LENGTH_SHORT,true).show();
+        }
+        else
+        {
+            loadingDialog.HideDialog();
+            Toasty.error(this,"Photos Rating Failed", Toast.LENGTH_SHORT,true).show();
+        }
     }
 
     @Override
-    public void onFacilityFailed() {
-        fac_rate.clear();
-        loadingDialog.HideDialog();
-        Toasty.error(this,"Facilities Rating Failed", Toast.LENGTH_SHORT,true).show();
+    public void onFacilityFetchStatus(boolean status) {
+        if (status)
+        {
+            fac_rate.clear();
+            loadingDialog.HideDialog();
+            Toasty.success(this,"Facilities Successfully Rated", Toast.LENGTH_SHORT,true).show();
+        }
+        else
+        {
+            fac_rate.clear();
+            loadingDialog.HideDialog();
+            Toasty.error(this,"Facilities Rating Failed", Toast.LENGTH_SHORT,true).show();
+        }
     }
 
     @Override
-    public void onPhotoSent() {
-        loadingDialog.HideDialog();
-        Toasty.success(this,"Photos Successfully Rated", Toast.LENGTH_SHORT,true).show();
-    }
-
-    @Override
-    public void onPhotosFailed() {
-        loadingDialog.HideDialog();
-        Toasty.error(this,"Photos Rating Failed", Toast.LENGTH_SHORT,true).show();
+    public void onReviewSentStatus(boolean status) {
+        if (status)
+        {
+            loadingDialog.HideDialog();
+            Toast.makeText(this, "Review Submitted..", Toast.LENGTH_SHORT).show();
+            tv_review.setText("");
+        }
+        else
+        {
+            loadingDialog.HideDialog();
+            Toast.makeText(this, "Review Not Sent..", Toast.LENGTH_SHORT).show();
+        }
     }
 }
