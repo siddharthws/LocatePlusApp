@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_weight="1"
+                    android:layout_weight="3"
                     android:gravity="right">
                     <ImageView
                         android:id="@+id/dec_fav"
@@ -154,6 +154,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="20"
                     android:gravity="left"
                     android:orientation="horizontal">
@@ -165,7 +166,7 @@
                         android:layout_gravity="left"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="9"
+                        android:layout_weight="8"
                         android:singleLine="true"
                         android:text="Place Name"
                         android:textColor="@color/BLACK"

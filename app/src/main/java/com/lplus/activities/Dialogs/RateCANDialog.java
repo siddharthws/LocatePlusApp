@@ -97,8 +97,6 @@ public class RateCANDialog implements RateCANInterface {
         photo_no             = ratePhotoDialog.findViewById(R.id.LL_no);
         photo_not_sure       = ratePhotoDialog.findViewById(R.id.LL_not_sure);
 
-        ShowDialog();
-
     }
 
     public void ShowDialog()
@@ -133,12 +131,6 @@ public class RateCANDialog implements RateCANInterface {
                 showCategoryDialogue();
             }
         });
-
-        loadingDialog = new LoadingDialog(context, "Please Wait...");
-        loadingDialog.ShowDialog();
-        RateCANServerClass rateCANServerClass = new RateCANServerClass(context, markerObject, CANRate_array);
-        rateCANServerClass.SetListener(this);
-        rateCANServerClass.execute();
     }
 
     void showCategoryDialogue() {
@@ -182,6 +174,7 @@ public class RateCANDialog implements RateCANInterface {
             public void onClick(View v) {
                 CANRate_array.add("1");
                 ratePhotoDialog.cancel();
+                sendToServer();
             }
         });
         photo_no.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +182,7 @@ public class RateCANDialog implements RateCANInterface {
             public void onClick(View v) {
                 CANRate_array.add("-1");
                 ratePhotoDialog.cancel();
+                sendToServer();
             }
         });
         photo_not_sure.setOnClickListener(new View.OnClickListener() {
@@ -196,8 +190,16 @@ public class RateCANDialog implements RateCANInterface {
             public void onClick(View v) {
                 CANRate_array.add("0");
                 ratePhotoDialog.cancel();
+                sendToServer();
             }
         });
+    }
+    public void sendToServer() {
+        loadingDialog = new LoadingDialog(context, "Please Wait...");
+        loadingDialog.ShowDialog();
+        RateCANServerClass rateCANServerClass = new RateCANServerClass(context, markerObject, CANRate_array);
+        rateCANServerClass.SetListener(this);
+        rateCANServerClass.execute();
     }
 
     @Override

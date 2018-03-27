@@ -65,12 +65,11 @@ public class MarkersTable extends DatabaseHelper {
         ArrayList<String> facii = markerObject.getMarkerFacilities();
         StringBuilder sb=new StringBuilder();
         int j=0;
-        for (int i = 0; i < facii.size(); i++)
+        for (int i = 0; i < facii.size()-1; i++)
         {
-            j=i+1;
-            sb.insert(i, facii.get(i));
-            sb.insert(j, "_");
+            sb.append(facii.get(i)).append(", ");
         }
+        sb.append(facii.get(facii.size()-1));
         record.put(COLUMN_PLACE_FACILITIES,     sb.toString());
         record.put(COLUMN_PLACE_LATITUDE,       markerObject.getMarkerLatitude());
         record.put(COLUMN_PLACE_LONGITUDE,      markerObject.getMarkerLongitude());
@@ -104,7 +103,7 @@ public class MarkersTable extends DatabaseHelper {
             String address                  = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_ADDRESS));
             String category                 = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_CATEGORY));
             String facilities_string        = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_FACILITIES));
-            array = facilities_string.split("_");
+            array = facilities_string.split(",");
             for(int i=0; i<array.length; i++)
             {
                 if(!array[i].equals(""))

@@ -23,6 +23,8 @@ import com.lplus.activities.Server.GetReviewsServerClass;
 import com.lplus.activities.Server.ReviewsStatusServerClass;
 import com.lplus.activities.activities.MarkerDescriptionActivity;
 
+import java.util.ArrayList;
+
 /**
  * Created by Sai_Kameswari on 22-03-2018.
  */
@@ -93,6 +95,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         //place data to views in dialog
         place_name.setText(markerObject.getMarkerName());
         place_category.setText(markerObject.getMarkerCategory());
+        ArrayList<String> plac_fac = markerObject.getMarkerFacilities();
+
         place_facilities.setText(markerObject.getMarkerFacilities().toString().replace("[", "").replace("]", ""));
     }
 

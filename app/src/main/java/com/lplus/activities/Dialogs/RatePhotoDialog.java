@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,12 +13,15 @@ import android.widget.Toast;
 
 import com.lplus.R;
 import com.lplus.activities.Extras.CustomToast;
+import com.lplus.activities.Interfaces.FacilityDialogClickInterface;
+import com.lplus.activities.Interfaces.PhotosDialogClickInterface;
 import com.lplus.activities.Interfaces.RateFacillityInterface;
 import com.lplus.activities.Interfaces.RatePhotosInterface;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Server.RateFacilityServerClass;
 import com.lplus.activities.Server.RatePhotoServerClass;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
@@ -26,7 +30,7 @@ import es.dmoral.toasty.Toasty;
  * Created by Sai_Kameswari on 25-03-2018.
  */
 
-public class RatePhotoDialog implements RatePhotosInterface {
+public class RatePhotoDialog {
 
     private Context context;
     private Dialog ratePhotoDialog;
@@ -34,17 +38,25 @@ public class RatePhotoDialog implements RatePhotosInterface {
     private TextView photo_ques;
     private ImageView photo_view;
     private LinearLayout LL_yes, LL_no, LL_not_sure;
-    private ArrayList<String> photo_rate;
+    private ArrayList<String> photo_path;
     private ArrayList<String> photo_uuid;
     private Bitmap bmImg;
+    private int index;
     private LoadingDialog loadingDialog;
 
-    public RatePhotoDialog(Context context, MarkerObject markerObject, ArrayList<String> photo_rate, ArrayList<String> photo_uuid)
+    private PhotosDialogClickInterface listener;
+    public void SetListener(PhotosDialogClickInterface listener)
+    {
+        this.listener = listener;
+    }
+
+    public RatePhotoDialog(Context context, MarkerObject markerObject, ArrayList<String> photo_path, ArrayList<String> photo_uuid, int index)
     {
         this.context = context;
         this.markerObject = markerObject;
-        this.photo_rate = photo_rate;
+        this.photo_path = photo_path;
         this.photo_uuid = photo_uuid;
+        this.index = index;
         Init();
     }
 
@@ -69,52 +81,43 @@ public class RatePhotoDialog implements RatePhotosInterface {
 
 
         photo_ques.setText("Is this Photo Appropriate?");
-        ShowDialog(markerObject);
-
     }
 
-    public void ShowDialog(MarkerObject markerObject)
+    public void ShowDialog()
     {
-        /*File imgFile = new  File(“filepath”);
+        File imgFile = new  File(photo_path.get(index));
         if(imgFile.exists())
         {
-            ImageView myImage = new ImageView(this);
-            myImage.setImageURI(Uri.fromFile(imgFile));
+            photo_view.setImageURI(Uri.fromFile(imgFile));
 
-        }*/
-
-        for(String path : markerObject.getMarkerFacilities()) {                         //give path array here from tinyDB
-            bmImg = BitmapFactory.decodeFile(path);
-            photo_view.setImageBitmap(bmImg);
-            ratePhotoDialog.show();
-            LL_yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ratePhotoDialog.cancel();
-                    photo_rate.add("1");
-                }
-            });
-
-            LL_no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ratePhotoDialog.cancel();
-                    photo_rate.add("-1");
-                }
-            });
-            LL_not_sure.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ratePhotoDialog.cancel();
-                    photo_rate.add("0");
-                }
-            });
         }
-        loadingDialog = new LoadingDialog(context, "Please Wait...");
-        loadingDialog.ShowDialog();
-        RatePhotoServerClass ratePhotoServerClass = new RatePhotoServerClass(context, markerObject, photo_uuid, photo_rate);
-        ratePhotoServerClass.SetListener(this);
-        ratePhotoServerClass.execute();
+        else {
+            Toasty.error(context,"Photos Doesn't Exist", Toast.LENGTH_SHORT,true).show();
+        }
+        ratePhotoDialog.show();
+        LL_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HideDialog();
+                listener.onPhotosDialogClick("1");
+            }
+        });
+        LL_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HideDialog();
+                listener.onPhotosDialogClick("-1");
+            }
+        });
+        LL_not_sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HideDialog();
+                listener.onPhotosDialogClick("0");
+            }
+        });
+
+        /**/
     }
 
     public void HideDialog()
@@ -122,16 +125,4 @@ public class RatePhotoDialog implements RatePhotosInterface {
         ratePhotoDialog.cancel();
     }
 
-
-    @Override
-    public void onPhotoSent() {
-        loadingDialog.HideDialog();
-        Toasty.success(context,"Photos Successfully Rated", Toast.LENGTH_SHORT,true);
-    }
-
-    @Override
-    public void onPhotosFailed() {
-        loadingDialog.HideDialog();
-        Toasty.error(context,"Photos Rating Failed", Toast.LENGTH_SHORT,true);
-    }
 }

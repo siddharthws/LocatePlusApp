@@ -21,7 +21,7 @@ public class UrlMappings {
     public static final String RATE_FACILITY        = "http://172.16.39.50:8080/api/user/";
     public static final String RATE_CAN             = "http://172.16.39.50:8080/api/user/";
 
-    /*public static final String REGISTER_APP         = "http://172.16.39.51:8080/api/auth/registerUser";
+  /*  public static final String REGISTER_APP         = "http://172.16.39.51:8080/api/auth/registerUser";
     public static final String FILTER_FETCH         = "http://172.16.39.51:8080/api/user/getFC";
     public static final String ADD_PLACE            = "http://172.16.39.51:8080/api/user/addPlace";
     public static final String GET_MARKERS          = "http://172.16.39.51:8080/api/user/getPlaces";

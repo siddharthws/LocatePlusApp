@@ -95,17 +95,14 @@ public class RateFacilityServerClass extends BaseServerClass {
     private JSONArray toFacJSONArray()
     {
         JSONObject fac = null;
-        JSONObject fac1 = null;
         JSONArray facilitiesJSON = new JSONArray();
         try {
             for(int i = 0;i<fac_ids.size();i++)
             {
                 fac = new JSONObject();
-                fac1 = new JSONObject();
                 fac.put(Keys.RATE_FAC_ID, fac_ids.get(i));
-                fac1.put(Keys.RATE_FAC_RATE, fac_rates.get(i));
+                fac.put(Keys.RATE_FAC_RATE, fac_rates.get(i));
                 facilitiesJSON.put(fac);
-                facilitiesJSON.put(fac1);
             }
         } catch (JSONException e) {
             e.printStackTrace();
