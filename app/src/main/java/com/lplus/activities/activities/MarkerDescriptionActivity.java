@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.lplus.R;
+import com.lplus.activities.Adapters.FetchedImageSlider;
 import com.lplus.activities.Adapters.ReviewSliderAdapter;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
 import com.lplus.activities.DBHelper.AddRateTable;
@@ -29,10 +30,12 @@ import com.lplus.activities.Dialogs.RatePlaceDialog;
 import com.lplus.activities.Extras.CacheData;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.MarkerReviewInterface;
+import com.lplus.activities.Interfaces.PhotoFetchStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Objects.ReviewsObject;
+import com.lplus.activities.Server.FetchPhotoServer;
 import com.lplus.activities.Server.MarkerReviewServerClass;
 
 import java.util.ArrayList;
@@ -41,14 +44,14 @@ import java.util.TimerTask;
 
 import es.dmoral.toasty.Toasty;
 
-public class MarkerDescriptionActivity extends HomeActivity implements View.OnClickListener, MarkerReviewInterface {
+public class MarkerDescriptionActivity extends HomeActivity implements View.OnClickListener, MarkerReviewInterface, PhotoFetchStatusInterface {
 
     private MarkerObject markerObject;
     private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total;
     private LinearLayout direction_layout, desc_layout, rate_place;
     private ImageButton review_send, flag_photo, flag_name_address_category, flag_facility;
     private LoadingDialog loadingDialog;
-    private ViewPager mPager;
+    private ViewPager mPager, imagePager;
     private static int currentPage = 0;
     private TinyDB tinyDB;
     private ArrayList<String> photo_uuid_array;
@@ -112,15 +115,9 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         addRateTable = new AddRateTable(this);
         showRate();
         checkforFavorites();
-        setData();
-        //set listeners for linear layouts
-        direction_layout.setOnClickListener(this);
-        desc_layout.setOnClickListener(this);
-        review_send.setOnClickListener(this);
-        flag_photo.setOnClickListener(this);
-        flag_facility.setOnClickListener(this);
-        flag_name_address_category.setOnClickListener(this);
-        flag_facility.setOnClickListener(this);
+        FetchPhotoServer fetchPhotoServer = new FetchPhotoServer(this, markerObject);
+        fetchPhotoServer.SetListener(this);
+        fetchPhotoServer.execute();
     }
 
     private void setData()
@@ -146,6 +143,16 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
             reviewsTable.CloseConnection();
         }
         beginSlide();
+
+
+        //set listeners for linear layouts
+        direction_layout.setOnClickListener(this);
+        desc_layout.setOnClickListener(this);
+        review_send.setOnClickListener(this);
+        flag_photo.setOnClickListener(this);
+        flag_facility.setOnClickListener(this);
+        flag_name_address_category.setOnClickListener(this);
+        flag_facility.setOnClickListener(this);
     }
 
     private void checkforFavorites()
@@ -397,4 +404,44 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         star5.setImageResource(R.drawable.icons8_star_96);
     }
 
+    public void putImage(Bitmap  image) {
+        imagePager =  findViewById(R.id.photo_pager);
+        final ArrayList<Bitmap> images = new ArrayList<>();
+        images.add(image);
+        imagePager.setAdapter(new FetchedImageSlider(this,images));
+
+        // Auto start of viewpager
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == images.size()) {
+                    currentPage = 0;
+                }
+                imagePager.setCurrentItem(currentPage++, true);
+            }
+        };
+        Timer swipeTimer = new Timer();
+        swipeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, 4000, 3000);
+    }
+
+    @Override
+    public void onPhotoFetched(Bitmap bitmap)
+    {
+        System.out.println("Photo Fetched from server");
+        System.out.println("Bitmap: "+bitmap);
+        putImage(bitmap);
+        setData();
+    }
+
+    @Override
+    public void onPhotoFetchFailed()
+    {
+        System.out.println("Photo not Fetched from server");
+        setData();
+    }
 }

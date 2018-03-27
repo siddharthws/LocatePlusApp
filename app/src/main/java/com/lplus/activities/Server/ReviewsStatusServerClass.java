@@ -2,14 +2,17 @@ package com.lplus.activities.Server;
 
 import android.content.Context;
 
+import com.lplus.activities.DBHelper.AddRateTable;
 import com.lplus.activities.Interfaces.ReviewsStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Macros.UrlMappings;
 import com.lplus.activities.Objects.MarkerObject;
-import okhttp3.RequestBody;
+import com.lplus.activities.Objects.RateObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import okhttp3.RequestBody;
 
 /**
  * Created by Sai_Kameswari on 23-03-2018.
@@ -58,9 +61,25 @@ public class ReviewsStatusServerClass extends BaseServerClass {
         // Register user in preferences if server returned OK
         if (IsResponseValid()) {
                 try {
+                    AddRateTable addRateTable = new AddRateTable(context);
                    int reviewResponse = responseJson.getInt(Keys.REVIEW_UPDATE_RESPONSE);
                    int photoResponse = responseJson.getInt(Keys.PHOTO_UPDATE_RESPONSE);
+                    double rate = responseJson.getDouble(Keys.RATE_PLACE);
 
+
+                    boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
+                    //Fetch new Records
+                    String placeID = responseJson.getString(Keys.MARKER_ID);
+                    //store data in tinyDB
+                    if(isRateAvailable) {
+                        RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate);
+                        boolean update = addRateTable.UpdateRateByID(rateObject);
+                    }
+                    else {
+                        RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate);
+                        addRateTable.SaveRecord(rateObject);
+                    }
+                    addRateTable.close();
                    listener.onUpdateRequired(reviewResponse, photoResponse);
             } catch (JSONException e) {
                 e.printStackTrace();
