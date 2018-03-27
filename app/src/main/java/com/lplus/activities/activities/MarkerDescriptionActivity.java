@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.lplus.R;
 import com.lplus.activities.Adapters.FetchedImageSlider;
 import com.lplus.activities.Adapters.ReviewSliderAdapter;
@@ -76,6 +75,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
     RatePhotoDialog ratePhotoDialog;
     AddFacilityTable addFacilityTable;
     AddRateTable addRateTable;
+    private Bitmap snap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +102,9 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         photo_uuid_array = new ArrayList<>();
         photo_path_array = new ArrayList<>();
         markerObject = tinyDB.getObject(Keys.MARKER_OBJECT, MarkerObject.class);
+        String imagePath = tinyDB.getString("snap");
+        snap = tinyDB.getImage(imagePath);
+        System.out.println("Bitmap snap: "+snap.toString());
         addFavoutiteTable = new AddFavoutiteTable(this);
         addFacilityTable = new AddFacilityTable(this);
 
@@ -309,36 +312,12 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
             case R.id.flag_name_address_category:
             {
                 System.out.println("Reaching to the flag of address");
-                //call Rate place dialog
-                final GoogleMap googleMap = getMap();
-                if(googleMap != null)
-                {
-                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                        @Override
-                        public void onMapLoaded() {
-                            System.out.println("Map ready");
-                            // Make a snapshot when map's done loading
-                            googleMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
-                                @Override
-                                public void onSnapshotReady(Bitmap bitmap) {
-                                    System.out.println("Shot ready");
-                                    RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject, bitmap);
-                                    rateCategoryDialog.ShowDialog();
-                                }
-                            });
-                        }
-                    });
-
-                }
-                else
-                {
-                    System.out.println("GetMap is null");
-                }
+                RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject, snap);
+                rateCategoryDialog.ShowDialog();
                 break;
             }
             case R.id.flag_facility:
             {
-
                 fac_count = 0;
                 rateFacilityDialog = new RateFacilityDialog(MarkerDescriptionActivity.this, markerObject, fac_count);
                 rateFacilityDialog.SetListener(this);
