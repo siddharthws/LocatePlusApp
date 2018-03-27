@@ -12,36 +12,43 @@ import android.widget.Toast;
 
 import com.lplus.R;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
+import com.lplus.activities.DBHelper.AddRateTable;
 import com.lplus.activities.Extras.TinyDB;
+import com.lplus.activities.Interfaces.GetRateInterface;
 import com.lplus.activities.Interfaces.GetReviewsInterface;
 import com.lplus.activities.Interfaces.ReviewsStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Server.GetRateServerClass;
 import com.lplus.activities.Server.GetReviewsServerClass;
 import com.lplus.activities.Server.ReviewsStatusServerClass;
 import com.lplus.activities.activities.MarkerDescriptionActivity;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * Created by Sai_Kameswari on 22-03-2018.
  */
 
-public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusInterface, GetReviewsInterface {
+public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusInterface, GetReviewsInterface, GetRateInterface {
 
     private Context context;
     private Dialog markerSummaryDialog;
     private MarkerObject markerObject;
-    private TextView place_name, place_category, place_facilities, fav_tv;
+    private TextView place_name, place_category, place_facilities, fav_tv, rate_total;
     private LinearLayout direction_layout, desc_layout, fav_layout, rate_layout;
     private AddFavoutiteTable addFavoutiteTable;
-    private ImageView fav_iv;
+    private ImageView fav_iv, star1, star2, star3, star4,star5;
     private  TinyDB tinyDB;
+    private AddRateTable addRateTable;
 
     public MarkerSummaryDialog(Context context, MarkerObject markerObject)
     {
         this.context = context;
         this.markerObject = markerObject;
         addFavoutiteTable = new AddFavoutiteTable(context);
+        addRateTable = new AddRateTable(context);
         Init();
     }
 
@@ -56,6 +63,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
 
         fav_iv = markerSummaryDialog.findViewById(R.id.favourite_iv);
         fav_tv = markerSummaryDialog.findViewById(R.id.favourite_tv);
+        rate_total = markerSummaryDialog.findViewById(R.id.rate_total);
+        rate_total.setText("0.0");
 
         //fetch all ID's from View
         place_name = markerSummaryDialog.findViewById(R.id.place_name);
@@ -67,6 +76,13 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         fav_layout = markerSummaryDialog.findViewById(R.id.fav_layout);
         rate_layout = markerSummaryDialog.findViewById(R.id.rate_layout);
 
+        star1 = markerSummaryDialog.findViewById(R.id.summary_star1);
+        star2 = markerSummaryDialog.findViewById(R.id.summary_star2);
+        star3 = markerSummaryDialog.findViewById(R.id.summary_star3);
+        star4 = markerSummaryDialog.findViewById(R.id.summary_star4);
+        star5 = markerSummaryDialog.findViewById(R.id.summary_star5);
+
+        checkforRate();
         checkforFavorites();
         setData();
         //set listeners for linear layouts
@@ -108,6 +124,49 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         }
     }
 
+    public void checkforRate() {
+        if(addRateTable == null)
+        {
+            addRateTable = new AddRateTable(context);
+        }
+        boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
+        if(isRateAvailable) {
+            Double rate = addRateTable.GetRateById(markerObject.getMarkerID());
+            rate_total.setText(String.valueOf(rate));
+            if(rate == 0.0) {
+                clearAllStar();
+            }else if(rate == 1.0) {
+                selectOneStar();
+            }else if(rate == 2.0) {
+                selectTwoStar();
+            }else if(rate == 3.0) {
+                selectThreeStar();
+            }else if(rate == 4.0) {
+                selectFourStar();
+            }else if(rate == 5.0) {
+                selectFiveStar();
+            }else if(rate > 0.0 && rate < 1.0) {
+                clearAllStar();
+                star1.setImageResource(R.drawable.icons8_star_half_empty_96);
+            } else if(rate > 1.0 && rate < 2.0) {
+                selectOneStar();
+                star2.setImageResource(R.drawable.icons8_star_half_empty_96);
+            }else if(rate > 2.0 && rate < 3.0) {
+                selectTwoStar();
+                star3.setImageResource(R.drawable.icons8_star_half_empty_96);
+            }else if(rate > 3.0 && rate < 4.0) {
+                selectThreeStar();
+                star4.setImageResource(R.drawable.icons8_star_half_empty_96);
+            }else if(rate > 4.0 && rate < 5.0) {
+                selectFourStar();
+                star5.setImageResource(R.drawable.icons8_star_half_empty_96);
+            }
+        }else {
+            clearAllStar();
+        }
+        addRateTable.CloseConnection();
+    }
+
     @Override
     public void onClick(View view) {
 
@@ -126,9 +185,10 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
             {
                 markerSummaryDialog.dismiss();
                 //Check if Review update required
-                ReviewsStatusServerClass reviewsStatusServerClass = new ReviewsStatusServerClass(context, markerObject);
-                reviewsStatusServerClass.SetListener(this);
-                reviewsStatusServerClass.execute();
+
+                GetRateServerClass getRateServerClass = new GetRateServerClass(context, markerObject);
+                getRateServerClass.SetListener(this);
+                getRateServerClass.execute();
                 break;
             }
 
@@ -213,5 +273,66 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         tinyDB = TinyDB.Init(context);
         tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
         context.startActivity(intent);
+    }
+
+    public void selectOneStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_96);
+        star3.setImageResource(R.drawable.icons8_star_96);
+        star4.setImageResource(R.drawable.icons8_star_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+    public void selectTwoStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_filled_96);
+        star3.setImageResource(R.drawable.icons8_star_96);
+        star4.setImageResource(R.drawable.icons8_star_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+    public void selectThreeStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_filled_96);
+        star3.setImageResource(R.drawable.icons8_star_filled_96);
+        star4.setImageResource(R.drawable.icons8_star_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+    public void selectFourStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_filled_96);
+        star3.setImageResource(R.drawable.icons8_star_filled_96);
+        star4.setImageResource(R.drawable.icons8_star_filled_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+    public void selectFiveStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_filled_96);
+        star3.setImageResource(R.drawable.icons8_star_filled_96);
+        star4.setImageResource(R.drawable.icons8_star_filled_96);
+        star5.setImageResource(R.drawable.icons8_star_filled_96);
+    }
+    public void clearAllStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_96);
+        star2.setImageResource(R.drawable.icons8_star_96);
+        star3.setImageResource(R.drawable.icons8_star_96);
+        star4.setImageResource(R.drawable.icons8_star_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+
+    @Override
+    public void onRateReceiveSuccess() {
+        ReviewsStatusServerClass reviewsStatusServerClass = new ReviewsStatusServerClass(context, markerObject);
+        reviewsStatusServerClass.SetListener(this);
+        reviewsStatusServerClass.execute();
+    }
+
+    @Override
+    public void onRateReceiveFailed() {
+        Toasty.error(context,"Rate not recieved",Toast.LENGTH_SHORT,true).show();
     }
 }
