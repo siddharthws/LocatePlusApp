@@ -94,5 +94,6 @@ public class Keys {
     public static final String RATE_PHOTO                       = "photo";
     public static final String RATE_PHOTO_UUID                  = "photoUuid";
     public static final String RATE_PHOTO_RATE                  = "photoRate";
+    public static final String RATE_USERS                       = "noOfUsers";
 
 }
