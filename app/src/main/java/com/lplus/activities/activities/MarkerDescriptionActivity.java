@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.lplus.R;
 import com.lplus.activities.Adapters.ReviewSliderAdapter;
+import com.lplus.activities.DBHelper.AddFavoutiteTable;
+import com.lplus.activities.DBHelper.AddRateTable;
 import com.lplus.activities.DBHelper.ReviewsTable;
 import com.lplus.activities.Dialogs.LoadingDialog;
 import com.lplus.activities.Dialogs.RateCANDialog;
@@ -27,6 +30,7 @@ import com.lplus.activities.Extras.CacheData;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.MarkerReviewInterface;
 import com.lplus.activities.Macros.Keys;
+import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Objects.ReviewsObject;
 import com.lplus.activities.Server.MarkerReviewServerClass;
@@ -35,10 +39,12 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import es.dmoral.toasty.Toasty;
+
 public class MarkerDescriptionActivity extends HomeActivity implements View.OnClickListener, MarkerReviewInterface {
 
     private MarkerObject markerObject;
-    private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review;
+    private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total;
     private LinearLayout direction_layout, desc_layout, rate_place;
     private ImageButton review_send, flag_photo, flag_name_address_category, flag_facility;
     private LoadingDialog loadingDialog;
@@ -47,6 +53,9 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
     private TinyDB tinyDB;
     private ArrayList<String> photo_uuid_array;
     private ArrayList<String> photo_path_array;
+    private ImageView fav_iv, star1, star2, star3, star4,star5;
+    private AddFavoutiteTable addFavoutiteTable;
+    AddRateTable addRateTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +82,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         photo_uuid_array = new ArrayList<>();
         photo_path_array = new ArrayList<>();
         markerObject = tinyDB.getObject(Keys.MARKER_OBJECT, MarkerObject.class);
+        addFavoutiteTable = new AddFavoutiteTable(this);
 
         //fetch all ID's from View
         dec_place_name = findViewById(R.id.dec_place_name);
@@ -85,12 +95,23 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         flag_name_address_category = findViewById(R.id.flag_name_address_category);
         flag_facility = findViewById(R.id.flag_facility);
         rate_place = findViewById(R.id.rate_place_layout);
+        rate_total = findViewById(R.id.rate_total);
+        rate_total.setText("0.0");
+
+        star1 = findViewById(R.id.desc_star1);
+        star2 = findViewById(R.id.desc_star2);
+        star3 = findViewById(R.id.desc_star3);
+        star4 = findViewById(R.id.desc_star4);
+        star5 = findViewById(R.id.desc_star5);
+        fav_iv = findViewById(R.id.dec_fav);
 
 
 
         direction_layout = findViewById(R.id.direction_layout);
         desc_layout = findViewById(R.id.rate_place_layout);
-
+        addRateTable = new AddRateTable(this);
+        showRate();
+        checkforFavorites();
         setData();
         //set listeners for linear layouts
         direction_layout.setOnClickListener(this);
@@ -127,11 +148,86 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         beginSlide();
     }
 
+    private void checkforFavorites()
+    {
+        if(addFavoutiteTable ==null)
+        {
+            addFavoutiteTable = new AddFavoutiteTable(this);
+        }
+        boolean isFavorite = addFavoutiteTable.isFavourite(markerObject.getMarkerID());
+        if(isFavorite)
+        {
+            fav_iv.setImageResource(R.drawable.icons8_heart_red_96);
+        }
+    }
+
+    public void showRate() {
+        if(addRateTable == null)
+        {
+            addRateTable = new AddRateTable(this);
+        }
+        boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
+        if(isRateAvailable) {
+            Double rate = addRateTable.GetRateById(markerObject.getMarkerID());
+            rate_total.setText(String.valueOf(rate));
+            if(rate == 0.0) {
+                clearAllStar();
+            }else if(rate == 1.0) {
+                selectOneStar();
+            }else if(rate == 2.0) {
+                selectTwoStar();
+            }else if(rate == 3.0) {
+                selectThreeStar();
+            }else if(rate == 4.0) {
+                selectFourStar();
+            }else if(rate == 5.0) {
+                selectFiveStar();
+            }else if(rate > 0.0 && rate < 1.0) {
+                clearAllStar();
+                star1.setImageResource(R.drawable.icons8_star_half_empty_96);
+            } else if(rate > 1.0 && rate < 2.0) {
+                selectOneStar();
+                star2.setImageResource(R.drawable.icons8_star_half_empty_96);
+            }else if(rate > 2.0 && rate < 3.0) {
+                selectTwoStar();
+                star3.setImageResource(R.drawable.icons8_star_half_empty_96);
+            }else if(rate > 3.0 && rate < 4.0) {
+                selectThreeStar();
+                star4.setImageResource(R.drawable.icons8_star_half_empty_96);
+            }else if(rate > 4.0 && rate < 5.0) {
+                selectFourStar();
+                star5.setImageResource(R.drawable.icons8_star_half_empty_96);
+            }
+        }else {
+            clearAllStar();
+        }
+        addRateTable.CloseConnection();
+    }
+
     @Override
     public void onClick(View view) {
 
         switch (view.getId())
         {
+            case R.id.dec_fav:
+            {
+                if(addFavoutiteTable ==null)
+                {
+                    addFavoutiteTable = new AddFavoutiteTable(this);
+                }
+                if(addFavoutiteTable.isFavourite(markerObject.getMarkerID())) {
+                    addFavoutiteTable.RemoveFavourite(markerObject.getMarkerID());
+                    fav_iv.setImageResource(R.drawable.icons8_heart_white_96);
+                    Toasty.success(this,"Removed From Favourites",Toast.LENGTH_SHORT,true).show();
+                } else {
+                    FavouriteObject favouriteObject = new FavouriteObject(markerObject.getMarkerID(),markerObject.getMarkerName(),markerObject.getMarkerAddress(),markerObject.getMarkerLatitude(),markerObject.getMarkerLongitude());
+                    addFavoutiteTable.SaveRecord(favouriteObject);
+                    fav_iv.setImageResource(R.drawable.icons8_heart_red_96);
+                    Toasty.success(this,"Added To Favourites",Toast.LENGTH_SHORT,true).show();
+                }
+                addFavoutiteTable.CloseConnection();
+                break;
+            }
             case R.id.direction_layout:
             {
                 Uri gmmIntentUri = Uri.parse("google.navigation:q="+markerObject.getMarkerLatitude()+","+markerObject.getMarkerLongitude());
@@ -250,6 +346,55 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
                 handler.post(Update);
             }
         }, 4000, 3000);
+    }
+
+    public void selectOneStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_96);
+        star3.setImageResource(R.drawable.icons8_star_96);
+        star4.setImageResource(R.drawable.icons8_star_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+    public void selectTwoStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_filled_96);
+        star3.setImageResource(R.drawable.icons8_star_96);
+        star4.setImageResource(R.drawable.icons8_star_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+    public void selectThreeStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_filled_96);
+        star3.setImageResource(R.drawable.icons8_star_filled_96);
+        star4.setImageResource(R.drawable.icons8_star_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+    public void selectFourStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_filled_96);
+        star3.setImageResource(R.drawable.icons8_star_filled_96);
+        star4.setImageResource(R.drawable.icons8_star_filled_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
+    }
+    public void selectFiveStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_filled_96);
+        star2.setImageResource(R.drawable.icons8_star_filled_96);
+        star3.setImageResource(R.drawable.icons8_star_filled_96);
+        star4.setImageResource(R.drawable.icons8_star_filled_96);
+        star5.setImageResource(R.drawable.icons8_star_filled_96);
+    }
+    public void clearAllStar()
+    {
+        star1.setImageResource(R.drawable.icons8_star_96);
+        star2.setImageResource(R.drawable.icons8_star_96);
+        star3.setImageResource(R.drawable.icons8_star_96);
+        star4.setImageResource(R.drawable.icons8_star_96);
+        star5.setImageResource(R.drawable.icons8_star_96);
     }
 
 }

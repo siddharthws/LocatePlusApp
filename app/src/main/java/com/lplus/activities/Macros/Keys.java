@@ -68,8 +68,9 @@ public class Keys {
     public static final String TINYDB_PHOTO_UUID_LIST           = "photoUUIDList";
     public static final String MARKER_REVIEW                    = "review";
     public static final String HELP_SLIDER                      = "helpSlider";
-    public static final String RATE_EXIST                      = "rateExist";
-    public static final String RATE_VALUE                      = "rateValue";
+    public static final String RATE_EXIST                       = "rateExist";
+    public static final String RATE_VALUE                       = "rateValue";
+    public static final String RATE_FAC_KEY                     = "rateFacKey";
 
 
     //Review Updates on Know More Click
