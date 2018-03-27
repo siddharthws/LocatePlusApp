@@ -2,7 +2,6 @@ package com.lplus.activities.Dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,11 +10,9 @@ import android.widget.Toast;
 import com.lplus.R;
 import com.lplus.activities.DBHelper.AddFacilityTable;
 import com.lplus.activities.Extras.CustomToast;
+import com.lplus.activities.Interfaces.FacilityDialogClickInterface;
 import com.lplus.activities.Interfaces.RateFacillityInterface;
-import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.MarkerObject;
-import com.lplus.activities.Server.RateFacilityServerClass;
-import com.lplus.activities.Server.RatePlaceServerClass;
 
 import java.util.ArrayList;
 
@@ -25,7 +22,7 @@ import es.dmoral.toasty.Toasty;
  * Created by Sai_Kameswari on 25-03-2018.
  */
 
-public class RateFacilityDialog implements RateFacillityInterface{
+public class RateFacilityDialog{
 
     private Context context;
     private Dialog rateFacilityDialog;
@@ -37,11 +34,19 @@ public class RateFacilityDialog implements RateFacillityInterface{
     private AddFacilityTable addFacilityTable;
     private ArrayList<String> fac_rate;
     private LoadingDialog loadingDialog;
+    private FacilityDialogClickInterface listener;
+    private int index;
+    public void SetListener(FacilityDialogClickInterface listener)
+    {
+        this.listener = listener;
+    }
 
-    public RateFacilityDialog(Context context, MarkerObject markerObject)
+
+    public RateFacilityDialog(Context context, MarkerObject markerObject,int index)
     {
         this.context = context;
         this.markerObject = markerObject;
+        this.index = index;
         Init();
     }
 
@@ -60,11 +65,7 @@ public class RateFacilityDialog implements RateFacillityInterface{
         fac_rate = new ArrayList<>();
 
 
-        for(String fac_value : markerObject.getMarkerFacilities()) {
-            fac_id.add(addFacilityTable.ReadID(fac_value));
-        }
-        Toasty.info(context,fac_id.toString(), Toast.LENGTH_SHORT,true).show();
-        addFacilityTable.CloseConnection();
+
 
         //fetch all ID's from View
         rate_title        = rateFacilityDialog.findViewById(R.id.rate_title);
@@ -74,56 +75,41 @@ public class RateFacilityDialog implements RateFacillityInterface{
         LL_not_sure       = rateFacilityDialog.findViewById(R.id.LL_not_sure);
 
 
-        category_que.setText("Is this Category/Facility Appropriate?");
-        ShowDialog(markerObject);
+        category_que.setText("Is this Facility Appropriate?");
 
     }
 
-    public void ShowDialog(MarkerObject markerObject)
+    public void ShowDialog()
     {
-        for(String facility : markerObject.getMarkerFacilities()) {
-        rate_title.setText(facility.toUpperCase());
+        rateFacilityDialog.show();
+        rate_title.setText(markerObject.getMarkerFacilities().get(index).toUpperCase());
         rateFacilityDialog.show();
         LL_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rateFacilityDialog.cancel();
-                fac_rate.add("1");
+                HideDialog();
+                listener.onDialogClick("1");
             }
         });
-
         LL_no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rateFacilityDialog.cancel();
-                fac_rate.add("-1");
+                HideDialog();
+                listener.onDialogClick("-1");
             }
         });
         LL_not_sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rateFacilityDialog.cancel();
-                fac_rate.add("0");
+                HideDialog();
+                listener.onDialogClick("0");
             }
         });
-    }
-        loadingDialog = new LoadingDialog(context, "Please Wait...");
-        loadingDialog.ShowDialog();
-        RateFacilityServerClass rateFacilityServerClass = new RateFacilityServerClass(context, markerObject, fac_id, fac_rate);
-        rateFacilityServerClass.SetListener(this);
-        rateFacilityServerClass.execute();
+
 
     }
 
-    @Override
-    public void onFacilitySent() {
-        loadingDialog.HideDialog();
-        Toasty.success(context,"Facility Rated", Toast.LENGTH_SHORT,true);
-    }
-
-    @Override
-    public void onFacilityFailed() {
-        loadingDialog.HideDialog();
-        Toasty.error(context,"Facility Rating Failed", Toast.LENGTH_SHORT,true);
+    public  void HideDialog() {
+        rateFacilityDialog.cancel();
     }
 }

@@ -69,7 +69,6 @@ public class ReviewsStatusServerClass extends BaseServerClass {
 
                     boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
                     //Fetch new Records
-                    String placeID = responseJson.getString(Keys.MARKER_ID);
                     //store data in tinyDB
                     if(isRateAvailable) {
                         RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate);

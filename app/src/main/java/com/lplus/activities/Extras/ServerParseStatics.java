@@ -159,8 +159,10 @@ public class ServerParseStatics {
                 {
                     JSONObject marker_fac_object = marker_facilities.getJSONObject(j);
                     marker_facilities_list.add(marker_fac_object.getString(Keys.FAC_NAME));
-                }
+                    System.out.println("marker data = "+marker_fac_object.getString(Keys.FAC_NAME));
 
+                }
+                System.out.println("marker list = "+marker_facilities_list.toString());
                 //set marker facilities
                 markerObject.setMarkerFacilities(marker_facilities_list);
                 markersTable.SaveRecord(markerObject);

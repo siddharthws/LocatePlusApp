@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.lplus.R;
 import com.lplus.activities.Adapters.FetchedImageSlider;
 import com.lplus.activities.Adapters.ReviewSliderAdapter;
+import com.lplus.activities.DBHelper.AddFacilityTable;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
 import com.lplus.activities.DBHelper.AddRateTable;
 import com.lplus.activities.DBHelper.ReviewsTable;
@@ -29,14 +30,20 @@ import com.lplus.activities.Dialogs.RatePhotoDialog;
 import com.lplus.activities.Dialogs.RatePlaceDialog;
 import com.lplus.activities.Extras.CacheData;
 import com.lplus.activities.Extras.TinyDB;
+import com.lplus.activities.Interfaces.FacilityDialogClickInterface;
 import com.lplus.activities.Interfaces.MarkerReviewInterface;
 import com.lplus.activities.Interfaces.PhotoFetchStatusInterface;
+import com.lplus.activities.Interfaces.PhotosDialogClickInterface;
+import com.lplus.activities.Interfaces.RateFacillityInterface;
+import com.lplus.activities.Interfaces.RatePhotosInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Objects.ReviewsObject;
 import com.lplus.activities.Server.FetchPhotoServer;
 import com.lplus.activities.Server.MarkerReviewServerClass;
+import com.lplus.activities.Server.RateFacilityServerClass;
+import com.lplus.activities.Server.RatePhotoServerClass;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -44,7 +51,8 @@ import java.util.TimerTask;
 
 import es.dmoral.toasty.Toasty;
 
-public class MarkerDescriptionActivity extends HomeActivity implements View.OnClickListener, MarkerReviewInterface, PhotoFetchStatusInterface {
+public class MarkerDescriptionActivity extends HomeActivity implements View.OnClickListener,
+        MarkerReviewInterface, PhotoFetchStatusInterface,FacilityDialogClickInterface, PhotosDialogClickInterface, RateFacillityInterface, RatePhotosInterface {
 
     private MarkerObject markerObject;
     private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total;
@@ -54,10 +62,14 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
     private ViewPager mPager, imagePager;
     private static int currentPage = 0;
     private TinyDB tinyDB;
-    private ArrayList<String> photo_uuid_array;
+    private ArrayList<String> photo_uuid_array, fac_id, fac_rate, photo_rate, can_rate;
     private ArrayList<String> photo_path_array;
     private ImageView fav_iv, star1, star2, star3, star4,star5;
     private AddFavoutiteTable addFavoutiteTable;
+    private  int fac_count, photo_count;
+    RateFacilityDialog rateFacilityDialog;
+    RatePhotoDialog ratePhotoDialog;
+    AddFacilityTable addFacilityTable;
     AddRateTable addRateTable;
 
     @Override
@@ -86,6 +98,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         photo_path_array = new ArrayList<>();
         markerObject = tinyDB.getObject(Keys.MARKER_OBJECT, MarkerObject.class);
         addFavoutiteTable = new AddFavoutiteTable(this);
+        addFacilityTable = new AddFacilityTable(this);
 
         //fetch all ID's from View
         dec_place_name = findViewById(R.id.dec_place_name);
@@ -100,7 +113,10 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         rate_place = findViewById(R.id.rate_place_layout);
         rate_total = findViewById(R.id.rate_total);
         rate_total.setText("0.0");
-
+        fac_id = new ArrayList<>();
+        fac_rate = new ArrayList<>();
+        photo_rate = new ArrayList<>();
+        can_rate = new ArrayList<>();
         star1 = findViewById(R.id.desc_star1);
         star2 = findViewById(R.id.desc_star2);
         star3 = findViewById(R.id.desc_star3);
@@ -126,13 +142,16 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
         dec_place_name.setText(markerObject.getMarkerName());
         dec_category.setText(markerObject.getMarkerCategory());
         desc_address.setText(markerObject.getMarkerAddress());
-        String facility_item = "";
+        StringBuilder facility_item = new StringBuilder();
         ArrayList<String> items = markerObject.getMarkerFacilities();
-        for(int i=0; i<items.size();i++)
+
+        for(int i = 0; i<items.size()-1;i++)
         {
-            facility_item = facility_item + items.get(i) + "\n";
+            facility_item.append(items.get(i));
+            facility_item.append(", ");
         }
-        dec_facilities.setText(facility_item);
+        facility_item.append(items.get(items.size()-1));
+        dec_facilities.setText(facility_item.toString());
 
         //check if Reviews are there
         if(CacheData.cacheAllReviews == null)
@@ -270,7 +289,10 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
             case R.id.flag_photo:
             {
                 //call Rate place dialog
-                RatePhotoDialog ratePhotoDialog = new RatePhotoDialog(this, markerObject, photo_uuid_array, photo_path_array);
+                photo_count = 0;
+                ratePhotoDialog = new RatePhotoDialog(MarkerDescriptionActivity.this, markerObject, photo_path_array, photo_uuid_array, photo_count);
+                ratePhotoDialog.SetListener(this);
+                ratePhotoDialog.ShowDialog();
                 break;
             }
 
@@ -298,7 +320,13 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
             }
             case R.id.flag_facility:
             {
-                RateFacilityDialog rateFacilityDialog = new RateFacilityDialog(this, markerObject);
+
+                fac_count = 0;
+                rateFacilityDialog = new RateFacilityDialog(MarkerDescriptionActivity.this, markerObject, fac_count);
+                rateFacilityDialog.SetListener(this);
+                rateFacilityDialog.ShowDialog();
+
+                /**/
                 break;
             }
             case R.id.rate_place_layout:
@@ -443,5 +471,86 @@ public class MarkerDescriptionActivity extends HomeActivity implements View.OnCl
     {
         System.out.println("Photo not Fetched from server");
         setData();
+    }
+
+    @Override
+    public void onDialogClick(String givenRating)
+    {
+        fac_count++;
+        fac_rate.add(givenRating);
+        if(fac_count != markerObject.getMarkerFacilities().size())
+        {
+            System.out.println("fac_count position : "+fac_count);
+            rateFacilityDialog = new RateFacilityDialog(MarkerDescriptionActivity.this, markerObject, fac_count);
+            rateFacilityDialog.SetListener(this);
+            rateFacilityDialog.ShowDialog();
+        }
+        else
+        {
+            for(String fac_value : markerObject.getMarkerFacilities()) {
+                System.out.println("fac_value : "+fac_value);
+                String id = addFacilityTable.ReadID(fac_value);
+                System.out.println("fac_id : "+id);
+                fac_id.add(id);
+            }
+            System.out.println("fac_count position : "+fac_id.toString());
+            addFacilityTable.CloseConnection();
+            loadingDialog = new LoadingDialog(MarkerDescriptionActivity.this, "Please Wait...");
+            loadingDialog.ShowDialog();
+
+            RateFacilityServerClass rateFacilityServerClass = new RateFacilityServerClass(this, markerObject, fac_id, fac_rate);
+            rateFacilityServerClass.SetListener(this);
+            rateFacilityServerClass.execute();
+
+        }
+    }
+
+    @Override
+    public void onPhotosDialogClick(String rating) {
+
+        photo_count++;
+        photo_rate.add(rating);
+        if(photo_count != photo_path_array.size())
+        {
+            System.out.println("photo_count position : "+photo_count);
+            ratePhotoDialog = new RatePhotoDialog(MarkerDescriptionActivity.this, markerObject,photo_path_array,photo_uuid_array, fac_count);
+            ratePhotoDialog.SetListener(this);
+            ratePhotoDialog.ShowDialog();
+        }
+        else
+        {
+            loadingDialog = new LoadingDialog(this, "Please Wait...");
+            loadingDialog.ShowDialog();
+            RatePhotoServerClass ratePhotoServerClass = new RatePhotoServerClass(this, markerObject, photo_uuid_array, photo_rate);
+            ratePhotoServerClass.SetListener(this);
+            ratePhotoServerClass.execute();
+            photo_rate.clear();
+        }
+    }
+
+    @Override
+    public void onFacilitySent() {
+        fac_rate.clear();
+        loadingDialog.HideDialog();
+        Toasty.success(this,"Facilities Successfully Rated", Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onFacilityFailed() {
+        fac_rate.clear();
+        loadingDialog.HideDialog();
+        Toasty.error(this,"Facilities Rating Failed", Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onPhotoSent() {
+        loadingDialog.HideDialog();
+        Toasty.success(this,"Photos Successfully Rated", Toast.LENGTH_SHORT,true).show();
+    }
+
+    @Override
+    public void onPhotosFailed() {
+        loadingDialog.HideDialog();
+        Toasty.error(this,"Photos Rating Failed", Toast.LENGTH_SHORT,true).show();
     }
 }
