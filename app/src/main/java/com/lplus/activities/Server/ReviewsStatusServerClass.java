@@ -65,17 +65,17 @@ public class ReviewsStatusServerClass extends BaseServerClass {
                    int reviewResponse = responseJson.getInt(Keys.REVIEW_UPDATE_RESPONSE);
                    int photoResponse = responseJson.getInt(Keys.PHOTO_UPDATE_RESPONSE);
                     double rate = responseJson.getDouble(Keys.RATE_PLACE);
+                    int users = responseJson.getInt(Keys.RATE_USERS);
 
 
                     boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
                     //Fetch new Records
                     //store data in tinyDB
+                    RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate, users);
                     if(isRateAvailable) {
-                        RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate);
                         boolean update = addRateTable.UpdateRateByID(rateObject);
                     }
                     else {
-                        RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate);
                         addRateTable.SaveRecord(rateObject);
                     }
                     addRateTable.close();

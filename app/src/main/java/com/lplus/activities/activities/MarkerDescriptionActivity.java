@@ -60,7 +60,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
                                                                         RatePhotosInterface {
 
     private MarkerObject markerObject;
-    private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total;
+    private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total, user_count;
     private LinearLayout direction_layout, desc_layout, rate_place;
     private ImageButton review_send, flag_photo, flag_name_address_category, flag_facility;
     private LoadingDialog loadingDialog;
@@ -117,7 +117,9 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         flag_facility = findViewById(R.id.flag_facility);
         rate_place = findViewById(R.id.rate_place_layout);
         rate_total = findViewById(R.id.rate_total);
+        user_count  = findViewById(R.id.user_count);
         rate_total.setText("0.0");
+        user_count.setText("(0)");
         fac_id = new ArrayList<>();
         fac_rate = new ArrayList<>();
         photo_rate = new ArrayList<>();
@@ -200,7 +202,9 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
         if(isRateAvailable) {
             Double rate = addRateTable.GetRateById(markerObject.getMarkerID());
+            int users = addRateTable.GetUsersById(markerObject.getMarkerID());
             rate_total.setText(String.valueOf(rate));
+            user_count.setText("("+users+")");
             if(rate == 0.0) {
                 clearAllStar();
             }else if(rate == 1.0) {

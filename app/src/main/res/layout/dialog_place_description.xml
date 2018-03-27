@@ -118,12 +118,18 @@
                     android:layout_height="25dp"
                     app:srcCompat="@drawable/icons8_star_96"/>
                 <TextView
+                    android:id="@+id/user_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_18"
+                    android:text="(count)"/>
+                <TextView
                     android:id="@+id/dec_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
                     android:text="Category"
                     android:textSize="@dimen/text_size_18"
                     android:textStyle="bold" />

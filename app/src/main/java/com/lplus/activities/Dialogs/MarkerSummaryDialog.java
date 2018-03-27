@@ -34,7 +34,7 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     private Context context;
     private Dialog markerSummaryDialog;
     private MarkerObject markerObject;
-    private TextView place_name, place_category, place_facilities, fav_tv, rate_total;
+    private TextView place_name, place_category, place_facilities, fav_tv, rate_total, user_count;
     private LinearLayout direction_layout, desc_layout, fav_layout, rate_layout;
     private AddFavoutiteTable addFavoutiteTable;
     private ImageView fav_iv, star1, star2, star3, star4,star5;
@@ -62,7 +62,9 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         fav_iv = markerSummaryDialog.findViewById(R.id.favourite_iv);
         fav_tv = markerSummaryDialog.findViewById(R.id.favourite_tv);
         rate_total = markerSummaryDialog.findViewById(R.id.rate_total);
+        user_count = markerSummaryDialog.findViewById(R.id.user_count);
         rate_total.setText("0.0");
+        user_count.setText("(0)");
 
         //fetch all ID's from View
         place_name = markerSummaryDialog.findViewById(R.id.place_name);
@@ -132,6 +134,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
         if(isRateAvailable) {
             Double rate = addRateTable.GetRateById(markerObject.getMarkerID());
+            int users = addRateTable.GetUsersById(markerObject.getMarkerID());
+            user_count.setText("("+users+")");
             rate_total.setText(String.valueOf(rate));
             if(rate == 0.0) {
                 clearAllStar();

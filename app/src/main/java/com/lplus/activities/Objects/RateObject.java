@@ -7,10 +7,11 @@ package com.lplus.activities.Objects;
 public class RateObject {
     String placeId;
     Double placerate;
+    int rateusers;
 
-    public RateObject(String placeId, Double placerate) {
+    public RateObject(String placeId, Double placerate, int rateusers) {
         this.placeId = placeId;
-        this.placerate = placerate;
+        this.rateusers = rateusers;
     }
 
     public RateObject() {
@@ -31,5 +32,13 @@ public class RateObject {
 
     public void setPlacerate(Double placerate) {
         this.placerate = placerate;
+    }
+
+    public int getRateusers() {
+        return rateusers;
+    }
+
+    public void setRateusers(int rateusers) {
+        this.rateusers = rateusers;
     }
 }

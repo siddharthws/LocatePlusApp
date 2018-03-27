@@ -22,8 +22,9 @@ public class AddRateTable extends DatabaseHelper {
     public static final String TABLE_NAME               = "categoryTable";
 
     public static final String COLUMN_ID                = "id";
-    public static final String COLUMN_PLACE_ID       = "category_id";
-    public static final String COLUMN_PLACE_RATE    = "category_value";
+    public static final String COLUMN_PLACE_ID       = "place_id";
+    public static final String COLUMN_PLACE_RATE    = "place_rate";
+    public static final String COLUMN_RATE_USERS   = "rate_users";
 
     //Create a Table name
     // Create table SQL query
@@ -31,7 +32,8 @@ public class AddRateTable extends DatabaseHelper {
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
                     + COLUMN_ID                + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_PLACE_ID       + " TEXT,"
-                    + COLUMN_PLACE_RATE    + " REAL"
+                    + COLUMN_PLACE_RATE    + " REAL,"
+                    + COLUMN_RATE_USERS    + " INTEGER"
                     + ")";
 
     public AddRateTable(Context context) {
@@ -44,6 +46,7 @@ public class AddRateTable extends DatabaseHelper {
         ContentValues record;
         String place_id = rateObject.getPlaceId();
         Double place_rate = rateObject.getPlacerate();
+        int rate_users = rateObject.getRateusers();
 
         //Iterate each item and put in DB
             record = new ContentValues();
@@ -51,6 +54,7 @@ public class AddRateTable extends DatabaseHelper {
             //put values
             record.put(COLUMN_PLACE_ID,      place_id);
             record.put(COLUMN_PLACE_RATE,   place_rate);
+            record.put(COLUMN_RATE_USERS,   rate_users);
 
             //save in DB
             Add(TABLE_NAME, record);
@@ -62,7 +66,7 @@ public class AddRateTable extends DatabaseHelper {
         SQLiteDatabase Rdb = db.getReadableDatabase();
 
         Cursor dbRows = Rdb.query(TABLE_NAME,
-                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_RATE},
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_RATE,COLUMN_RATE_USERS},
                 COLUMN_PLACE_ID + "=?",
                 new String[] {id},
                 null,
@@ -75,6 +79,27 @@ public class AddRateTable extends DatabaseHelper {
         }
 
         return rate;
+    }
+
+    public Integer GetUsersById(String id)
+    {
+        int users = 0;
+        SQLiteDatabase Rdb = db.getReadableDatabase();
+
+        Cursor dbRows = Rdb.query(TABLE_NAME,
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_RATE,COLUMN_RATE_USERS},
+                COLUMN_PLACE_ID + "=?",
+                new String[] {id},
+                null,
+                null,
+                null);
+
+        while (dbRows.moveToNext()) {
+
+            users = dbRows.getInt(   dbRows.getColumnIndex(  COLUMN_RATE_USERS));
+        }
+
+        return users;
     }
 
     public Boolean RemoveRate(String place_id)
