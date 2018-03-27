@@ -76,7 +76,10 @@ public class GetReviewsServerClass extends BaseServerClass{
                 String placeID = responseJson.getString(Keys.MARKER_ID);
                 reviews = responseJson.getJSONArray(Keys.ALL_REVIEWS);
                 //store data in markers
-                ServerParseStatics.parseReviews(context, placeID, reviews);
+                if(reviews.length() > 0)
+                {
+                    ServerParseStatics.parseReviews(context, placeID, reviews);
+                }
                 listener.onReviewFetched();
             } catch (JSONException e) {
                 e.printStackTrace();

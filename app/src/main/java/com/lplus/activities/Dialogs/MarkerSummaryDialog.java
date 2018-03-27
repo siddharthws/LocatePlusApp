@@ -14,24 +14,20 @@ import com.lplus.R;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
 import com.lplus.activities.DBHelper.AddRateTable;
 import com.lplus.activities.Extras.TinyDB;
-import com.lplus.activities.Interfaces.GetRateInterface;
 import com.lplus.activities.Interfaces.GetReviewsInterface;
 import com.lplus.activities.Interfaces.ReviewsStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
-import com.lplus.activities.Server.GetRateServerClass;
 import com.lplus.activities.Server.GetReviewsServerClass;
 import com.lplus.activities.Server.ReviewsStatusServerClass;
 import com.lplus.activities.activities.MarkerDescriptionActivity;
-
-import es.dmoral.toasty.Toasty;
 
 /**
  * Created by Sai_Kameswari on 22-03-2018.
  */
 
-public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusInterface, GetReviewsInterface, GetRateInterface {
+public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusInterface, GetReviewsInterface {
 
     private Context context;
     private Dialog markerSummaryDialog;
@@ -186,9 +182,9 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
                 markerSummaryDialog.dismiss();
                 //Check if Review update required
 
-                GetRateServerClass getRateServerClass = new GetRateServerClass(context, markerObject);
-                getRateServerClass.SetListener(this);
-                getRateServerClass.execute();
+                ReviewsStatusServerClass reviewsStatusServerClass = new ReviewsStatusServerClass(context, markerObject);
+                reviewsStatusServerClass.SetListener(this);
+                reviewsStatusServerClass.execute();
                 break;
             }
 
@@ -322,17 +318,5 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         star3.setImageResource(R.drawable.icons8_star_96);
         star4.setImageResource(R.drawable.icons8_star_96);
         star5.setImageResource(R.drawable.icons8_star_96);
-    }
-
-    @Override
-    public void onRateReceiveSuccess() {
-        ReviewsStatusServerClass reviewsStatusServerClass = new ReviewsStatusServerClass(context, markerObject);
-        reviewsStatusServerClass.SetListener(this);
-        reviewsStatusServerClass.execute();
-    }
-
-    @Override
-    public void onRateReceiveFailed() {
-        Toasty.error(context,"Rate not recieved",Toast.LENGTH_SHORT,true).show();
     }
 }
