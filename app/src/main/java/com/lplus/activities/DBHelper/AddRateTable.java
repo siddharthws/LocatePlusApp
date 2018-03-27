@@ -19,12 +19,12 @@ public class AddRateTable extends DatabaseHelper {
     private DatabaseHelper db;
 
     //Table Name and Columns
-    public static final String TABLE_NAME               = "categoryTable";
+    public static final String TABLE_NAME               = "RateTable";
 
     public static final String COLUMN_ID                = "id";
-    public static final String COLUMN_PLACE_ID       = "place_id";
-    public static final String COLUMN_PLACE_RATE    = "place_rate";
-    public static final String COLUMN_RATE_USERS   = "rate_users";
+    public static final String COLUMN_PLACE_ID          = "place_id";
+    public static final String COLUMN_PLACE_RATE        = "place_rate";
+    public static final String COLUMN_RATE_USERS        = "rate_users";
 
     //Create a Table name
     // Create table SQL query
@@ -117,7 +117,7 @@ public class AddRateTable extends DatabaseHelper {
         SQLiteDatabase Rdb = db.getReadableDatabase();
 
         Cursor dbRows = Rdb.query(TABLE_NAME,
-                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_RATE},
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_RATE, COLUMN_RATE_USERS},
                 COLUMN_PLACE_ID + "=?",
                 new String[] {place_id},
                 null,

@@ -164,7 +164,7 @@ public class RatePlaceDialog implements View.OnClickListener, RatePlaceInterface
                 }
                 loadingDialog = new LoadingDialog(context, "Please Wait...");
                 loadingDialog.ShowDialog();
-                RatePlaceServerClass ratePlaceServerClass = new RatePlaceServerClass(context, markerObject, String.valueOf(tinyDB.getInt(Keys.RATE_VALUE)));
+                RatePlaceServerClass ratePlaceServerClass = new RatePlaceServerClass(context, markerObject, String.valueOf(tinyDB.getInt(markerObject.getMarkerID()+"value")));
                 ratePlaceServerClass.SetListener(this);
                 ratePlaceServerClass.execute();
                 HideDialog();
