@@ -3,6 +3,7 @@ package com.lplus.activities.Dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,13 +41,15 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     private ImageView fav_iv, star1, star2, star3, star4,star5;
     private  TinyDB tinyDB;
     private AddRateTable addRateTable;
+    private Bitmap snap;
 
-    public MarkerSummaryDialog(Context context, MarkerObject markerObject)
+    public MarkerSummaryDialog(Context context, MarkerObject markerObject, Bitmap snap)
     {
         this.context = context;
         this.markerObject = markerObject;
         addFavoutiteTable = new AddFavoutiteTable(context);
         addRateTable = new AddRateTable(context);
+        this.snap = snap;
         Init();
     }
 
@@ -243,6 +246,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
             System.out.println("Reviews fetched: ");
             Intent intent = new Intent(context, MarkerDescriptionActivity.class);
             tinyDB = TinyDB.Init(context);
+            String imagePath = tinyDB.putImage("snap","image", snap);
+            tinyDB.putString("snap", imagePath);
             tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
             context.startActivity(intent);
         }
@@ -254,6 +259,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context, MarkerDescriptionActivity.class);
         tinyDB = TinyDB.Init(context);
+        String imagePath = tinyDB.putImage("snap","image", snap);
+        tinyDB.putString("snap", imagePath);
         tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
         context.startActivity(intent);
     }
@@ -314,6 +321,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
             System.out.println("Reviews fetched: ");
             Intent intent = new Intent(context, MarkerDescriptionActivity.class);
             tinyDB = TinyDB.Init(context);
+            String imagePath = tinyDB.putImage("snap","image", snap);
+            tinyDB.putString("snap", imagePath);
             tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
             context.startActivity(intent);
         }
@@ -322,6 +331,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
             Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(context, MarkerDescriptionActivity.class);
             tinyDB = TinyDB.Init(context);
+            String imagePath = tinyDB.putImage("snap","image", snap);
+            tinyDB.putString("snap", imagePath);
             tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
             context.startActivity(intent);
         }

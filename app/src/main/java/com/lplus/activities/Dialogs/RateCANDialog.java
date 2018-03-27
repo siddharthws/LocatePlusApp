@@ -163,7 +163,6 @@ public class RateCANDialog implements RateCANInterface {
         });
     }
     void showPhotoDialog() {
-        //bitmap = BitmapFactory.decodeFile(path);
         rate_photo_que.setText("Is this Adress appropriate?");
         rate_photo_view.setImageBitmap(bitmap);
         ratePhotoDialog.show();
