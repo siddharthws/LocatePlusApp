@@ -62,8 +62,8 @@ public class ReviewsStatusServerClass extends BaseServerClass {
         if (IsResponseValid()) {
                 try {
                     AddRateTable addRateTable = new AddRateTable(context);
-                   int reviewResponse = responseJson.getInt(Keys.REVIEW_UPDATE_RESPONSE);
-                   int photoResponse = responseJson.getInt(Keys.PHOTO_UPDATE_RESPONSE);
+                    int reviewResponse = responseJson.getInt(Keys.REVIEW_UPDATE_RESPONSE);
+                    int photoResponse = responseJson.getInt(Keys.PHOTO_UPDATE_RESPONSE);
                     double rate = responseJson.getDouble(Keys.RATE_PLACE);
                     int users = responseJson.getInt(Keys.RATE_USERS);
 

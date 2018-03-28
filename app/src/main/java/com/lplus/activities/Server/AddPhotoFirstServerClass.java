@@ -1,6 +1,8 @@
 package com.lplus.activities.Server;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.lplus.activities.Interfaces.AddPhotoInterface;
 import com.lplus.activities.Macros.Keys;
@@ -9,7 +11,13 @@ import com.lplus.activities.Objects.TempNewPhotoObject;
 
 import org.json.JSONException;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -23,6 +31,7 @@ import okhttp3.RequestBody;
 public class AddPhotoFirstServerClass extends BaseServerClass {
     private Context context;
     private TempNewPhotoObject tempNewPhotoObject;
+    BitmapFactory.Options bmOptions;
 
     private AddPhotoInterface listener = null;
     public void SetListener(AddPhotoInterface listener)
@@ -35,6 +44,7 @@ public class AddPhotoFirstServerClass extends BaseServerClass {
         super(context, UrlMappings.ADD_PHOTOS);
         this.context = context;
         this.tempNewPhotoObject = tempNewPhotoObject;
+        bmOptions = new BitmapFactory.Options();
     }
 
     @Override
@@ -91,8 +101,10 @@ public class AddPhotoFirstServerClass extends BaseServerClass {
         MultipartBody.Builder mpartBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for(int i = 0;i<imagePaths.size();i++) {
 
+            File file = ScaleImage(new File(imagePaths.get(i)));
+            /*File file = new File(imagePaths.get(i));*/
             //MultipartRequestBody fileBody = new MultipartRequestBody(path);
-            RequestBody rq = RequestBody.create(MediaType.parse("image/jpeg"), new File(imagePaths.get(i)));
+            RequestBody rq = RequestBody.create(MediaType.parse("image/jpeg"), file);
             mpartBuilder.addFormDataPart(Keys.AP_PHOTOSTREAM, imageUUIDs.get(i), rq);
         }
         requestBuilder.method("POST", mpartBuilder.build());
@@ -104,5 +116,29 @@ public class AddPhotoFirstServerClass extends BaseServerClass {
         }
 
         return true;
+    }
+
+    private File ScaleImage(File file) {
+        OutputStream os = null;
+        try {
+            //os = new BufferedOutputStream(new FileOutputStream(file));
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap = Bitmap.createScaledBitmap(bitmap,1024,1024,true);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            byte[] bitmapdata = bos.toByteArray();
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+            //os.flush();
+            //os.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }

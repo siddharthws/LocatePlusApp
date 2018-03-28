@@ -343,6 +343,11 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
                     }
                     @Override
                     public void onAnimationEnd(Animation animation) {
+                        if(XMEN.size() == 5)
+                        {
+                            Toasty.error(AddPlaceActivity.this, "Max Photo Limit 5 Reached", Toast.LENGTH_SHORT,true).show();
+                            return;
+                        }
 
                         try {
                             PackageManager pm = getPackageManager();
@@ -451,12 +456,10 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
         if(XMEN.size() == 5)
         {
             addphoto.setImageResource(R.drawable.add_photo_red);
-            addphoto.setEnabled(false);
-            Toasty.error(AddPlaceActivity.this, "Max Photo Limit 5", Toast.LENGTH_SHORT,true).show();
         }
         else {
             addphoto.setImageResource(R.drawable.add_photo_white);
-            addphoto.setEnabled(true);
+           /* addphoto.setEnabled(true);*/
         }
         // Auto start of viewpager
         final Handler handler = new Handler();
@@ -474,7 +477,7 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
             public void run() {
                 handler.post(Update);
             }
-        }, 1500, 5000);
+        }, 1500, 1500);
     }
 
     @Override

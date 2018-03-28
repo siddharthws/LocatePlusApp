@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.lplus.activities.DBHelper.AddCategoryTable;
 import com.lplus.activities.DBHelper.AddFacilityTable;
+import com.lplus.activities.DBHelper.AddRateTable;
 import com.lplus.activities.DBHelper.MarkersTable;
 import com.lplus.activities.DBHelper.ReviewsTable;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.CategoryObject;
 import com.lplus.activities.Objects.FacilityObject;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Objects.RateObject;
 import com.lplus.activities.Objects.ReviewsObject;
 
 import org.json.JSONArray;
@@ -140,6 +142,7 @@ public class ServerParseStatics {
         for(int i=0; i<markers.length();i++)
         {
             try {
+                AddRateTable addRateTable = new AddRateTable(context);
                 JSONObject marker = markers.getJSONObject(i);
                 markerObject = new MarkerObject();
                 markerObject.setMarkerID(marker.getString(Keys.MARKER_ID));
@@ -151,6 +154,23 @@ public class ServerParseStatics {
                 markerObject.setMarkerCategory(categoryObject.getString(Keys.CAT_NAME));
                 markerObject.setMarkerLatitude(marker.getDouble(Keys.MARKER_LATITUDE));
                 markerObject.setMarkerLongitude(marker.getDouble(Keys.MARKER_LONGITUDE));
+
+                //save rate and user count
+                double rate = marker.getDouble(Keys.RATE_PLACE);
+                int users = marker.getInt(Keys.RATE_USERS);
+
+
+                boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
+                //Fetch new Records
+                //store data in tinyDB
+                RateObject rateObject = new RateObject(markerObject.getMarkerID(),rate, users);
+                if(isRateAvailable) {
+                    boolean update = addRateTable.UpdateRateByID(rateObject);
+                }
+                else {
+                    addRateTable.SaveRecord(rateObject);
+                }
+                addRateTable.close();
 
                 //fetch marker facilities through jsonarray
                 JSONArray marker_facilities = marker.getJSONArray(Keys.MARKER_FACILITIES);
