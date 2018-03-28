@@ -12,6 +12,7 @@ public class RateObject {
     public RateObject(String placeId, Double placerate, int rateusers) {
         this.placeId = placeId;
         this.rateusers = rateusers;
+        this.placerate = placerate;
     }
 
     public RateObject() {

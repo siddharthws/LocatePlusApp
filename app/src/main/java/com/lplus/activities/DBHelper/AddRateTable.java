@@ -4,11 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import com.lplus.activities.Objects.CategoryObject;
 import com.lplus.activities.Objects.RateObject;
 
 import java.util.ArrayList;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * Created by CHANDEL on 3/27/2018.
@@ -74,8 +77,10 @@ public class AddRateTable extends DatabaseHelper {
                 null);
 
         while (dbRows.moveToNext()) {
+            System.out.println("Rate Available "+ dbRows);
 
             rate = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_RATE));
+            System.out.println("rate = "+rate);
         }
 
         return rate;
@@ -97,6 +102,7 @@ public class AddRateTable extends DatabaseHelper {
         while (dbRows.moveToNext()) {
 
             users = dbRows.getInt(   dbRows.getColumnIndex(  COLUMN_RATE_USERS));
+            System.out.println("users = "+users);
         }
 
         return users;
@@ -137,6 +143,7 @@ public class AddRateTable extends DatabaseHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_PLACE_ID, place_id);
         contentValues.put(COLUMN_PLACE_RATE, rateObject.getPlacerate());
+        contentValues.put(COLUMN_RATE_USERS, rateObject.getRateusers());
         int value = Wdb.update(TABLE_NAME,contentValues,COLUMN_PLACE_ID + "=?",new String[] {place_id});
 
         if(value != 0)

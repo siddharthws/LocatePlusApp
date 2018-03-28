@@ -60,7 +60,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
 
     private MarkerObject markerObject;
     private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total, user_count;
-    private LinearLayout direction_layout, desc_layout, rate_place;
+    private LinearLayout direction_layout, desc_layout, rate_place, desc_layout_fav;
     private ImageButton review_send, flag_photo, flag_name_address_category, flag_facility;
     private LoadingDialog loadingDialog;
     private ViewPager mPager, imagePager;
@@ -118,6 +118,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         flag_photo = findViewById(R.id.flag_photo);
         flag_name_address_category = findViewById(R.id.flag_name_address_category);
         flag_facility = findViewById(R.id.flag_facility);
+        desc_layout_fav = findViewById(R.id.dec_fav_layout);
         rate_place = findViewById(R.id.rate_place_layout);
         rate_total = findViewById(R.id.rate_total);
         user_count  = findViewById(R.id.user_count);
@@ -176,6 +177,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
 
         //set listeners for linear layouts
         direction_layout.setOnClickListener(this);
+        desc_layout_fav.setOnClickListener(this);
         desc_layout.setOnClickListener(this);
         review_send.setOnClickListener(this);
         flag_photo.setOnClickListener(this);
@@ -248,7 +250,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
 
         switch (view.getId())
         {
-            case R.id.dec_fav:
+            case R.id.dec_fav_layout:
             {
                 if(addFavoutiteTable ==null)
                 {
@@ -256,7 +258,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
                 }
                 if(addFavoutiteTable.isFavourite(markerObject.getMarkerID())) {
                     addFavoutiteTable.RemoveFavourite(markerObject.getMarkerID());
-                    fav_iv.setImageResource(R.drawable.icons8_heart_white_96);
+                    fav_iv.setImageResource(R.drawable.icons8_heart_black_96);
                     Toasty.success(this,"Removed From Favourites",Toast.LENGTH_SHORT,true).show();
                 } else {
                     FavouriteObject favouriteObject = new FavouriteObject(markerObject.getMarkerID(),markerObject.getMarkerName(),markerObject.getMarkerAddress(),markerObject.getMarkerLatitude(),markerObject.getMarkerLongitude());
