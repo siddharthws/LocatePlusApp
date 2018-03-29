@@ -58,8 +58,11 @@
 
         <activity
             android:name=".activities.activities.HelpSliderActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activities.activities.MarkerDescriptionActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.activities.MarkerDescriptionActivity" />
+        <activity android:name=".activities.activities.TextToSpeechActivity">
+        </activity>
+        <activity android:name=".activities.activities.SpeechToTextActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
