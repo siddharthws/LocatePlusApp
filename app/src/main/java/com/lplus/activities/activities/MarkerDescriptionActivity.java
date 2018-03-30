@@ -99,6 +99,9 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
 
         Intent intent = getIntent();
         paths = intent.getStringArrayListExtra("paths");
+        if (paths == null) {
+            paths = new ArrayList<>();
+        }
         //fetch marker object
         tinyDB = TinyDB.Init(this);
         photo_uuid_array = new ArrayList<>();
@@ -143,6 +146,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         desc_layout = findViewById(R.id.rate_place_layout);
         addRateTable = new AddRateTable(this);
         showRate();
+        setData();
         checkforFavorites();
         putImage(paths);
     }

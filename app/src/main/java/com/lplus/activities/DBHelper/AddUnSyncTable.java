@@ -18,7 +18,7 @@ public class AddUnSyncTable extends DatabaseHelper {
     private DatabaseHelper db;
 
     //Table Name and Columns
-    public static final String TABLE_NAME               = "photosTable";
+    public static final String TABLE_NAME               = "UnsyncTable";
 
     public static final String COLUMN_ID                = "id";
     public static final String COLUMN_PHOTO_IDS       = "photo_ids";

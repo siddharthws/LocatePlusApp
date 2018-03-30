@@ -12,6 +12,7 @@ import com.lplus.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +20,11 @@ import java.util.List;
  */
 
 public class FetchedImageSlider extends PagerAdapter {
-    private List<String> images;
+    private ArrayList<String> images;
     private LayoutInflater inflater;
     private Context context;
 
-    public FetchedImageSlider(Context context, List<String> images) {
+    public FetchedImageSlider(Context context, ArrayList<String> images) {
         this.context = context;
         this.images=images;
         inflater = LayoutInflater.from(context);

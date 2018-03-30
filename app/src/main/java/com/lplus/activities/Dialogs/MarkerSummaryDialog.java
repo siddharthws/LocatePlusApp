@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.lplus.R;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
+import com.lplus.activities.DBHelper.AddPhotoTable;
 import com.lplus.activities.DBHelper.AddRateTable;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.GetReviewsInterface;
@@ -21,6 +22,7 @@ import com.lplus.activities.Interfaces.ReviewsStatusInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Objects.PhotoObject;
 import com.lplus.activities.Server.FetchPhotoServer;
 import com.lplus.activities.Server.GetReviewsServerClass;
 import com.lplus.activities.Server.ReviewsStatusServerClass;
@@ -45,6 +47,9 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     private AddRateTable addRateTable;
     private Bitmap snap;
     private int fetchedPhotoResponse;
+    AddPhotoTable addPhotoTable;
+    PhotoObject photoObject;
+    int reviewResponse;
 
     public MarkerSummaryDialog(Context context, MarkerObject markerObject, Bitmap snap)
     {
@@ -71,6 +76,9 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         user_count = markerSummaryDialog.findViewById(R.id.user_count);
         rate_total.setText("0.0");
         user_count.setText("(0)");
+
+        addPhotoTable = new AddPhotoTable(context);
+        photoObject = new PhotoObject();
 
         //fetch all ID's from View
         place_name = markerSummaryDialog.findViewById(R.id.place_name);
@@ -238,10 +246,10 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         int savedReviewStatus = tinyDB.getInt(markerObject.getMarkerID()+"review");
         int savedPhotoResponse = tinyDB.getInt(markerObject.getMarkerID()+"photo");
         fetchedPhotoResponse = photoResponse;
+        this.reviewResponse = reviewResponse;
         if(savedReviewStatus < reviewResponse)
         {
             //Request for Reviews
-            tinyDB.putInt(markerObject.getMarkerID()+"review", reviewResponse);
             GetReviewsServerClass getReviewsServerClass = new GetReviewsServerClass(context, markerObject);
             getReviewsServerClass.SetListener(this);
             getReviewsServerClass.execute();
@@ -263,6 +271,7 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
                 tinyDB.putInt(markerObject.getMarkerID()+"photo", fetchedPhotoResponse);
                 System.out.println("Reviews fetched: ");
                 Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+
                 tinyDB = TinyDB.Init(context);
                 String imagePath = tinyDB.putImage("snap","image", snap);
                 tinyDB.putString("snap", imagePath);
@@ -338,10 +347,10 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
         int savedPhotoResponse = tinyDB.getInt(markerObject.getMarkerID()+"photo");
         if (status)
         {
+            tinyDB.putInt(markerObject.getMarkerID()+"review", reviewResponse);
             System.out.println("Fetched Response "+fetchedPhotoResponse);
             if (savedPhotoResponse < fetchedPhotoResponse)
             {
-                tinyDB.putInt(markerObject.getMarkerID()+"photo", fetchedPhotoResponse);
                 FetchPhotoServer fetchPhotoServer = new FetchPhotoServer(context, markerObject);
                 fetchPhotoServer.SetListener(this);
                 fetchPhotoServer.execute();
@@ -372,6 +381,9 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
                 tinyDB.putInt(markerObject.getMarkerID()+"photo", fetchedPhotoResponse);
                 Toast.makeText(context, "Review Update Failed", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+                photoObject = addPhotoTable.ReadPhotos(markerObject.getMarkerID());
+                ArrayList<String> path  = photoObject.getPhoto_paths();
+                intent.putStringArrayListExtra("paths",path);
                 tinyDB = TinyDB.Init(context);
                 String imagePath = tinyDB.putImage("snap","image", snap);
                 tinyDB.putString("snap", imagePath);
@@ -384,6 +396,7 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     @Override
     public void onPhotoFetched(ArrayList<String> images)
     {
+        tinyDB.putInt(markerObject.getMarkerID()+"photo", fetchedPhotoResponse);
         System.out.println("Photo fetch success......");
         Intent intent = new Intent(context, MarkerDescriptionActivity.class);
         tinyDB = TinyDB.Init(context);
