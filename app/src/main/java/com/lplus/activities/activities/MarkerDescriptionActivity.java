@@ -19,6 +19,7 @@ import com.lplus.activities.Adapters.FetchedImageSlider;
 import com.lplus.activities.Adapters.ReviewSliderAdapter;
 import com.lplus.activities.DBHelper.AddFacilityTable;
 import com.lplus.activities.DBHelper.AddFavoutiteTable;
+import com.lplus.activities.DBHelper.AddPhotoTable;
 import com.lplus.activities.DBHelper.AddRateTable;
 import com.lplus.activities.DBHelper.ReviewsTable;
 import com.lplus.activities.Dialogs.LoadingDialog;
@@ -36,6 +37,7 @@ import com.lplus.activities.Interfaces.RatePhotosInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Objects.PhotoObject;
 import com.lplus.activities.Objects.ReviewsObject;
 import com.lplus.activities.Server.MarkerReviewServerClass;
 import com.lplus.activities.Server.RateFacilityServerClass;
@@ -71,7 +73,6 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
     RatePhotoDialog ratePhotoDialog;
     AddFacilityTable addFacilityTable;
     AddRateTable addRateTable;
-    private ArrayList<String> paths;
 
 
     @Override
@@ -95,15 +96,14 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
     private void Init()
     {
 
-        Intent intent = getIntent();
-        paths = intent.getStringArrayListExtra("paths");
-        if (paths == null) {
-            paths = new ArrayList<>();
-        }
+
         //fetch marker object
         tinyDB = TinyDB.Init(this);
         photo_uuid_array = new ArrayList<>();
         photo_path_array = new ArrayList<>();
+        Intent intent = getIntent();
+        photo_path_array = tinyDB.getListString(Keys.TINYDB_PHOTO_PATHS);
+        photo_uuid_array = tinyDB.getListString(Keys.TINYDB_PHOTO_UUID);
         markerObject = tinyDB.getObject(Keys.MARKER_OBJECT, MarkerObject.class);
         addFavoutiteTable = new AddFavoutiteTable(this);
         addFacilityTable = new AddFacilityTable(this);
@@ -143,7 +143,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         showRate();
         setData();
         checkforFavorites();
-        putImage(paths);
+        putImage(photo_path_array);
     }
 
     private void setData()
@@ -418,6 +418,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         imagePager =  findViewById(R.id.photo_pager);
         final ArrayList<String> images = new ArrayList<>();
         images.addAll(image);
+        System.out.println("imaged in putimage "+images.toString());
         imagePager.setAdapter(new FetchedImageSlider(this,images));
 
         // Auto start of viewpager

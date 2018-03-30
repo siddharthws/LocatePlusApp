@@ -78,7 +78,7 @@ public class AddPhotoTable extends DatabaseHelper {
                 null,
                 null,
                 null);
-        System.out.println("message asdjkasj");
+        System.out.println("reading photos");
         while (dbRows.moveToNext()) {
             System.out.println("message "+dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PHOTO_UUID)));
             System.out.println("message next "+dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PHOTO_PATH)));

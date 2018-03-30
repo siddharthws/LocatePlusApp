@@ -39,6 +39,13 @@
                     android:layout_weight="1"
                     android:src="@color/WHITE"
                     app:srcCompat="@drawable/background_black" />
+                <ProgressBar
+                    android:id="@+id/progresinphoto"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|center_horizontal"/>
 
                 <TextView
                     android:id="@+id/photo_ques"

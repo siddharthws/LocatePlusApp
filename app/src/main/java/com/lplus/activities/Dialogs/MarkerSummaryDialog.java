@@ -47,6 +47,7 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
     private int fetchedPhotoResponse;
     AddPhotoTable addPhotoTable;
     PhotoObject photoObject;
+    LoadingDialog loadingDialog;
     int reviewResponse;
 
     public MarkerSummaryDialog(Context context, MarkerObject markerObject)
@@ -200,7 +201,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
             {
                 markerSummaryDialog.dismiss();
                 //Check if Review update required
-
+                loadingDialog = new LoadingDialog(context, "Connecting to server ..");
+                loadingDialog.ShowDialog();
                 ReviewsStatusServerClass reviewsStatusServerClass = new ReviewsStatusServerClass(context, markerObject);
                 reviewsStatusServerClass.SetListener(this);
                 reviewsStatusServerClass.execute();
@@ -336,11 +338,17 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
 
     @Override
     public void onReviewFetchStatus(boolean status) {
-        int savedPhotoResponse = tinyDB.getInt(markerObject.getMarkerID()+"photo");
+
+        FetchPhotoServer fetchPhotoServer = new FetchPhotoServer(context, markerObject);
+        fetchPhotoServer.SetListener(this);
+        fetchPhotoServer.execute();
+
+        /*int savedPhotoResponse = tinyDB.getInt(markerObject.getMarkerID()+"photo");
         if (status)
         {
             tinyDB.putInt(markerObject.getMarkerID()+"review", reviewResponse);
             System.out.println("Fetched Response "+fetchedPhotoResponse);
+            System.out.println("saved Response "+savedPhotoResponse);
             if (savedPhotoResponse < fetchedPhotoResponse)
             {
                 FetchPhotoServer fetchPhotoServer = new FetchPhotoServer(context, markerObject);
@@ -352,6 +360,10 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
                 tinyDB.putInt(markerObject.getMarkerID()+"photo", fetchedPhotoResponse);
                 System.out.println("Reviews fetched: ");
                 Intent intent = new Intent(context, MarkerDescriptionActivity.class);
+                photoObject = addPhotoTable.ReadPhotos(markerObject.getMarkerID());
+                ArrayList<String> path  = photoObject.getPhoto_paths();
+                intent.putStringArrayListExtra("paths",path);
+                System.out.println("path array "+path.toString());
                 tinyDB = TinyDB.Init(context);
                 tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
                 context.startActivity(intent);
@@ -374,31 +386,37 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
                 photoObject = addPhotoTable.ReadPhotos(markerObject.getMarkerID());
                 ArrayList<String> path  = photoObject.getPhoto_paths();
                 intent.putStringArrayListExtra("paths",path);
+                System.out.println("path array "+path.toString());
                 tinyDB = TinyDB.Init(context);
                 tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
                 context.startActivity(intent);
             }
-        }
+        }*/
     }
 
     @Override
-    public void onPhotoFetched(ArrayList<String> images)
+    public void onPhotoFetched(ArrayList<String> images, ArrayList<String> uuids)
     {
+        loadingDialog.HideDialog();
         tinyDB.putInt(markerObject.getMarkerID()+"photo", fetchedPhotoResponse);
         System.out.println("Photo fetch success......");
         Intent intent = new Intent(context, MarkerDescriptionActivity.class);
         tinyDB = TinyDB.Init(context);
         tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
-        intent.putStringArrayListExtra("paths" ,images);
+        tinyDB.putListString(Keys.TINYDB_PHOTO_PATHS,images);
+        tinyDB.putListString(Keys.TINYDB_PHOTO_UUID,uuids);
         context.startActivity(intent);
     }
 
     @Override
     public void onPhotoFetchFailed()
     {
+        loadingDialog.HideDialog();
         System.out.println("Photo fetch failed......");
         Intent intent = new Intent(context, MarkerDescriptionActivity.class);
         tinyDB = TinyDB.Init(context);
+        tinyDB.putListString(Keys.TINYDB_PHOTO_PATHS,new ArrayList<String>());
+        tinyDB.putListString(Keys.TINYDB_PHOTO_UUID,new ArrayList<String>());
         tinyDB.putObject(Keys.MARKER_OBJECT, markerObject);
         context.startActivity(intent);
     }

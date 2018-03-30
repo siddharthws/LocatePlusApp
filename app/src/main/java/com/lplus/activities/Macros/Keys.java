@@ -71,6 +71,8 @@ public class Keys {
     public static final String RATE_EXIST                       = "rateExist";
     public static final String RATE_VALUE                       = "rateValue";
     public static final String RATE_FAC_KEY                     = "rateFacKey";
+    public static final String TINYDB_PHOTO_PATHS               = "ratePhoto";
+    public static final String TINYDB_PHOTO_UUID                = "ratePUuid";
 
 
     //Review Updates on Know More Click

@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -240,6 +242,10 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
                             Toasty.error(AddPlaceActivity.this, "Please add a photo", Toast.LENGTH_SHORT, true).show();
                             return;
                         }
+                        if(selected_fac.size() == 0) {
+                            Toasty.error(AddPlaceActivity.this, "Please select some facilities", Toast.LENGTH_SHORT, true).show();
+                            return;
+                        }
                         loadingDialog.ShowDialog();
                         ArrayList<String> photo_uuid_array = new ArrayList<>();
                         ArrayList<String> photo_path_array = new ArrayList<>();
@@ -288,6 +294,10 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
                             unSyncObject.setPlace_category(category);
                             unSyncObject.setPlace_facilities(place_fac.toString());
                             unSyncObject.setPlace_decription(place_description_string);
+                        }
+                        else {
+                            Toasty.error(AddPlaceActivity.this,"Some Data is Missing",Toast.LENGTH_SHORT,true).show();
+                            return;
                         }
                         //Add Data to Database
                         AddToUnsync(unSyncObject);
@@ -471,13 +481,7 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
                 mPager.setCurrentItem(currentPage++, true);
             }
         };
-        Timer swipeTimer = new Timer();
-        swipeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(Update);
-            }
-        }, 1500, 1500);
+
     }
 
     @Override
@@ -533,5 +537,14 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
 
         setResult(2);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(facility_drop_image.getTag() == "ON") {
+            facility_drop_image.setImageResource(R.drawable.icons8_drop_down_48);
+            simpleExpandableListView.setVisibility(View.GONE);
+            facility_drop_image.setTag("OFF");
+        }
     }
 }

@@ -7,6 +7,6 @@ import java.util.ArrayList;
  */
 
 public interface PhotoFetchStatusInterface {
-    void onPhotoFetched(ArrayList<String> images);
+    void onPhotoFetched(ArrayList<String> images, ArrayList<String> uuids);
     void onPhotoFetchFailed();
 }
