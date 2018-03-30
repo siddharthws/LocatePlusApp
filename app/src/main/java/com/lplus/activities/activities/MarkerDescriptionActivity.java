@@ -1,7 +1,6 @@
 package com.lplus.activities.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,7 +71,6 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
     RatePhotoDialog ratePhotoDialog;
     AddFacilityTable addFacilityTable;
     AddRateTable addRateTable;
-    private Bitmap snap;
     private ArrayList<String> paths;
 
 
@@ -107,9 +105,6 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         photo_uuid_array = new ArrayList<>();
         photo_path_array = new ArrayList<>();
         markerObject = tinyDB.getObject(Keys.MARKER_OBJECT, MarkerObject.class);
-        String imagePath = tinyDB.getString("snap");
-        snap = tinyDB.getImage(imagePath);
-        System.out.println("Bitmap snap: "+snap.toString());
         addFavoutiteTable = new AddFavoutiteTable(this);
         addFacilityTable = new AddFacilityTable(this);
 
@@ -318,7 +313,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
             case R.id.flag_name_address_category:
             {
                 System.out.println("Reaching to the flag of address");
-                RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject, snap);
+                RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject);
                 rateCategoryDialog.ShowDialog();
                 break;
             }

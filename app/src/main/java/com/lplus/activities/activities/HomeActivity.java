@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -236,15 +235,10 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         if(zoomLevel > 7.2)
         {
             zoomlevel.setVisibility(View.VISIBLE);
-            //setAllMarkers();
         }
         if(zoomLevel <= 7.2)
         {
             zoomlevel.setVisibility(View.GONE);
-           /* if(mMap != null)
-            {
-                mMap.clear();
-            }*/
         }
     }
 
@@ -594,23 +588,9 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     public boolean onMarkerClick(final Marker marker)
     {
         final MarkerObject selectedMarker = (MarkerObject) marker.getTag();
-        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                System.out.println("Map ready");
-                // Make a snapshot when map's done loading
-                mMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
-                    @Override
-                    public void onSnapshotReady(Bitmap bitmap) {
-                        System.out.println("Shot ready");
-                        //open Dialog
-                        MarkerSummaryDialog markerSummaryDialog = new MarkerSummaryDialog(HomeActivity.this, selectedMarker, bitmap);
-                        markerSummaryDialog.ShowDialog();
-                    }
-                });
-            }
-        });
 
+        MarkerSummaryDialog markerSummaryDialog = new MarkerSummaryDialog(HomeActivity.this, selectedMarker);
+        markerSummaryDialog.ShowDialog();
         return false;
     }
 
