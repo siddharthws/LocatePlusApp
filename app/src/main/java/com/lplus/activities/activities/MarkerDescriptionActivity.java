@@ -31,7 +31,6 @@ import com.lplus.activities.Extras.CacheData;
 import com.lplus.activities.Extras.TinyDB;
 import com.lplus.activities.Interfaces.FacilityDialogClickInterface;
 import com.lplus.activities.Interfaces.MarkerReviewInterface;
-import com.lplus.activities.Interfaces.PhotoFetchStatusInterface;
 import com.lplus.activities.Interfaces.PhotosDialogClickInterface;
 import com.lplus.activities.Interfaces.RateFacillityInterface;
 import com.lplus.activities.Interfaces.RatePhotosInterface;
@@ -39,7 +38,6 @@ import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
 import com.lplus.activities.Objects.ReviewsObject;
-import com.lplus.activities.Server.FetchPhotoServer;
 import com.lplus.activities.Server.MarkerReviewServerClass;
 import com.lplus.activities.Server.RateFacilityServerClass;
 import com.lplus.activities.Server.RatePhotoServerClass;
@@ -52,7 +50,6 @@ import es.dmoral.toasty.Toasty;
 
 public class MarkerDescriptionActivity extends HomeActivity implements  View.OnClickListener,
                                                                         MarkerReviewInterface,
-                                                                        PhotoFetchStatusInterface,
                                                                         FacilityDialogClickInterface,
                                                                         PhotosDialogClickInterface,
                                                                         RateFacillityInterface,
@@ -76,6 +73,8 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
     AddFacilityTable addFacilityTable;
     AddRateTable addRateTable;
     private Bitmap snap;
+    private ArrayList<String> paths;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +96,9 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
     }
     private void Init()
     {
+
+        Intent intent = getIntent();
+        paths = intent.getStringArrayListExtra("paths");
         //fetch marker object
         tinyDB = TinyDB.Init(this);
         photo_uuid_array = new ArrayList<>();
@@ -142,9 +144,7 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         addRateTable = new AddRateTable(this);
         showRate();
         checkforFavorites();
-        FetchPhotoServer fetchPhotoServer = new FetchPhotoServer(this, markerObject);
-        fetchPhotoServer.SetListener(this);
-        fetchPhotoServer.execute();
+        putImage(paths);
     }
 
     private void setData()
@@ -415,10 +415,10 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         star5.setImageResource(R.drawable.icons8_star_96);
     }
 
-    public void putImage(Bitmap  image) {
+    public void putImage(ArrayList<String>  image) {
         imagePager =  findViewById(R.id.photo_pager);
-        final ArrayList<Bitmap> images = new ArrayList<>();
-        images.add(image);
+        final ArrayList<String> images = new ArrayList<>();
+        images.addAll(image);
         imagePager.setAdapter(new FetchedImageSlider(this,images));
 
         // Auto start of viewpager
@@ -438,22 +438,6 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
                 handler.post(Update);
             }
         }, 4000, 3000);
-    }
-
-    @Override
-    public void onPhotoFetched(Bitmap bitmap)
-    {
-        System.out.println("Photo Fetched from server");
-        System.out.println("Bitmap: "+bitmap);
-        putImage(bitmap);
-        setData();
-    }
-
-    @Override
-    public void onPhotoFetchFailed()
-    {
-        System.out.println("Photo not Fetched from server");
-        setData();
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.lplus.activities.Interfaces;
 
-import android.graphics.Bitmap;
+import java.util.ArrayList;
 
 /**
  * Created by Sai_Kameswari on 26-03-2018.
  */
 
 public interface PhotoFetchStatusInterface {
-    void onPhotoFetched(Bitmap bitmap);
+    void onPhotoFetched(ArrayList<String> images);
     void onPhotoFetchFailed();
 }
