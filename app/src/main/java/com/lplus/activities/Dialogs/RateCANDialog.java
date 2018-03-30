@@ -2,7 +2,6 @@ package com.lplus.activities.Dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,16 +31,14 @@ public class RateCANDialog implements RateCANInterface {
     private LinearLayout LL_yes, LL_no, LL_not_sure;
     private LinearLayout cat_LL_yes, cat_LL_no, cat_LL_not_sure;
     private LinearLayout photo_yes, photo_no, photo_not_sure;
-    private Bitmap bitmap;
     private ImageView rate_photo_view;
     ArrayList<String> CANRate_array;
     private LoadingDialog loadingDialog;
 
-    public RateCANDialog(Context context, MarkerObject markerObject, Bitmap bitmap)
+    public RateCANDialog(Context context, MarkerObject markerObject)
     {
         this.context = context;
         this.markerObject = markerObject;
-        this.bitmap = bitmap;
         Init();
     }
 
@@ -164,7 +161,6 @@ public class RateCANDialog implements RateCANInterface {
     }
     void showPhotoDialog() {
         rate_photo_que.setText("Is this Adress appropriate?");
-        rate_photo_view.setImageBitmap(bitmap);
         ratePhotoDialog.show();
         photo_yes.setOnClickListener(new View.OnClickListener() {
             @Override
