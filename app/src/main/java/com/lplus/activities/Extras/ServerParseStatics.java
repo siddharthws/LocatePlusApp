@@ -1,6 +1,8 @@
 package com.lplus.activities.Extras;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Environment;
 
 import com.lplus.activities.DBHelper.AddCategoryTable;
 import com.lplus.activities.DBHelper.AddFacilityTable;
@@ -18,7 +20,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -234,5 +240,59 @@ public class ServerParseStatics {
         }
         markersTable.CloseConnection();
         return filteredMarkers;
+    }
+
+    public static ArrayList<String> parsePhotos(Context contexts, ArrayList<Bitmap> images)
+    {
+        //Initialise the cache variable
+        /*if(CacheData.cacheAllReviews == null)
+        {
+            CacheData.cacheAllReviews = new ArrayList<>();
+        }*/
+        ArrayList<String> paths = new ArrayList<>();
+        context = contexts;
+        for(Bitmap bitmap : images)
+        {
+            if (isExternalStorageWritable()) {
+                String path = saveImage(bitmap);
+                paths.add(path);
+            }else{
+                //prompt the user or do something
+            }
+        }
+        return  paths;
+    }
+
+    /* Checks if external storage is available for read and write */
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static String saveImage(Bitmap finalBitmap) {
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/saved_images");
+        myDir.mkdirs();
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String fname = "image"+ timeStamp +".jpg";
+
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete ();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+            System.out.println("The absolute path is: "+ file.getAbsolutePath());
+            return file.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
