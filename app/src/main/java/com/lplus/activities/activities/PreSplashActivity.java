@@ -37,7 +37,10 @@ public class PreSplashActivity extends AppCompatActivity {
                     Keys.REQUEST_PERMISSION);
             return;
         }
-        onPermissionSuccess();
+        //onPermissionSuccess();
+
+        Intent intent = new Intent(this, TextToSpeechActivity.class);
+        startActivity(intent);
     }
 
     @Override

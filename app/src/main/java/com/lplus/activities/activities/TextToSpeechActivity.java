@@ -1,9 +1,8 @@
 package com.lplus.activities.activities;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +10,6 @@ import android.widget.EditText;
 
 import com.lplus.R;
 
-import java.util.HashMap;
 import java.util.Locale;
 
 public class TextToSpeechActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
@@ -27,14 +25,6 @@ public class TextToSpeechActivity extends AppCompatActivity implements TextToSpe
         textToSpeech = new TextToSpeech(this,this);
         editText = findViewById(R.id.textView);
         button = findViewById(R.id.clickme);
-        speech = findViewById(R.id.wow);
-        /*textToSpeech.setPitch(1);*/
-
-        /*String speech = "Who is the first player?";
-        HashMap<String, String> params = new HashMap<>();
-        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, String.valueOf(REQUEST_CODE));
-// Be aware, you need to call speak method after TextToSpeech object onInit method is called.
-        textToSpeech.speak(speech, TextToSpeech.QUEUE_FLUSH, params);*/
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,12 +33,7 @@ public class TextToSpeechActivity extends AppCompatActivity implements TextToSpe
             }
         });
 
-        speech.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(TextToSpeechActivity.this,SpeechToTextActivity.class));
-            }
-        });
+
     }
 
     @Override
