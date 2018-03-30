@@ -486,15 +486,10 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
         super.onPostResume();
     }
 
-
-
     public void AddToUnsync(UnSyncObject unSyncObject) {
         AddUnSyncTable addUnSyncTable = new AddUnSyncTable(AddPlaceActivity.this);
         addUnSyncTable.SaveRecord(unSyncObject);
     }
-
-
-
 
 
     @Override

@@ -96,4 +96,12 @@ public class Keys {
     public static final String RATE_PHOTO_RATE                  = "photoRate";
     public static final String RATE_USERS                       = "noOfUsers";
 
+
+
+    //SOS Contacts
+    public static final String CONTACT_1                       = "contact_1";
+    public static final String CONTACT_2                       = "contact_2";
+    public static final String CONTACT_3                       = "contact_3";
+
+
 }

@@ -15,6 +15,10 @@
             android:icon="@drawable/icons8_heart_black_96"
             android:title="Favorites" />
         <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="SOS Contacts" />
+        <item
             android:id="@+id/help"
             android:icon="@drawable/icons8_inquiry_48"
             android:title="Help" />

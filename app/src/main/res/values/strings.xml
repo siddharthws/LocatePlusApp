@@ -16,7 +16,7 @@
     <string name="category">Select a Category</string>
 
     //Text to speech to text
-    <string name="action_settings">Settings</string>
+    <string name="action_sos">SOS</string>
     <string name="hello_world">Hello world!</string>
     <string name="speech_prompt">Say something&#8230;</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>

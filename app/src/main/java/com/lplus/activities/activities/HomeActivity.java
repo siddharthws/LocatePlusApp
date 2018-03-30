@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -282,6 +283,11 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                 startActivityForResult((new Intent(HomeActivity.this,FavouriteActivity.class)), 1);
                 break;
             }
+            case R.id.settings:
+            {
+                startActivity(new Intent(HomeActivity.this,SOSContactsActivity.class));
+                break;
+            }
             case R.id.help: {
                 tinyDB.putBoolean(Keys.HELP_SLIDER, true);
                 startActivity(new Intent(HomeActivity.this,HelpSliderActivity.class));
@@ -298,6 +304,39 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(tinyDB == null)
+        {
+            tinyDB = TinyDB.Init(this);
+        }
+        long contact1 = tinyDB.getLong(Keys.CONTACT_1, -1);
+        long contact2 = tinyDB.getLong(Keys.CONTACT_2, -1);
+        long contact3 = tinyDB.getLong(Keys.CONTACT_3, -1);
+
+        //check for numbers
+        if(contact1 == -1 || contact2 == -1 || contact3 == -1)
+        {
+            //Redirect to save contacts
+            Intent save=new Intent(HomeActivity.this,SOSContactsActivity.class);
+            startActivity(save);
+        }
+        else
+        {
+            Intent sos=new Intent(HomeActivity.this,SmsActivity.class);
+            startActivity(sos);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -470,13 +509,13 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         //get address using geocoding
         Geocoding geocoding = new Geocoding(HomeActivity.this, center.latitude, center.longitude);
         geocoding.setListener(this);
+        loadingDialog.HideDialog();
         geocoding.execute();
         center = null;
     }
     @Override
     public void onAddressFetched(String result, double latit, double longi) {
 
-        loadingDialog.HideDialog();
 
         Intent addPlaceIntent = new Intent(HomeActivity.this, AddPlaceActivity.class);
         Bundle mBundle = new Bundle();
@@ -485,13 +524,16 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         mBundle.putString(Keys.CENTER_ADDRESS, result);
         addPlaceIntent.putExtras(mBundle);
         startActivityForResult(addPlaceIntent, 2);
+
     }
 
     @Override
-    public void onAddressFetchFailed()
+    public void onAddressFetchFailed(int status)
     {
-        loadingDialog.HideDialog();
-        Toast.makeText(this, "Sorry...Cannot Fetch the address...Try again",Toast.LENGTH_SHORT).show();
+        if(status == -1)
+        {
+            Toast.makeText(this, "Sorry...Cannot Fetch the address...Try again",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
