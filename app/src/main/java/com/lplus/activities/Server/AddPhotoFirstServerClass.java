@@ -3,6 +3,8 @@ package com.lplus.activities.Server;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.lplus.activities.Interfaces.AddPhotoInterface;
 import com.lplus.activities.Macros.Keys;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -101,13 +104,15 @@ public class AddPhotoFirstServerClass extends BaseServerClass {
         MultipartBody.Builder mpartBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for(int i = 0;i<imagePaths.size();i++) {
 
-            File file = ScaleImage(new File(imagePaths.get(i)));
+            File f = new File(imagePaths.get(i));
+            File file = ScaleImage(f);
+            System.out.print("image "+imagePaths.get(i));
             /*File file = new File(imagePaths.get(i));*/
             //MultipartRequestBody fileBody = new MultipartRequestBody(path);
             RequestBody rq = RequestBody.create(MediaType.parse("image/jpeg"), file);
             mpartBuilder.addFormDataPart(Keys.AP_PHOTOSTREAM, imageUUIDs.get(i), rq);
         }
-        requestBuilder.method("POST", mpartBuilder.build());
+            requestBuilder.method("POST", mpartBuilder.build());
 
 
         // Validate response
@@ -124,7 +129,7 @@ public class AddPhotoFirstServerClass extends BaseServerClass {
             //os = new BufferedOutputStream(new FileOutputStream(file));
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bitmap = Bitmap.createScaledBitmap(bitmap,1024,1024,true);
+            bitmap = Bitmap.createScaledBitmap(bitmap,256,256,true);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             byte[] bitmapdata = bos.toByteArray();
 

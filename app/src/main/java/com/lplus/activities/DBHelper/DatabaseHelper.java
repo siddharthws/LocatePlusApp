@@ -35,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(ReviewsTable.CREATE_TABLE);
         db.execSQL(AddUnSyncTable.CREATE_TABLE);
         db.execSQL(AddRateTable.CREATE_TABLE);
+        db.execSQL(AddPhotoTable.CREATE_TABLE);
 
     }
 
@@ -49,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + AddUnSyncTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ReviewsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AddRateTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AddPhotoTable.TABLE_NAME);
 
         // Create tables again
         onCreate(db);

@@ -242,7 +242,7 @@ public class ServerParseStatics {
         return filteredMarkers;
     }
 
-    public static ArrayList<String> parsePhotos(Context contexts, ArrayList<Bitmap> images)
+    public static ArrayList<String> parsePhotos(Context contexts, ArrayList<Bitmap> images, ArrayList<String> uuids)
     {
         //Initialise the cache variable
         /*if(CacheData.cacheAllReviews == null)
@@ -251,10 +251,10 @@ public class ServerParseStatics {
         }*/
         ArrayList<String> paths = new ArrayList<>();
         context = contexts;
-        for(Bitmap bitmap : images)
+        for(int i = 0;i< images.size();i++)
         {
             if (isExternalStorageWritable()) {
-                String path = saveImage(bitmap);
+                String path = saveImage(images.get(i),uuids.get(i));
                 paths.add(path);
             }else{
                 //prompt the user or do something
@@ -272,14 +272,13 @@ public class ServerParseStatics {
         return false;
     }
 
-    private static String saveImage(Bitmap finalBitmap) {
+    private static String saveImage(Bitmap finalBitmap, String uuid) {
 
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/saved_images");
         myDir.mkdirs();
 
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String fname = "image"+ timeStamp +".jpg";
+        String fname = "image"+ uuid +".jpg";
 
         File file = new File(myDir, fname);
         if (file.exists()) file.delete ();
