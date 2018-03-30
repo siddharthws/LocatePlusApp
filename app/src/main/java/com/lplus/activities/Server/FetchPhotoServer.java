@@ -137,7 +137,7 @@ public class FetchPhotoServer extends BaseServerClass
             photoObject.setPhoto_uuids(images_uuids);
             photoObject.setPhoto_paths(paths);
             addPhotoTable.SavePhotos(photoObject);
-            listener.onPhotoFetched(paths);
+            listener.onPhotoFetched(paths,images_uuids);
         }
         else
         {

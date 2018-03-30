@@ -2,15 +2,20 @@ package com.lplus.activities.Dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lplus.R;
+import com.lplus.activities.Interfaces.FetchGooglePhoto;
 import com.lplus.activities.Interfaces.RateCANInterface;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Server.FetchMapPhoto;
 import com.lplus.activities.Server.RateCANServerClass;
 
 import java.util.ArrayList;
@@ -21,7 +26,7 @@ import es.dmoral.toasty.Toasty;
  * Created by Sai_Kameswari on 25-03-2018.
  */
 
-public class RateCANDialog implements RateCANInterface {
+public class RateCANDialog implements RateCANInterface, FetchGooglePhoto {
 
     private Context context;
     private Dialog rateNameDialog, rateCategoryDialog, ratePhotoDialog;
@@ -32,6 +37,7 @@ public class RateCANDialog implements RateCANInterface {
     private LinearLayout cat_LL_yes, cat_LL_no, cat_LL_not_sure;
     private LinearLayout photo_yes, photo_no, photo_not_sure;
     private ImageView rate_photo_view;
+    private ProgressBar progressBar;
     ArrayList<String> CANRate_array;
     private LoadingDialog loadingDialog;
 
@@ -86,7 +92,13 @@ public class RateCANDialog implements RateCANInterface {
 
         //fetch all ID's from View
         rate_photo_view      = ratePhotoDialog.findViewById(R.id.photo_view);
+        progressBar          = ratePhotoDialog.findViewById(R.id.progresinphoto);
         rate_photo_que       = ratePhotoDialog.findViewById(R.id.photo_ques);
+        rate_photo_view.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        FetchMapPhoto fetchMapPhoto = new FetchMapPhoto(context, markerObject, "green");
+        fetchMapPhoto.SetListener(this);
+        fetchMapPhoto.execute();
 
         photo_yes            = ratePhotoDialog.findViewById(R.id.LL_yes);
         photo_no             = ratePhotoDialog.findViewById(R.id.LL_no);
@@ -104,6 +116,7 @@ public class RateCANDialog implements RateCANInterface {
             public void onClick(View v) {
                 CANRate_array.add("1");
                 rateNameDialog.cancel();
+                System.out.println("inside show dialogue");
                 showCategoryDialogue();
 
             }
@@ -136,6 +149,7 @@ public class RateCANDialog implements RateCANInterface {
             @Override
             public void onClick(View v) {
                 CANRate_array.add("1");
+                System.out.println("inside category dialogue");
                 rateCategoryDialog.cancel();
                 showPhotoDialog();
             }
@@ -145,6 +159,7 @@ public class RateCANDialog implements RateCANInterface {
             @Override
             public void onClick(View v) {
                 CANRate_array.add("-1");
+                System.out.println("inside category dialogue");
                 rateCategoryDialog.cancel();
                 showPhotoDialog();
             }
@@ -154,6 +169,7 @@ public class RateCANDialog implements RateCANInterface {
             @Override
             public void onClick(View v) {
                 CANRate_array.add("0");
+                System.out.println("inside category dialogue");
                 rateCategoryDialog.cancel();
                 showPhotoDialog();
             }
@@ -166,6 +182,7 @@ public class RateCANDialog implements RateCANInterface {
             @Override
             public void onClick(View v) {
                 CANRate_array.add("1");
+                System.out.println("inside photo dialogue");
                 ratePhotoDialog.cancel();
                 sendToServer();
             }
@@ -207,5 +224,22 @@ public class RateCANDialog implements RateCANInterface {
             loadingDialog.HideDialog();
             Toasty.error(context,"Rating Failed", Toast.LENGTH_SHORT,true);
         }
+    }
+
+
+    @Override
+    public void onMapPhotoFetched(Bitmap bitmap) {
+
+        Log.e("ABC", "Fetched " + bitmap.getByteCount());
+        rate_photo_view.setImageBitmap(bitmap);
+        progressBar.setVisibility(View.GONE);
+        rate_photo_view.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onMapPhotoFailed() {
+        Log.e("ABC", "Failed ");
+        progressBar.setVisibility(View.VISIBLE);
+        rate_photo_view.setVisibility(View.GONE);
     }
 }
