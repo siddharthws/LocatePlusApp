@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,7 +27,7 @@ public class Geocoding extends AsyncTask<Void, Integer, Void> {
 
     public interface geocodingInterface {
         void onAddressFetched(String result, double latitude, double longitude);
-        void onAddressFetchFailed();
+        void onAddressFetchFailed(int status);
     }
     public void setListener(geocodingInterface listener)
     {
@@ -60,6 +61,11 @@ public class Geocoding extends AsyncTask<Void, Integer, Void> {
                 }
                 if(address.getAdminArea() != null)
                 {
+                    if (!address.getAdminArea().equals("Maharashtra"))
+                    {
+                        Toast.makeText(context, "Cannot add place outside Maharashtra", Toast.LENGTH_LONG).show();
+                        listener.onAddressFetchFailed(0);
+                    }
                     sb.append(address.getAdminArea()).append(",");
                 }
                 if(address.getPostalCode() != null)
@@ -87,7 +93,7 @@ public class Geocoding extends AsyncTask<Void, Integer, Void> {
         }
         else
         {
-            listener.onAddressFetchFailed();
+            listener.onAddressFetchFailed(-1);
         }
     }
 }

@@ -13,7 +13,6 @@ import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.CategoryObject;
 import com.lplus.activities.Objects.FacilityObject;
 import com.lplus.activities.Objects.MarkerObject;
-import com.lplus.activities.Objects.RateObject;
 import com.lplus.activities.Objects.ReviewsObject;
 
 import org.json.JSONArray;
@@ -22,9 +21,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -161,7 +158,7 @@ public class ServerParseStatics {
                 markerObject.setMarkerLatitude(marker.getDouble(Keys.MARKER_LATITUDE));
                 markerObject.setMarkerLongitude(marker.getDouble(Keys.MARKER_LONGITUDE));
 
-                //save rate and user count
+               /* //save rate and user count
                 double rate = marker.getDouble(Keys.RATE_PLACE);
                 int users = marker.getInt(Keys.RATE_USERS);
 
@@ -176,7 +173,7 @@ public class ServerParseStatics {
                 else {
                     addRateTable.SaveRecord(rateObject);
                 }
-                addRateTable.close();
+                addRateTable.close();*/
 
                 //fetch marker facilities through jsonarray
                 JSONArray marker_facilities = marker.getJSONArray(Keys.MARKER_FACILITIES);
