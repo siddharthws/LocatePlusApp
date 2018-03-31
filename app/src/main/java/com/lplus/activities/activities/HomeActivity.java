@@ -290,8 +290,8 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
                 break;
             }
             case R.id.help: {
-                /*tinyDB.putBoolean(Keys.HELP_SLIDER, true);
-                startActivity(new Intent(HomeActivity.this,HelpSliderActivity.class));*/
+                tinyDB.putBoolean(Keys.HELP_SLIDER, true);
+                startActivity(new Intent(HomeActivity.this,HelpSliderActivity.class));
                 break;
             }
             case R.id.rate_us: {
