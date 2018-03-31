@@ -297,6 +297,11 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
                 break;
             }
+            case R.id.udid: {
+                tinyDB.putBoolean(Keys.TINYDB_UDID, true);
+                startActivity(new Intent(HomeActivity.this,UdidActivity.class));
+                break;
+            }
             case R.id.exit: {
                 System.exit(1);
             }
