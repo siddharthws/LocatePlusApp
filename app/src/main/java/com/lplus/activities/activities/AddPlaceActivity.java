@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -47,8 +45,6 @@ import com.lplus.activities.Server.GetMarkersServerClass;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import es.dmoral.toasty.Toasty;
@@ -70,12 +66,12 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
     private static int currentPage = 0;
     private ArrayList<String> XMEN = new ArrayList<>();
     private ArrayList<String> XMENUUID = new ArrayList<>();
-
-    private EditText place_name,place_description;
-    private LinearLayout selected_fac_layout;
+    private CheckBox check_contact;
+    private EditText place_name,place_description, contact;
+    private LinearLayout selected_fac_layout, contact_layout,check_layout;
     private TextView address, selected_fac_value;
     private CardView save,cancel;
-    private String address_result, place_name_string, place_description_string;
+    private String address_result, place_name_string, place_description_string,contact_value;
     private double latitude, longitude;
     private static String category, facilities;
     private ArrayList<String> list, fac_list, selected_fac, cat_key, fac_key, fac_value;
@@ -112,9 +108,11 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
 
         cat_key = new ArrayList<>();
         fac_key = new ArrayList<>();
+        check_contact = findViewById(R.id.check_contact);
 
         place_name = findViewById(R.id.add_place_name);
         place_description = findViewById(R.id.addplace_description);
+        contact = findViewById(R.id.contact);
 
         cameraPhoto = new CameraPhoto(getApplicationContext());
         addphoto = findViewById(R.id.addImage);
@@ -124,6 +122,8 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
         address.setText(address_result);
 
         selected_fac_layout = findViewById(R.id.selected_fac_layout);
+        contact_layout = findViewById(R.id.contact_layout);
+        check_layout = findViewById(R.id.check_layout);
         selected_fac_value = findViewById(R.id.selected_fac);
 
         facilityListLayout = findViewById(R.id.fac_list_on_off);
@@ -199,6 +199,8 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
         });
         facilityListLayout.setOnClickListener(this);
 
+        check_layout.setOnClickListener(this);
+
         save.setOnClickListener(this);
 
         cancel.setOnClickListener(this);
@@ -217,6 +219,14 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
 
         switch (v.getId())
         {
+            case R.id.check_layout: {
+                if(check_contact.isChecked()) {
+                    check_contact.setChecked(false);
+                }else {
+                    check_contact.setChecked(true);
+                }
+                break;
+            }
             case R.id.save_add:
             {
                 Animation myAnim = AnimationUtils.loadAnimation(AddPlaceActivity.this, R.anim.bounce);
@@ -231,6 +241,7 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
                         //apply constraint checks everywhere and as necessary
                         place_name_string = place_name.getText().toString();
                         place_description_string = place_description.getText().toString();
+                        contact_value = contact.getText().toString();
 
                         //Check constraints
                         if(place_name_string.length() == 0 )
@@ -245,6 +256,10 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
                         }
                         if(selected_fac.size() == 0) {
                             Toasty.error(AddPlaceActivity.this, "Please select some facilities", Toast.LENGTH_SHORT, true).show();
+                            return;
+                        }
+                        if(check_contact.isChecked() && contact.length() == 0) {
+                            Toasty.error(AddPlaceActivity.this, "Enter your contact no", Toast.LENGTH_SHORT, true).show();
                             return;
                         }
                         loadingDialog.ShowDialog();
@@ -502,7 +517,8 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
 
         if (status)
         {
-            TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac,tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST), latitude, longitude, place_description_string);
+            TempNewPlaceObject tempNewPlaceObject = new TempNewPlaceObject(place_name_string, address_result, category, selected_fac,tinyDB.getListString(Keys.TINYDB_PHOTO_UUID_LIST), latitude, longitude, place_description_string, contact_value);
+            System.out.println("Contact in on photorecieve "+contact_value);
             AddPlaceServerClass addPlaceServerClass = new AddPlaceServerClass(AddPlaceActivity.this, tempNewPlaceObject);
             addPlaceServerClass.SetListener(this);
             addPlaceServerClass.execute();

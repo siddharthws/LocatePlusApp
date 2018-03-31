@@ -37,6 +37,7 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -295,11 +296,6 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
             }
             case R.id.rate_us: {
 
-                break;
-            }
-            case R.id.udid: {
-                tinyDB.putBoolean(Keys.TINYDB_UDID, true);
-                startActivity(new Intent(HomeActivity.this,UdidActivity.class));
                 break;
             }
             case R.id.exit: {
@@ -572,20 +568,30 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
 
     public void setAllMarkers()
     {
+        AddFavoutiteTable addFavoutiteTable;
         if(CacheData.cacheMarkers == null)
         {
             MarkersTable markersTable = new MarkersTable(this);
             CacheData.cacheMarkers = markersTable.ReadRecords();
             markersTable.CloseConnection();
         }
+        addFavoutiteTable = new AddFavoutiteTable(this);
         ArrayList<MarkerObject> markersList = CacheData.cacheMarkers;
         LatLng position;
         for(MarkerObject markerObject : markersList)
         {
             position = new LatLng(markerObject.getMarkerLatitude(), markerObject.getMarkerLongitude());
-            Marker marker = mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName())
-                            .snippet(markerObject.getMarkerCategory()));
-            marker.setTag(markerObject);
+            if(addFavoutiteTable.isFavourite(markerObject.getMarkerID())) {
+
+                Marker marker = mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.placeholderfav)).position(position).title(markerObject.getMarkerName())
+                        .snippet(markerObject.getMarkerCategory()));
+                marker.setTag(markerObject);
+            }
+            else {
+                Marker marker = mMap.addMarker(new MarkerOptions().position(position).title(markerObject.getMarkerName())
+                        .snippet(markerObject.getMarkerCategory()));
+                marker.setTag(markerObject);
+            }
         }
     }
 

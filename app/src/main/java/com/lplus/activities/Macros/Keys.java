@@ -49,6 +49,7 @@ public class Keys {
     public static final String AP_RESPONSE              = "success";
     public static final String AP_PHOTO_RESPONSE        = "photo";
     public static final String AP_UUIDS                 = "photouuid";
+    public static final String AP_CONTACT               = "contact";
     public static final String AP_PHOTOSTREAM           = "uploadImage";
 
     //get markers

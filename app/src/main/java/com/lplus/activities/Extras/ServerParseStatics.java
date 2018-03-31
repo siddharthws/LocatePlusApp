@@ -161,9 +161,11 @@ public class ServerParseStatics {
 
                 //save rate and user count
                 double rate = marker.getDouble(Keys.RATE_PLACE_GET_MARKERS);
-                /*int users = marker.getInt(Keys.RATE_USERS);*/
-                int users = 0;
+                int users = marker.getInt(Keys.RATE_USERS);
+                markerObject.setContact(marker.getString(Keys.AP_CONTACT));
 
+
+                System.out.println("contact info = "+marker.getString(Keys.AP_CONTACT));
                 System.out.println("rate and users "+ rate + " " + users );
 
 

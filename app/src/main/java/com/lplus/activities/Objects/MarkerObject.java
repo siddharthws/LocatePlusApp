@@ -17,6 +17,7 @@ public class MarkerObject {
     private double markerLongitude;
     private String markerDescription;
     private ArrayList<String> reviews;
+    private String contact;
 
     public ArrayList<String> getReviews() {
         return reviews;
@@ -30,7 +31,7 @@ public class MarkerObject {
         return markerDescription;
     }
 
-    public MarkerObject(String markerID, String markerName, String markerAddress, ArrayList<String> markerFacilities, String markerCategory, double markerLatitude, double markerLongitude, String markerDescription) {
+    public MarkerObject(String markerID, String markerName, String markerAddress, ArrayList<String> markerFacilities, String markerCategory, double markerLatitude, double markerLongitude, String markerDescription, String contact) {
         this.markerID = markerID;
         this.markerName = markerName;
         this.markerAddress = markerAddress;
@@ -39,10 +40,19 @@ public class MarkerObject {
         this.markerLatitude = markerLatitude;
         this.markerLongitude = markerLongitude;
         this.markerDescription = markerDescription;
+        this.contact = contact;
     }
 
     public void setMarkerDescription(String markerDescription) {
         this.markerDescription = markerDescription;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
     }
 
     public String getMarkerID() {

@@ -17,6 +17,7 @@ public class TempNewPlaceObject {
     private double latitude;
     private double longitude;
     private String description;
+    private String contact;
 
     public ArrayList<String> getUuids() {
         return uuids;
@@ -90,7 +91,15 @@ public class TempNewPlaceObject {
         this.description = description;
     }
 
-    public TempNewPlaceObject(String name, String address, String category, ArrayList<String> facilities, ArrayList<String> uuids,double latitude, double longitude, String description) {
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public TempNewPlaceObject(String name, String address, String category, ArrayList<String> facilities, ArrayList<String> uuids, double latitude, double longitude, String description, String contact) {
         this.name = name;
         this.address = address;
         this.category = category;
@@ -99,5 +108,6 @@ public class TempNewPlaceObject {
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
+        this.contact = contact;
     }
 }
