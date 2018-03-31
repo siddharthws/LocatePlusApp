@@ -16,8 +16,32 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
         <LinearLayout
+            android:id="@+id/ll_ride"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_marginLeft="2dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:onClick="FindRide">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:srcCompat="@drawable/directions"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Find Ride"
+                android:textSize="@dimen/text_size_14"
+                android:textColor="@color/white"
+                android:textStyle="italic"/>
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/direction_layout"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:layout_marginLeft="2dp"
@@ -31,19 +55,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DIRECTIONS"
-                android:textSize="@dimen/text_size_18"
+                android:text="Directions"
+                android:textSize="@dimen/text_size_14"
                 android:textColor="@color/white"
                 android:textStyle="italic"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/rate_place_layout"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:background="@color/navy_blue"
-            android:gravity="left"
-            android:layout_marginLeft="45dp"
+            android:gravity="center"
+            android:layout_marginLeft="2dp"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -55,9 +80,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="RATE PLACE"
+                android:text="Rate"
                 android:layout_gravity="center_vertical"
-                android:textSize="@dimen/text_size_18"
+                android:textSize="@dimen/text_size_14"
                 android:textColor="@color/white"
                 android:textStyle="italic" />
         </LinearLayout>

@@ -539,4 +539,10 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
             Toast.makeText(this, "Review Not Sent..", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void FindRide(View view) {
+        // Open in browser
+        String url = "https://olawebcdn.com/assets/ola-universal-link.html?drop_lat="+markerObject.getMarkerLatitude()+"&drop_lng="+markerObject.getMarkerLongitude();
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+    }
 }
