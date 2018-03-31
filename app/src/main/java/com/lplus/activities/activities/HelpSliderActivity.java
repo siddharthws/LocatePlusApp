@@ -38,6 +38,7 @@ public class HelpSliderActivity extends AppCompatActivity {
             startHomeActivity();
             finish();
         }
+        //transparent status
         setStatusBarTransparent();
 
         setContentView(R.layout.activity_help_slider);
