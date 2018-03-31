@@ -73,6 +73,7 @@ public class Keys {
     public static final String RATE_FAC_KEY                     = "rateFacKey";
     public static final String TINYDB_PHOTO_PATHS               = "ratePhoto";
     public static final String TINYDB_PHOTO_UUID                = "ratePUuid";
+    public static final String TINYDB_UDID                      = "isUdid";
 
 
     //Review Updates on Know More Click
@@ -104,6 +105,11 @@ public class Keys {
     public static final String CONTACT_1                       = "contact_1";
     public static final String CONTACT_2                       = "contact_2";
     public static final String CONTACT_3                       = "contact_3";
+
+    //Udid Constants
+    public static final String UDID                            = "udid";
+    public static final String NAME                            = "name";
+
 
 
 }

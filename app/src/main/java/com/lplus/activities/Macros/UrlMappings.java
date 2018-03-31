@@ -5,7 +5,7 @@ package com.lplus.activities.Macros;
  */
 
 public class UrlMappings {
-    private static final String ip = "http://172.16.18.70:8080";
+    private static final String ip = "http://172.16.18.52:8080";
 
     //functionalities
 
@@ -22,4 +22,5 @@ public class UrlMappings {
     public static final String RATE_PHOTOS          = ip + "/api/user/photoRating";
     public static final String RATE_FACILITY        = ip + "/api/user/";
     public static final String RATE_CAN             = ip + "/api/user/infoRating";
+    public static final String REGISTER_UDID        = ip + "/api/admin/validateUdid";
 }
