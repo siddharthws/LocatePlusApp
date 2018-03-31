@@ -67,7 +67,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.activities.SOSContactsActivity" />
         <activity android:name=".activities.activities.SmsActivity" />
-        <activity android:name=".activities.activities.UdidActivity"></activity>
+        <activity android:name=".activities.activities.UdidActivity" />
+        <activity android:name=".activities.activities.AddComplaintActivity"></activity>
     </application>
 
 </manifest>

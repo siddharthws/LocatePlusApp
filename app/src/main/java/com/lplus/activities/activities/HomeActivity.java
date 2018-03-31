@@ -87,7 +87,7 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
     private NavigationView navigationView;
     private Toolbar toolbar;
     private LinearLayout ll_map;
-    private ImageButton zoomlevel, clearFavorites;
+    private ImageButton zoomlevel, clearFavorites, ibComplaint;
     private LoadingDialog loadingDialog;
     private FilterDialog filterDialog;
     private SupportMapFragment mapFragment;
@@ -510,6 +510,57 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         //get address using geocoding
         Geocoding geocoding = new Geocoding(HomeActivity.this, center.latitude, center.longitude);
         geocoding.setListener(this);
+        loadingDialog.HideDialog();
+        geocoding.execute();
+        center = null;
+    }
+
+    public void onAddComplaint(View view)
+    {
+        //check for internet connection
+        if(!InternetConnectivityCheck.isConnectedToNetwork(HomeActivity.this))
+        {
+            Snackbar snackbar = Snackbar.make(view,"Please connect to internet and try again...", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("RETRY", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(HomeActivity.this,HomeActivity.class));
+                }
+            });
+        }
+        loadingDialog = new LoadingDialog(this, "Fetching Coordinates");
+        loadingDialog.ShowDialog();
+
+        center = mMap.getCameraPosition().target;
+
+        //get address using geocoding
+        Geocoding geocoding = new Geocoding(HomeActivity.this, center.latitude, center.longitude);
+        geocoding.setListener(new Geocoding.geocodingInterface() {
+            @Override
+            public void onAddressFetched(String result, double latitude, double longitude) {
+
+                Intent addComplaintIntent = new Intent(HomeActivity.this, AddComplaintActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putDouble(Keys.CENTER_LATITUDE, latitude);
+                mBundle.putDouble(Keys.CENTER_LONGITUDE, longitude);
+                mBundle.putString(Keys.CENTER_ADDRESS, result);
+                addComplaintIntent.putExtras(mBundle);
+                startActivityForResult(addComplaintIntent, 2);
+            }
+
+            @Override
+            public void onAddressFetchFailed(int status) {
+                if(status == -1)
+                {
+                    Toast.makeText(HomeActivity.this, "Sorry...Cannot Fetch the address...Try again",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(HomeActivity.this, "Cannot add marker outside Maharashtra....",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
         loadingDialog.HideDialog();
         geocoding.execute();
         center = null;

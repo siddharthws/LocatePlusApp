@@ -71,6 +71,15 @@
         android:visibility="gone"/>
 
         <ImageButton
+            android:id="@+id/ib_complaint"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/ic_report_problem_white_24dp"
+            android:onClick="onAddComplaint"/>
+
+        <ImageButton
             android:id="@+id/current_location"
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -12,6 +12,7 @@ public class UrlMappings {
     public static final String REGISTER_APP         = ip + "/api/auth/registerUser";
     public static final String FILTER_FETCH         = ip + "/api/user/getFC";
     public static final String ADD_PLACE            = ip + "/api/user/addPlace";
+    public static final String ADD_COMPLAINT        = ip + "/api/user/addComplaint";
     public static final String GET_MARKERS          = ip + "/api/user/getPlaces";
     public static final String ADD_REVIEWS          = ip + "/api/user/addReviews";
     public static final String ADD_PHOTOS           = ip + "/api/user/upload";
