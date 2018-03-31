@@ -6,10 +6,11 @@
     tools:context="com.lplus.activities.activities.voiceCatFetchActivity">
 
 
-    <TextView
-        android:layout_width="wrap_content "
-        android:layout_height="wrap_content"
-        android:text="CATEGORIES"
-        android:layout_centerInParent="true"/>
+    <ListView
+        android:id="@+id/lvitems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
 
 </RelativeLayout>

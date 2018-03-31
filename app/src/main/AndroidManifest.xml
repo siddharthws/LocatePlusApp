@@ -37,7 +37,7 @@
             android:name=".activities.activities.AddPlaceActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.activities.FavouriteActivity" />
-        <activity android:name=".activities.activities.PreSplashActivity"></activity>
+        <activity android:name=".activities.activities.PreSplashActivity" />
         <activity android:name=".activities.activities.EditPhotosActivity" />
         <activity android:name=".activities.activities.PostSplashActivity" />
 
@@ -59,14 +59,18 @@
         <activity
             android:name=".activities.activities.SpeechToTextActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.activities.VoiceActivity">
+        <activity android:name=".activities.activities.VoiceActivity" />
+        <activity android:name=".activities.activities.voiceCatFetchActivity" />
+        <activity android:name=".activities.activities.PreSplashVoiceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.activities.voiceCatFetchActivity"></activity>
+        <activity android:name=".activities.activities.VoiceMarkerFetchActivity" />
+        <activity android:name=".activities.activities.VoiceMarkerDescriptionActivity" />
+        <activity android:name=".activities.activities.VoiceContactActivity"></activity>
     </application>
 
 </manifest>

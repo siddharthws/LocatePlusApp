@@ -114,4 +114,10 @@ public class Keys {
 
 
 
+
+    //Blind Keys
+    public static final String VOICE_CURRENT_LOCATION           = "voice_current_location";
+    public static final String VOICE_SELECTED_MARKER            = "voice_selected_marker";
+
+
 }

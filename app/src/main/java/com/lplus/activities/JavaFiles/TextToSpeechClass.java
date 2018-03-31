@@ -29,7 +29,6 @@ public class TextToSpeechClass implements TextToSpeech.OnInitListener, TextToSpe
 
     public void convert(String toSay)
     {
-        System.out.println("Reached to conversion");
         textToSpeech.speak(toSay, TextToSpeech.QUEUE_ADD, myHash);
     }
 
@@ -40,7 +39,7 @@ public class TextToSpeechClass implements TextToSpeech.OnInitListener, TextToSpe
         if (status == TextToSpeech.SUCCESS) {
 
             int result =    textToSpeech.setLanguage(Locale.ENGLISH);
-                            textToSpeech.setSpeechRate(0.8f);
+                            textToSpeech.setSpeechRate(3.0f);
 
 
             if (result == TextToSpeech.LANG_MISSING_DATA
