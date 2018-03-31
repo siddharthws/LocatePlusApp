@@ -12,5 +12,6 @@
         android:text="Reviews"
         android:adjustViewBounds="true"
         android:layout_gravity="center"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 </FrameLayout>

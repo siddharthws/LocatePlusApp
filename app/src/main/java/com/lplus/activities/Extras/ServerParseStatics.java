@@ -13,6 +13,7 @@ import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.CategoryObject;
 import com.lplus.activities.Objects.FacilityObject;
 import com.lplus.activities.Objects.MarkerObject;
+import com.lplus.activities.Objects.RateObject;
 import com.lplus.activities.Objects.ReviewsObject;
 
 import org.json.JSONArray;
@@ -158,9 +159,12 @@ public class ServerParseStatics {
                 markerObject.setMarkerLatitude(marker.getDouble(Keys.MARKER_LATITUDE));
                 markerObject.setMarkerLongitude(marker.getDouble(Keys.MARKER_LONGITUDE));
 
-               /* //save rate and user count
-                double rate = marker.getDouble(Keys.RATE_PLACE);
-                int users = marker.getInt(Keys.RATE_USERS);
+                //save rate and user count
+                double rate = marker.getDouble(Keys.RATE_PLACE_GET_MARKERS);
+                /*int users = marker.getInt(Keys.RATE_USERS);*/
+                int users = 0;
+
+                System.out.println("rate and users "+ rate + " " + users );
 
 
                 boolean isRateAvailable = addRateTable.isRateAvailable(markerObject.getMarkerID());
@@ -173,7 +177,7 @@ public class ServerParseStatics {
                 else {
                     addRateTable.SaveRecord(rateObject);
                 }
-                addRateTable.close();*/
+                addRateTable.close();
 
                 //fetch marker facilities through jsonarray
                 JSONArray marker_facilities = marker.getJSONArray(Keys.MARKER_FACILITIES);

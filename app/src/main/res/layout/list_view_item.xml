@@ -15,8 +15,8 @@
             android:id="@+id/favourite_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:layout_weight="9"
+            android:background="@color/navy_blue"
+            android:layout_weight="10"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/fav_place"
@@ -25,25 +25,37 @@
                 android:singleLine="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:text="Place name"
-                android:textSize="15dp"
+                android:textColor="@color/white"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="@dimen/text_size_18"
                 android:textStyle="bold" />
+            <View
+                android:layout_width="350dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="1dp"
+                android:background="@color/white" />
             <TextView
                 android:id="@+id/fav_address"
                 android:layout_width="match_parent"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginBottom="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="Place address"
-                android:textSize="15dp"
+                android:textSize="@dimen/text_size_14"
                 android:textStyle="bold"/>
 
         </LinearLayout>
         <ImageView
             android:id="@+id/fav_image"
             android:layout_width="40dp"
-            android:layout_marginRight="10dp"
-            android:layout_height="40dp"
+            android:background="@color/navy_blue"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             app:srcCompat="@drawable/icons8_heart_red_96"/>
 
@@ -53,5 +65,5 @@
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
         android:layout_height="1dp"
-        android:background="@color/colorPrimary" />
+        android:background="@color/white" />
 </LinearLayout>

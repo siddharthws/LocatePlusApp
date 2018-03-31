@@ -24,6 +24,7 @@ public class Geocoding extends AsyncTask<Void, Integer, Void> {
     private Context context;
     private String result = null;
     private geocodingInterface listener = null;
+    private int flag=0;
 
     public interface geocodingInterface {
         void onAddressFetched(String result, double latitude, double longitude);
@@ -63,8 +64,8 @@ public class Geocoding extends AsyncTask<Void, Integer, Void> {
                 {
                     if (!address.getAdminArea().equals("Maharashtra"))
                     {
-                        Toast.makeText(context, "Cannot add place outside Maharashtra", Toast.LENGTH_LONG).show();
-                        listener.onAddressFetchFailed(0);
+                        flag = 1;
+                        return null;
                     }
                     sb.append(address.getAdminArea()).append(",");
                 }
@@ -93,7 +94,15 @@ public class Geocoding extends AsyncTask<Void, Integer, Void> {
         }
         else
         {
-            listener.onAddressFetchFailed(-1);
+            if (flag == 1)
+            {
+                listener.onAddressFetchFailed(0);
+            }
+            else
+            {
+                listener.onAddressFetchFailed(-1);
+            }
+
         }
     }
 }

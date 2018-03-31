@@ -93,19 +93,17 @@ public class RatePhotoServerClass extends BaseServerClass {
 
     private JSONArray toPhotoJSONArray()
     {
-        JSONObject fac = null;
-        JSONObject fac1 = null;
+        JSONObject fac;
         JSONArray facilitiesJSON = new JSONArray();
         try {
             for(int i = 0;i<photo_uuid.size();i++)
             {
                 fac = new JSONObject();
-                fac1 = new JSONObject();
                 fac.put(Keys.RATE_PHOTO_UUID, photo_uuid.get(i));
-                fac1.put(Keys.RATE_PHOTO_RATE, photo_rate.get(i));
+                fac.put(Keys.RATE_PHOTO_RATE, photo_rate.get(i));
                 facilitiesJSON.put(fac);
-                facilitiesJSON.put(fac1);
             }
+            System.out.println("json Photos "+facilitiesJSON.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

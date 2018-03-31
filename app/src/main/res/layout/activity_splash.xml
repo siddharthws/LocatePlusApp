@@ -3,19 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/GREY_5"
+    android:background="@color/navy_blue"
     tools:context="com.lplus.activities.activities.SplashActivity">
 
-    <TextView
+    <ImageView
         android:id="@+id/tv_splash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Locate Plus"
-        android:textSize="30dp"
-        android:textAlignment="center"
-        android:textStyle="italic"
-        android:textColor="@color/BLACK" />
+        android:src="@drawable/locate"/>
 
     <ProgressBar
         android:id="@+id/pb_splash"
@@ -32,7 +28,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
         android:text="Registering App...."
-        android:textColor="@color/BLACK"
+        android:textColor="@color/white"
         android:textSize="15dp"
         android:textStyle="italic" />
 

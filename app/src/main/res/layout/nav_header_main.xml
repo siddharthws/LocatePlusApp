@@ -8,15 +8,10 @@
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <TextView
+    <ImageView
         android:id="@+id/username"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Locate Plus"
-        android:textSize="25dp"
-        android:textStyle="italic"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="30dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:layout_height="match_parent"
+        android:src="@drawable/locate"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

@@ -4,6 +4,16 @@
     android:layout_height="300dp"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:background="@color/navy_blue"
+        android:textSize="@dimen/text_size_18"
+        android:text="Choose Category"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
     <ListView
         android:layout_weight="9"
         android:id="@+id/filter_list"
@@ -26,12 +36,14 @@
             android:id="@+id/bt_apply"
             android:background="@color/navy_blue"
             android:layout_width="wrap_content"
+            android:textColor="@color/white"
             android:layout_height="match_parent"
             android:minWidth="190dp"
             android:text="Apply"/>
 
         <Button
             android:id="@+id/bt_cancel"
+            android:textColor="@color/white"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

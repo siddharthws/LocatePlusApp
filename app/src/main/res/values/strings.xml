@@ -11,6 +11,7 @@
 
     //size
     <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
 
     //spinner data
     <string name="category">Select a Category</string>

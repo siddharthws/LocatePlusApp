@@ -488,10 +488,10 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         {
             loadingDialog = new LoadingDialog(this, "Please Wait...");
             loadingDialog.ShowDialog();
-            RatePhotoServerClass ratePhotoServerClass = new RatePhotoServerClass(this, markerObject, photo_uuid_array, photo_rate);
+            RatePhotoServerClass ratePhotoServerClass = new RatePhotoServerClass(this, markerObject, photo_rate, photo_uuid_array);
+            System.out.println("calling ratephotoserver "+photo_rate +" "+ photo_uuid_array);
             ratePhotoServerClass.SetListener(this);
             ratePhotoServerClass.execute();
-            photo_rate.clear();
         }
     }
 
