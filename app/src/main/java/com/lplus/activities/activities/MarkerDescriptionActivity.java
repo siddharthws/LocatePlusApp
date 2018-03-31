@@ -34,6 +34,7 @@ import com.lplus.activities.Interfaces.MarkerReviewInterface;
 import com.lplus.activities.Interfaces.PhotosDialogClickInterface;
 import com.lplus.activities.Interfaces.RateFacillityInterface;
 import com.lplus.activities.Interfaces.RatePhotosInterface;
+import com.lplus.activities.Interfaces.RegisterUdidInterface;
 import com.lplus.activities.Macros.Keys;
 import com.lplus.activities.Objects.FavouriteObject;
 import com.lplus.activities.Objects.MarkerObject;
@@ -57,8 +58,8 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
                                                                         RatePhotosInterface {
 
     private MarkerObject markerObject;
-    private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total, user_count;
-    private LinearLayout direction_layout, desc_layout, rate_place, desc_layout_fav;
+    private TextView dec_place_name, dec_category, desc_address, dec_facilities, tv_review, rate_total, user_count, contact_value;
+    private LinearLayout direction_layout, desc_layout, rate_place, desc_layout_fav, contact_layout;
     private ImageButton review_send, flag_photo, flag_name_address_category, flag_facility;
     private LoadingDialog loadingDialog;
     private ViewPager mPager, imagePager;
@@ -122,6 +123,14 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
         rate_place = findViewById(R.id.rate_place_layout);
         rate_total = findViewById(R.id.rate_total);
         user_count  = findViewById(R.id.user_count);
+        contact_layout = findViewById(R.id.contact_layout_dec);
+        contact_value = findViewById(R.id.contact_value_dec);
+            String contact = markerObject.getContact();
+            if(contact == null || contact == "null" || contact.length() == 0) {
+                contact_layout.setVisibility(View.GONE);
+            } else {
+                contact_value.setText(contact);
+            }
         rate_total.setText("0.0");
         user_count.setText("(0)");
         fac_id = new ArrayList<>();
@@ -302,36 +311,56 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
 
             case R.id.flag_photo:
             {
-                //call Rate place dialog
-                photo_count = 0;
-                ratePhotoDialog = new RatePhotoDialog(MarkerDescriptionActivity.this, markerObject, photo_path_array, photo_uuid_array, photo_count);
-                ratePhotoDialog.SetListener(this);
-                ratePhotoDialog.ShowDialog();
+                if(tinyDB.getBoolean(Keys.TINYDB_UDID)) {
+                    //call Rate place dialog
+                    photo_count = 0;
+                    ratePhotoDialog = new RatePhotoDialog(MarkerDescriptionActivity.this, markerObject, photo_path_array, photo_uuid_array, photo_count);
+                    ratePhotoDialog.SetListener(this);
+                    ratePhotoDialog.ShowDialog();
+                } else {
+                    startActivity(new Intent(MarkerDescriptionActivity.this,UdidActivity.class));
+                }
+
                 break;
             }
 
             case R.id.flag_name_address_category:
             {
-                System.out.println("Reaching to the flag of address");
-                RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject);
-                rateCategoryDialog.ShowDialog();
-                break;
+                if(tinyDB.getBoolean(Keys.TINYDB_UDID)) {
+                    System.out.println("Reaching to the flag of address");
+                    RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject);
+                    rateCategoryDialog.ShowDialog();
+                    break;
+                }else {
+                    startActivity(new Intent(MarkerDescriptionActivity.this,UdidActivity.class));
+                }
+
             }
             case R.id.flag_facility:
             {
-                fac_count = 0;
-                rateFacilityDialog = new RateFacilityDialog(MarkerDescriptionActivity.this, markerObject, fac_count);
-                rateFacilityDialog.SetListener(this);
-                rateFacilityDialog.ShowDialog();
+                if(tinyDB.getBoolean(Keys.TINYDB_UDID)) {
+                    fac_count = 0;
+                    rateFacilityDialog = new RateFacilityDialog(MarkerDescriptionActivity.this, markerObject, fac_count);
+                    rateFacilityDialog.SetListener(this);
+                    rateFacilityDialog.ShowDialog();
 
                 /**/
-                break;
+                    break;
+                } else {
+                    startActivity(new Intent(MarkerDescriptionActivity.this,UdidActivity.class));
+                }
+
             }
             case R.id.rate_place_layout:
             {
-                RatePlaceDialog ratePlaceDialog = new RatePlaceDialog(this, markerObject);
-                ratePlaceDialog.ShowDialog();
-                break;
+                if(tinyDB.getBoolean(Keys.TINYDB_UDID)) {
+                    RatePlaceDialog ratePlaceDialog = new RatePlaceDialog(this, markerObject);
+                    ratePlaceDialog.ShowDialog();
+                    break;
+                }else {
+                    startActivity(new Intent(MarkerDescriptionActivity.this,UdidActivity.class));
+                }
+
             }
         }
     }

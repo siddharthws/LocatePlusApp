@@ -47,6 +47,7 @@ public class AddPlaceServerClass extends BaseServerClass {
 
             System.out.println("Facilities: "+facilitiesJSON.toString());
             System.out.println("Facilities: "+toUUIDJSONArray().toString());
+            System.out.println("contact info = ok "+tempNewPlaceObject.getContact());
             //put in jsonObject
             requestJson.put(Keys.AP_NAME,               tempNewPlaceObject.getName());
             requestJson.put(Keys.AP_ADDRESS,            tempNewPlaceObject.getAddress());
@@ -55,7 +56,8 @@ public class AddPlaceServerClass extends BaseServerClass {
             requestJson.put(Keys.AP_LONGITUDE,          tempNewPlaceObject.getLongitude());
             requestJson.put(Keys.AP_DESCRIPTION,        tempNewPlaceObject.getDescription());
             requestJson.put(Keys.AP_FACILITIES,         facilitiesJSON);
-            requestJson.put(Keys.AP_UUIDS,         toUUIDJSONArray());
+            requestJson.put(Keys.AP_UUIDS,              toUUIDJSONArray());
+            requestJson.put(Keys.AP_CONTACT,            tempNewPlaceObject.getContact());
         }
         catch (JSONException e)
         {

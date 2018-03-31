@@ -29,6 +29,7 @@ public class MarkersTable extends DatabaseHelper {
     public static final String COLUMN_PLACE_LATITUDE        = "place_latitude";
     public static final String COLUMN_PLACE_LONGITUDE       = "place_longitude";
     public static final String COLUMN_PLACE_DESCRIPTION     = "place_description";
+    public static final String COLUMN_CONTACT                = "place_contact";
 
     //Create a Table name
     // Create table SQL query
@@ -42,7 +43,8 @@ public class MarkersTable extends DatabaseHelper {
                     + COLUMN_PLACE_FACILITIES   + " TEXT,"
                     + COLUMN_PLACE_LATITUDE     + " REAL,"
                     + COLUMN_PLACE_LONGITUDE    + " REAL,"
-                    + COLUMN_PLACE_DESCRIPTION  + " TEXT"
+                    + COLUMN_PLACE_DESCRIPTION  + " TEXT,"
+                    + COLUMN_CONTACT  + " TEXT"
                     + ")";
 
     public MarkersTable(Context context) {
@@ -76,6 +78,7 @@ public class MarkersTable extends DatabaseHelper {
         record.put(COLUMN_PLACE_LATITUDE,       markerObject.getMarkerLatitude());
         record.put(COLUMN_PLACE_LONGITUDE,      markerObject.getMarkerLongitude());
         record.put(COLUMN_PLACE_DESCRIPTION,    markerObject.getMarkerDescription());
+        record.put(COLUMN_CONTACT,               markerObject.getContact());
 
         //save in DB
         Add(record);
@@ -90,7 +93,7 @@ public class MarkersTable extends DatabaseHelper {
         SQLiteDatabase Rdb = db.getReadableDatabase();
 
         Cursor dbRows = Rdb.query(TABLE_NAME,
-                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION},
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION,COLUMN_CONTACT},
                 null,
                 null,
                 null,
@@ -116,9 +119,53 @@ public class MarkersTable extends DatabaseHelper {
             double latitude                 = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LATITUDE));
             double longitude                = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LONGITUDE));
             String description              = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_DESCRIPTION));
+            String contact              = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_CONTACT));
 
-            markerObject = new MarkerObject(placeId, name, address, facii, category, latitude, longitude, description);
+            markerObject = new MarkerObject(placeId, name, address, facii, category, latitude, longitude, description, contact);
             marker_objects_list.add(markerObject);
+        }
+        return marker_objects_list;
+    }
+
+    public ArrayList<MarkerObject> GetMarkersByCategory(String category)
+    {
+        ArrayList<MarkerObject> marker_objects_list = new ArrayList<>();
+        MarkerObject markerObject;
+        ArrayList<String> facii;
+        String[] array;
+        SQLiteDatabase Rdb = db.getReadableDatabase();
+
+        Cursor dbRows = Rdb.query(TABLE_NAME,
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION, COLUMN_CONTACT},
+                COLUMN_PLACE_CATEGORY + "=?",
+                new String[] {category},
+                null,
+                null,
+                null);
+
+        while (dbRows.moveToNext()) {
+            facii = new ArrayList<>();
+            String contacts = dbRows.getString(dbRows.getColumnIndex(COLUMN_CONTACT));
+            if(contacts != null || contacts != "null" || contacts.length() !=0) {
+                String placeId                  = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_ID));
+                String name                     = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_NAME));
+                String address                  = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_ADDRESS));
+                String facilities_string        = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_FACILITIES));
+                array = facilities_string.split(",");
+                for(int i=0; i<array.length; i++)
+                {
+                    if(!array[i].equals(""))
+                    {
+                        facii.add(array[i]);
+                    }
+                }
+                double latitude                 = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LATITUDE));
+                double longitude                = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LONGITUDE));
+                String description              = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_DESCRIPTION));
+
+                markerObject = new MarkerObject(placeId, name, address, facii, category, latitude, longitude, description,contacts);
+                marker_objects_list.add(markerObject);
+            }
         }
         return marker_objects_list;
     }
@@ -141,7 +188,7 @@ public class MarkersTable extends DatabaseHelper {
         SQLiteDatabase Rdb = db.getReadableDatabase();
 
         Cursor dbRows = Rdb.query(TABLE_NAME,
-                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION},
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION, COLUMN_CONTACT},
                 COLUMN_PLACE_ID + "=?",
                 new String[] {placeId},
                 null,
@@ -168,8 +215,9 @@ public class MarkersTable extends DatabaseHelper {
             double latitude                 = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LATITUDE));
             double longitude                = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LONGITUDE));
             String description              = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_DESCRIPTION));
+            String contact                  = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_CONTACT));
 
-            markerObject = new MarkerObject(place_id, name, address, facii, category, latitude, longitude, description);
+            markerObject = new MarkerObject(place_id, name, address, facii, category, latitude, longitude, description, contact);
         }
         return markerObject;
     }
@@ -183,7 +231,7 @@ public class MarkersTable extends DatabaseHelper {
         SQLiteDatabase Rdb = db.getReadableDatabase();
 
         Cursor dbRows = Rdb.query(TABLE_NAME,
-                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION},
+                new String[]{COLUMN_ID, COLUMN_PLACE_ID, COLUMN_PLACE_NAME, COLUMN_PLACE_ADDRESS, COLUMN_PLACE_CATEGORY, COLUMN_PLACE_FACILITIES, COLUMN_PLACE_LATITUDE, COLUMN_PLACE_LONGITUDE, COLUMN_PLACE_DESCRIPTION, COLUMN_CONTACT},
                 COLUMN_PLACE_CATEGORY + "=?",
                 new String[] {category},
                 null,
@@ -211,8 +259,9 @@ public class MarkersTable extends DatabaseHelper {
                 double latitude                 = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LATITUDE));
                 double longitude                = dbRows.getDouble(   dbRows.getColumnIndex(  COLUMN_PLACE_LONGITUDE));
                 String description              = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_PLACE_DESCRIPTION));
+                String contact              = dbRows.getString(   dbRows.getColumnIndex(  COLUMN_CONTACT));
 
-                markerObject = new MarkerObject(placeId, name, address, facii, cat, latitude, longitude, description);
+                markerObject = new MarkerObject(placeId, name, address, facii, cat, latitude, longitude, description, contact);
                 marker_objects_list.add(markerObject);
             }
         }

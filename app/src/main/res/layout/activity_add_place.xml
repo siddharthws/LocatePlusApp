@@ -315,7 +315,64 @@
                     android:textSize="@dimen/text_size_18"/>
 
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/check_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_18"
+                    android:text="Is Blind Friendly ?"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold"/>
+                <CheckBox android:id="@+id/check_contact"
+                    android:focusable="false"
+                    android:layout_gravity="right|center"
+                    android:gravity="right"
+                    android:clickable="false"
+                    android:shadowColor="@color/white"
+                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/contact_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_18"
+                    android:text="Contact :"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_18"
+                    android:singleLine="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:hint="Enter Contact Info"
+                    android:textColor="@color/BLACK"
+                    android:textStyle="bold"/>
 
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

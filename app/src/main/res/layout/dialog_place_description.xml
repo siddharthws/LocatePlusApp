@@ -357,6 +357,40 @@
                     android:layout_marginRight="5dp"
                     android:background="@color/colorPrimary" />
 
+                <LinearLayout
+                    android:id="@+id/contact_layout_dec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:visibility="gone"
+                    android:gravity="left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="Contact No"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_18"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/contact_value_dec"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="9"
+                        android:text="Phone"
+                        android:textColor="@color/BLACK"
+                        android:textSize="@dimen/text_size_18"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
                 <RelativeLayout
                     android:id="@+id/review_layout"
                     android:layout_width="fill_parent"
