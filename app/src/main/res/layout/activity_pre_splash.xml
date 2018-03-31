@@ -3,18 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/GREY_5"
+    android:background="@color/navy_blue"
     tools:context="com.lplus.activities.activities.SplashActivity">
 
-    <TextView
+    <ImageView
         android:id="@+id/tv_presplash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:text="Checking For Permissions"
-        android:textSize="30dp"
-        android:textAlignment="center"
-        android:textStyle="italic"
-        android:textColor="@color/BLACK" />
-
+        android:src="@drawable/app_permissions"
+        android:scaleType="center"/>
 </RelativeLayout>

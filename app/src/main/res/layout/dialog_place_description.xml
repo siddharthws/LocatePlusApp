@@ -1,4 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <LinearLayout
+        android:id="@+id/ll_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="bottom|center_vertical"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:id="@+id/direction_layout"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_marginLeft="2dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:srcCompat="@drawable/directions"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DIRECTIONS"
+                android:textSize="@dimen/text_size_18"
+                android:textColor="@color/white"
+                android:textStyle="italic"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rate_place_layout"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@color/navy_blue"
+            android:gravity="left"
+            android:layout_marginLeft="45dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="left|center_vertical"
+                app:srcCompat="@drawable/icons8_star_filled_96"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RATE PLACE"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/text_size_18"
+                android:textColor="@color/white"
+                android:textStyle="italic" />
+        </LinearLayout>
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/ll_buttons">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -22,7 +90,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_layout_otp"
+        android:background="@color/navy_blue"
         android:orientation="vertical"
         android:weightSum="100">
 
@@ -68,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="40"
-            android:background="@drawable/round_layout_white_otp"
+            android:background="@color/white"
             android:orientation="vertical"
             android:weightSum="5000">
             <LinearLayout
@@ -178,6 +246,7 @@
                         android:text="Place Name"
                         android:textColor="@color/BLACK"
                         android:textSize="@dimen/text_size_18"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textStyle="bold" />
 
                     <ImageButton
@@ -194,6 +263,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:gravity="center"
@@ -268,6 +338,13 @@
                     android:layout_height="70dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="Reviews"
+
+                        android:textColor="@color/BLACK"
+                        android:textSize="@dimen/text_size_18" />
 
                     <android.support.v4.view.ViewPager
                         android:id="@+id/review_pager"
@@ -340,61 +417,10 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:id="@+id/direction_layout"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
-                    android:gravity="center"
-                    android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        app:srcCompat="@drawable/directions"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="DIRECTIONS"
-                        android:textSize="@dimen/text_size_18"
-                        android:textColor="@color/white"
-                        android:textStyle="italic"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/rate_place_layout"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:background="@color/navy_blue"
-                    android:gravity="left"
-                    android:layout_marginLeft="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="left|center_vertical"
-                        app:srcCompat="@drawable/icons8_star_filled_96"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="RATE PLACE"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="@dimen/text_size_18"
-                        android:textColor="@color/white"
-                        android:textStyle="italic" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     </ScrollView>
 </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

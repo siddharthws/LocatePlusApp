@@ -217,12 +217,12 @@ public class RateCANDialog implements RateCANInterface, FetchGooglePhoto {
         if (status)
         {
             loadingDialog.HideDialog();
-            Toasty.success(context,"Rate Uploaded", Toast.LENGTH_SHORT,true);
+            Toasty.success(context,"Rate Uploaded", Toast.LENGTH_SHORT,true).show();
         }
         else
         {
             loadingDialog.HideDialog();
-            Toasty.error(context,"Rating Failed", Toast.LENGTH_SHORT,true);
+            Toasty.error(context,"Rating Failed", Toast.LENGTH_SHORT,true).show();
         }
     }
 

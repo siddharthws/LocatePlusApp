@@ -539,6 +539,10 @@ public class HomeActivity extends AppCompatActivity implements  OnMapReadyCallba
         {
             Toast.makeText(this, "Sorry...Cannot Fetch the address...Try again",Toast.LENGTH_SHORT).show();
         }
+        else
+        {
+            Toast.makeText(this, "Cannot add marker outside Maharashtra....",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

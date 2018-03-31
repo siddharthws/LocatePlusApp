@@ -233,6 +233,8 @@ public class MarkerSummaryDialog implements View.OnClickListener, ReviewsStatusI
 
             case R.id.rate_layout:
             {
+                RatePlaceDialog ratePlaceDialog = new RatePlaceDialog(context, markerObject);
+                ratePlaceDialog.ShowDialog();
                 break;
             }
         }

@@ -18,9 +18,9 @@ public class UrlMappings {
     public static final String GET_PHOTOS           = ip + "/api/user/getPhotoApp";
     public static final String GET_REVIEWS          = ip + "/api/user/getReviews";
     public static final String GET_RP_STATUS        = ip + "/api/user/getrpStatus";
-    public static final String RATE_PLACE           = ip + "/api/user/addOverallRating";
+    public static final String RATE_PLACE           = ip + "/api/user/overallRating";
     public static final String RATE_PHOTOS          = ip + "/api/user/photoRating";
-    public static final String RATE_FACILITY        = ip + "/api/user/";
+    public static final String RATE_FACILITY        = ip + "/api/user/facilitiesRating";
     public static final String RATE_CAN             = ip + "/api/user/infoRating";
     public static final String REGISTER_UDID        = ip + "/api/admin/validateUdid";
 }

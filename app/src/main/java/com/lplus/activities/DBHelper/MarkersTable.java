@@ -64,12 +64,14 @@ public class MarkersTable extends DatabaseHelper {
         //parse the facilities into String
         ArrayList<String> facii = markerObject.getMarkerFacilities();
         StringBuilder sb=new StringBuilder();
-        int j=0;
+
         for (int i = 0; i < facii.size()-1; i++)
         {
             sb.append(facii.get(i)).append(", ");
         }
-        sb.append(facii.get(facii.size()-1));
+        if(facii.size() > 0) {
+            sb.append(facii.get(facii.size()-1));
+        }
         record.put(COLUMN_PLACE_FACILITIES,     sb.toString());
         record.put(COLUMN_PLACE_LATITUDE,       markerObject.getMarkerLatitude());
         record.put(COLUMN_PLACE_LONGITUDE,      markerObject.getMarkerLongitude());

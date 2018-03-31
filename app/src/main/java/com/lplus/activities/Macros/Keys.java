@@ -87,14 +87,15 @@ public class Keys {
     public static final String MARKER_OBJECT                    = "clickedMarker";
 
     //Rate Keys
-    public static final String RATE_CAN_NAME                    = "canRateName";
-    public static final String RATE_CAN_CATEGORY                = "canRateCategory";
-    public static final String RATE_CAN_ADDRESS                 = "canRateAddress";
-    public static final String RATE_FAC                         = "facility";
-    public static final String RATE_FAC_ID                      = "facilityID";
+    public static final String RATE_CAN_NAME                    = "name";
+    public static final String RATE_CAN_CATEGORY                = "category";
+    public static final String RATE_CAN_ADDRESS                 = "address";
+    public static final String RATE_FAC                         = "facilities";
+    public static final String RATE_FAC_ID                      = "facilityId";
     public static final String RATE_FAC_RATE                    = "facilityRate";
     public static final String RATE_PLACE                       = "rating";
-    public static final String RATE_PHOTO                       = "photo";
+    public static final String RATE_PLACE_GET_MARKERS           = "stars";
+    public static final String RATE_PHOTO                       = "photos";
     public static final String RATE_PHOTO_UUID                  = "photoUuid";
     public static final String RATE_PHOTO_RATE                  = "photoRate";
     public static final String RATE_USERS                       = "noOfUsers";

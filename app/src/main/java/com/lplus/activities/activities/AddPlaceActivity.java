@@ -155,6 +155,7 @@ public class AddPlaceActivity extends AppCompatActivity implements  AdapterView.
             facility.add( new FacilityChildInfo(fac_key.get(i), i+1, fac_list.get(i)));
         }
         simpleExpandableListView = findViewById(R.id.simpleExpandableListView);
+        simpleExpandableListView.setNestedScrollingEnabled(true);
 
         listAdapter = new CustomExpandableListAdapter(this,facility);
         simpleExpandableListView.setAdapter( listAdapter );
