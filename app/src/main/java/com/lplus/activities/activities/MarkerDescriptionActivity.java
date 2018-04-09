@@ -330,10 +330,11 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
                     System.out.println("Reaching to the flag of address");
                     RateCANDialog rateCategoryDialog = new RateCANDialog(MarkerDescriptionActivity.this, markerObject);
                     rateCategoryDialog.ShowDialog();
-                    break;
+
                 }else {
                     startActivity(new Intent(MarkerDescriptionActivity.this,UdidActivity.class));
                 }
+                break;
 
             }
             case R.id.flag_facility:
@@ -345,10 +346,11 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
                     rateFacilityDialog.ShowDialog();
 
                 /**/
-                    break;
+
                 } else {
                     startActivity(new Intent(MarkerDescriptionActivity.this,UdidActivity.class));
                 }
+                break;
 
             }
             case R.id.rate_place_layout:
@@ -356,10 +358,11 @@ public class MarkerDescriptionActivity extends HomeActivity implements  View.OnC
                 if(tinyDB.getBoolean(Keys.TINYDB_UDID)) {
                     RatePlaceDialog ratePlaceDialog = new RatePlaceDialog(this, markerObject);
                     ratePlaceDialog.ShowDialog();
-                    break;
+
                 }else {
                     startActivity(new Intent(MarkerDescriptionActivity.this,UdidActivity.class));
                 }
+                break;
 
             }
         }
